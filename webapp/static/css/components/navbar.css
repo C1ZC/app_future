@@ -1,0 +1,57 @@
+[data-theme="dark"] .nav-model,
+[data-theme="dark"] .nav-model .navbar,
+[data-theme="dark"] .nav-model .nav-link,
+[data-theme="dark"] .nav-model .navbar-brand,
+[data-theme="dark"] .nav-model .dropdown-menu {
+    background: var(--background);
+    color: var(--footer-text);
+}
+
+/* style.css o navbar.css */
+[data-theme="light"] #theme-toggle svg {
+    fill: var(--icon-color-light); /* negro */
+}
+
+[data-theme="dark"] #theme-toggle svg {
+    fill: var(--icon-color-dark); /* blanco */
+}
+
+.nav-model .button{
+  border: none;
+  padding: .8em 2em;
+  background-color: var(--primary);
+  color: white;
+  border-radius: 4px;
+  font: inherit;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+}
+.nav-model .cta-button{
+  background-color: var(--accent-color);
+}
+#theme-toggle{
+  width: 50px;
+  padding: 0;
+  border-radius: 50%;
+  background-color: var(--base-variant);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#theme-toggle svg{
+  fill: var(--primary-color);
+}
+#theme-toggle svg:last-child{
+  display: none;
+}
+.darkmode #theme-toggle svg:first-child{
+  display: none;
+}
+.darkmode #theme-toggle svg:last-child{
+  display: block;
+}
+
+.nav-model .navbar-nav {
+    padding-left: 270px;
+}

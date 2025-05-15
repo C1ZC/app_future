@@ -1,0 +1,5 @@
+[data-theme="dark"] .footer-mode {
+        background: var(--background);
+        color: var(--footer-text);
+        
+    }

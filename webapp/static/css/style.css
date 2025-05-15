@@ -1,0 +1,66 @@
+:root {
+    --primary: #0d6efd;
+    --secondary: #6c757d;
+    --success: #198754;
+    --info: #0dcaf0;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --background: #333;
+    --footer-text: #fff;
+    --icon-color-light: black;  /* Default color for light theme */
+    --icon-color-dark: white;   /* Default color for dark theme */
+    --line-ctrl: #ccc;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Asume que tienes una clase llamada 'main-content' para el contenido principal */
+.main-content {
+padding: min(30px, 7%);
+  transition: margin-left 300ms ease-in-out;
+  /* position: relative; */
+  z-index: 1; /* Asegúrate de que el contenido principal esté por encima del sidebar */
+}
+
+
+
+[data-theme="dark"] {
+    --primary: #0d6efd;
+    --secondary: #6c757d;
+    --success: #198754;
+    --info: #0dcaf0;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #212529;
+    --dark: #f8f9fa;
+    --background: #212529;
+    --text: #f8f9fa;
+    --accent-color: #0071ff;
+
+    body .card{
+        background-color: var(--background);
+        color: var(--text);
+    }
+    body{
+        background-color: var(--background);
+        color: var(--text);
+    }
+    body .modenav{
+        background-color: var(--background);
+        color: var(--text);
+    }
+}
+
