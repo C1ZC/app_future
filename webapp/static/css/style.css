@@ -68,6 +68,7 @@ body {
     flex: 1 1 auto;
     display: flex;
     flex-direction: row;
+    align-items: stretch;
     min-height: 80vh;
     width: 100%;
     position: relative;

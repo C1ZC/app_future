@@ -1,12 +1,12 @@
 #sidebar {
     box-sizing: border-box;
-    height: 100%;
+    min-height: 100vh;
+    height: auto;
     width: var(--sidebar-width);
     padding: 5px 1em;
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
     border-right: 1px solid var(--line-clr);
-    /* Quitar position: fixed, top, left, z-index */
     transition: width 300ms cubic-bezier(.4,0,.2,1);
     overflow-x: hidden;
     overflow-y: auto;
