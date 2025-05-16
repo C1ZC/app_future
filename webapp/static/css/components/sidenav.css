@@ -1,18 +1,15 @@
 #sidebar {
     box-sizing: border-box;
-    height: 100vh;
+    height: 100%;
     width: var(--sidebar-width);
     padding: 5px 1em;
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
     border-right: 1px solid var(--line-clr);
-    position: fixed;
-    top: 0;
-    left: 0;
+    /* Quitar position: fixed, top, left, z-index */
     transition: width 300ms cubic-bezier(.4,0,.2,1);
     overflow-x: hidden;
     overflow-y: auto;
-    z-index: 1000;
 }
 
 #sidebar.close {

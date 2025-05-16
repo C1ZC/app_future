@@ -16,7 +16,7 @@
 <body>
     {% include 'components/navbar.html' %}
 
-    <div class="main-wrapper d-flex flex-column" style="min-height: 80vh;">
+    <div class="main-wrapper d-flex flex-row" style="min-height: 80vh;">
         {% if user.is_authenticated %}
             {% include 'components/sidebar.html' %}
         {% endif %}
