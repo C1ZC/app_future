@@ -1,5 +1,14 @@
-[data-theme="dark"] .footer-mode {
-        background: var(--background);
-        color: var(--footer-text);
-        
-    }
+.footer,
+.footer-mode {
+    background: var(--footer-bg) !important;
+    color: var(--footer-text) !important;
+    transition: background 0.3s, color 0.3s;
+}
+.footer a,
+.footer-mode a {
+    color: var(--primary);
+}
+.footer a:hover,
+.footer-mode a:hover {
+    color: var(--accent-color);
+}
