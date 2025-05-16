@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('main-content');
     sidebar.classList.add('close');
     const toggleButton = document.getElementById('toggle-btn');
     const subMenus = document.querySelectorAll('.dropdown-btn');
@@ -18,13 +19,20 @@ document.addEventListener("DOMContentLoaded", function() {
         if (sidebar.classList.contains('close')) {
             sidebar.classList.remove('close');
             sidebar.classList.add('open');
-            toggleButton.classList.add('rotate');
         } else {
             sidebar.classList.remove('open');
             sidebar.classList.add('close');
-            toggleButton.classList.remove('rotate');
         }
+        updateMainContentMargin();
         closeAllSubMenus();
+    }
+
+    function updateMainContentMargin() {
+        if (sidebar.classList.contains('close')) {
+            mainContent.style.marginLeft = 'var(--sidebar-width-collapsed)';
+        } else {
+            mainContent.style.marginLeft = 'var(--sidebar-width)';
+        }
     }
 
     function toggleSubMenu(button) {
@@ -34,11 +42,10 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         subMenu.classList.toggle('show');
         button.classList.toggle('rotate');
-
         if (sidebar.classList.contains('close')) {
             sidebar.classList.remove('close');
-            toggleButton.classList.remove('rotate');
         }
+        updateMainContentMargin();
     }
 
     function closeAllSubMenus() {
@@ -47,4 +54,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ul.previousElementSibling.classList.remove('rotate');
         });
     }
+
+    // Inicializa el margen del contenido principal
+    updateMainContentMargin();
 });

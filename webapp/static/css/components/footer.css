@@ -1,6 +1,6 @@
 .footer,
 .footer-mode {
-    background: var(--footer-bg) !important;
+    background: var(--navbar-bg) !important;
     color: var(--footer-text) !important;
     transition: background 0.3s, color 0.3s;
 }

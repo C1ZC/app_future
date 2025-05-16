@@ -1,36 +1,40 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 #sidebar {
     box-sizing: border-box;
     height: 100vh;
-    width: 250px;
+    width: var(--sidebar-width);
     padding: 5px 1em;
     background-color: var(--sidebar-bg);
     color: var(--sidebar-text);
     border-right: 1px solid var(--line-clr);
     position: fixed;
-    align-self: start;
-    transition: 300ms ease-in-out;
-    overflow: hidden;
-    text-wrap: nowrap;
+    top: 0;
+    left: 0;
+    transition: width 300ms cubic-bezier(.4,0,.2,1);
+    overflow-x: hidden;
+    overflow-y: auto;
     z-index: 1000;
 }
+
 #sidebar.close {
+    width: var(--sidebar-width-collapsed);
     padding: 5px;
-    width: 60px;
 }
+
 #sidebar ul {
     list-style: none;
     padding-left: 1px;
 }
+
 #sidebar > ul > li:first-child {
     display: flex;
     justify-content: flex-end;
     margin-bottom: 16px;
 }
+
 #sidebar ul li.active a {
     color: var(--accent-color);
 }
+
 #sidebar a,
 #sidebar .dropdown-btn,
 #sidebar .logo {
@@ -42,6 +46,7 @@
     align-items: center;
     gap: 1em;
 }
+
 .dropdown-btn {
     width: 100%;
     text-align: left;
@@ -50,39 +55,49 @@
     font: inherit;
     cursor: pointer;
 }
+
 #sidebar svg {
     flex-shrink: 0;
     fill: var(--sidebar-text);
 }
+
 #sidebar a span,
 #sidebar .dropdown-btn span {
     flex-grow: 1;
 }
+
 #sidebar a:hover,
 #sidebar .dropdown-btn:hover {
     background-color: var(--accent-color);
     color: var(--sidebar-bg);
 }
+
 #sidebar .sub-menu {
     display: grid;
     grid-template-rows: 0fr;
     transition: 300ms ease-in-out;
 }
+
 #sidebar .sub-menu > div {
     overflow: hidden;
 }
+
 #sidebar .sub-menu.show {
     grid-template-rows: 1fr;
 }
+
 .dropdown-btn svg {
     transition: 200ms ease;
 }
+
 .rotate svg:last-child {
     rotate: 180deg;
 }
+
 #sidebar .sub-menu a {
     padding-left: 2em;
 }
+
 #toggle-btn {
     margin-left: auto;
     padding: 1em;
@@ -91,10 +106,12 @@
     background: none;
     cursor: pointer;
 }
+
 #toggle-btn:hover {
     background-color: var(--accent-color);
     color: var(--sidebar-bg);
 }
+
 @media(max-width: 800px) {
     #sidebar {
         height: 60px;
@@ -105,6 +122,7 @@
         position: fixed;
         top: unset;
         bottom: 0;
+        left: 0;
     }
     #sidebar > ul {
         padding: 0;
