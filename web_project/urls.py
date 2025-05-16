@@ -12,6 +12,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
+    path('upload-pdf/', views.upload_pdf, name='upload_pdf'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
