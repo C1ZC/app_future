@@ -28,6 +28,17 @@
     color: var(--navbar-text) !important;
 }
 
+/* Corregir color del botón cerrar sesión en modo dark */
+[data-theme="dark"] .dropdown-menu .dropdown-item {
+    color: var(--navbar-text) !important;
+    background: var(--navbar-bg) !important;
+}
+[data-theme="dark"] .dropdown-menu .dropdown-item:hover,
+[data-theme="dark"] .dropdown-menu .dropdown-item:focus {
+    color: var(--accent-color) !important;
+    background: var(--line-clr) !important;
+}
+
 [data-theme="light"] #theme-toggle svg {
     fill: var(--icon-color-light);
 }
@@ -43,7 +54,6 @@
 [data-theme="dark"] #theme-toggle svg:last-child {
     display: block;
 }
-
 
 .nav-model .button {
     border: none;
