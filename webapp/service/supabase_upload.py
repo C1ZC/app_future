@@ -1,5 +1,4 @@
 from .supabase_client import supabase_public
-import os
 
 SUPABASE_BUCKET = "pdfs"  # Cambia si tu bucket tiene otro nombre
 
