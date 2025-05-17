@@ -79,7 +79,7 @@ def upload_pdf(request):
         else:
             messages.error(request, f"Error al subir el archivo: {resp}")
         return redirect('upload_pdf')
-    return render(request, "menu/upload_pdf.html")
+    return render(request, "menu/upload_pdf.html", {"modo": "publico"})
 
 
 from webapp.service.supabase_upload_private import upload_pdf_to_supabase_private
@@ -100,4 +100,4 @@ def upload_pdf_private(request):
         else:
             messages.error(request, f"Error al subir el archivo privado: {resp}")
         return redirect('upload_pdf_private')
-    return render(request, "menu/upload_pdf.html")
+    return render(request, "menu/upload_pdf.html", {"modo": "privado"})

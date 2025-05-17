@@ -8,7 +8,17 @@
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="text-center mb-4">Subir PDF</h2>
+                <div class="mb-3 text-center">
+                    <a href="{% url 'upload_pdf' %}" class="btn {% if modo == 'publico' %}btn-primary{% else %}btn-outline-primary{% endif %} me-2">
+                        Público
+                    </a>
+                    <a href="{% url 'upload_pdf_private' %}" class="btn {% if modo == 'privado' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+                        Privado
+                    </a>
+                </div>
+                <h2 class="text-center mb-4">
+                    Subir PDF {% if modo == "privado" %}Privado{% else %}Público{% endif %}
+                </h2>
                 <form method="post" enctype="multipart/form-data" id="uploadForm">
                     {% csrf_token %}
                     <div class="mb-3">
@@ -16,7 +26,8 @@
                         <input type="file" class="form-control" id="pdf_file" name="pdf_file" accept="application/pdf" required>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
-                        <i class="bi bi-upload"></i> Subir PDF
+                        <i class="bi bi-upload"></i>
+                        {% if modo == "privado" %}Subir PDF Privado{% else %}Subir PDF Público{% endif %}
                     </button>
                 </form>
                 {% if messages %}
@@ -30,5 +41,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
