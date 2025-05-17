@@ -13,6 +13,8 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('upload-pdf/', views.upload_pdf, name='upload_pdf'),
+    path('upload-pdf-private/', views.upload_pdf_private, name='upload_pdf_private'),
+    path('upload-pdf-private/', views.upload_pdf_private, name='upload_pdf_private'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
