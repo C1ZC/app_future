@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.getElementById('sidebar');
     const mainContent = document.getElementById('main-content');
-    sidebar.classList.add('close');
     const toggleButton = document.getElementById('toggle-btn');
     const subMenus = document.querySelectorAll('.dropdown-btn');
 

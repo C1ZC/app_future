@@ -1,0 +1,78 @@
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from webapp.models import PerfilUsuario
+from webapp.forms.administration_forms import PerfilUsuarioForm, UserForm, UserEditForm
+from webapp.service.roles import rol_requerido, RolUsuario
+from django.contrib.auth.models import User
+
+@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA)
+def usuario_list(request):
+    usuarios = PerfilUsuario.objects.all()
+    user_form = UserForm()
+    perfil_form = PerfilUsuarioForm()
+    edit_forms = {}
+    for usuario in usuarios:
+        perfil_form_edit = PerfilUsuarioForm(instance=usuario)
+        user_form_edit = UserEditForm(instance=usuario.user)
+        edit_forms[usuario.pk] = {
+            'perfil_form': perfil_form_edit,
+            'user_form': user_form_edit,
+        }
+    return render(request, 'administration/usuario/lista_usuarios.html', {
+        'usuarios': usuarios,
+        'user_form': user_form,
+        'perfil_form': perfil_form,
+        'edit_forms': edit_forms,
+    })
+
+@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
+def usuario_create(request):
+    if request.method == 'POST':
+        user_form = UserForm(request.POST)
+        perfil_form = PerfilUsuarioForm(request.POST)
+        if user_form.is_valid() and perfil_form.is_valid():
+            user = user_form.save()
+            perfil = perfil_form.save(commit=False)
+            perfil.user = user
+            perfil.save()
+            messages.success(request, "Usuario creado correctamente.")
+            return redirect('lista_usuarios')
+        else:
+            # Si hay errores, vuelve a la lista y muestra el modal abierto
+            usuarios = PerfilUsuario.objects.all()
+            edit_forms = {usuario.pk: PerfilUsuarioForm(instance=usuario) for usuario in usuarios}
+            return render(request, 'administration/usuario/lista_usuarios.html', {
+                'usuarios': usuarios,
+                'user_form': user_form,
+                'perfil_form': perfil_form,
+                'edit_forms': edit_forms,
+                'abrir_modal': True,
+            })
+    else:
+        return redirect('lista_usuarios')
+    
+def usuario_update(request, pk):
+    perfil = get_object_or_404(PerfilUsuario, pk=pk)
+    user = perfil.user
+    if request.method == 'POST':
+        user_form = UserEditForm(request.POST, instance=user)
+        perfil_form = PerfilUsuarioForm(request.POST, instance=perfil)
+        if user_form.is_valid() and perfil_form.is_valid():
+            user_form.save()
+            perfil_form.save()
+            messages.success(request, "Usuario actualizado correctamente.")
+            return redirect('lista_usuarios')
+    else:
+        user_form = UserEditForm(instance=user)
+        perfil_form = PerfilUsuarioForm(instance=perfil)
+    return render(request, 'administration/usuario/users_forms.html', {'user_form': user_form, 'perfil_form': perfil_form})
+
+@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
+def usuario_delete(request, pk):
+    perfil = get_object_or_404(PerfilUsuario, pk=pk)
+    if request.method == 'POST':
+        perfil.user.delete()
+        perfil.delete()
+        messages.success(request, "Usuario eliminado correctamente.")
+        return redirect('lista_usuarios')
+    return render(request, 'administration/usuario/users_confirm_delete.html', {'perfil': perfil})

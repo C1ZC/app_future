@@ -1,0 +1,11 @@
+<!-- filepath: webapp/templates/administration/servicio/service_comfim_delete.html -->
+{% extends "base.html" %}
+{% block title %}Eliminar Servicio{% endblock %}
+{% block content %}
+<h2>¿Seguro que deseas eliminar el servicio "{{ servicio.nombre }}"?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a href="{% url 'lista_servicios' %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

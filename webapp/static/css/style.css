@@ -81,7 +81,6 @@ body {
     width: 100%;
     min-height: 100vh;
     margin-left: var(--sidebar-width);
-    z-index: 1;
 }
 body:not(.sidebar-visible) .main-content {
     margin-left: 0 !important;
@@ -135,4 +134,16 @@ a:hover {
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb {
     background: #444;
+}
+
+/* Extra para listas de administración */
+.list-group-item {
+    background: var(--background);
+    color: var(--text);
+    border: 1px solid var(--line-clr);
+    margin-bottom: 5px;
+}
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
 }

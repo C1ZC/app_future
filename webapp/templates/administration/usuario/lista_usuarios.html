@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static form_filters %}
+{% block title %}Lista de Usuarios{% endblock %}
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<h1>Lista de Usuarios</h1>
+
+<!-- Botón para abrir modal de creación -->
+<button type="button" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#usuarioModal">
+  Nuevo Usuario
+</button>
+
+<!-- Modal de creación -->
+<div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'usuario_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="usuarioModalLabel">Crear Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <h4>Datos de Usuario</h4>
+          {{ user_form.as_p }}
+          <h4>Perfil</h4>
+          {{ perfil_form.as_p }}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<ul class="list-group">
+    {% for usuario in usuarios %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+                {{ usuario.user.username }} ({{ usuario.empresa.nombre }})
+            </span>
+            <span>
+                <button type="button" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal{{ usuario.pk }}">
+                    Editar
+                </button>
+                <a href="{% url 'usuario_delete' usuario.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+            </span>
+        </li>
+
+        <!-- Modal de edición -->
+        <div class="modal fade" id="editarUsuarioModal{{ usuario.pk }}" tabindex="-1" aria-labelledby="editarUsuarioModalLabel{{ usuario.pk }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="{% url 'usuario_update' usuario.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="editarUsuarioModalLabel{{ usuario.pk }}">Editar Usuario</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                  <div class="modal-body">
+                    <h4>Datos de Usuario</h4>
+                    {{ edit_forms|dict_get:usuario.pk|dict_get:"user_form"|as_p }}
+                    <h4>Perfil</h4>
+                    {{ edit_forms|dict_get:usuario.pk|dict_get:"perfil_form"|as_p }}
+                  </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Guardar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+    {% endfor %}
+</ul>
+{% if abrir_modal %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('usuarioModal'));
+    myModal.show();
+  });
+</script>
+{% endif %}
+
+{% endblock %}
