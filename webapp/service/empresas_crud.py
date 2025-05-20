@@ -5,7 +5,6 @@ from webapp.forms.administration_forms import EmpresaForm
 from webapp.service.roles import rol_requerido, RolUsuario
 from django.contrib.auth.decorators import login_required
 
-@login_required
 @rol_requerido(RolUsuario.SUPERADMIN)
 def empresa_list(request):
     empresas = Empresa.objects.all()
