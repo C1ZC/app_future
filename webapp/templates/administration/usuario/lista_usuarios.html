@@ -22,7 +22,7 @@
 </div>
 <!-- Modal de creación -->
 <div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <form method="post" action="{% url 'usuario_create' %}">
         {% csrf_token %}
@@ -31,35 +31,40 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <h4>Datos de Usuario</h4>
-          <div class="mb-3">
-            <label for="{{ user_form.username.id_for_label }}">Usuario</label>
-            {{ user_form.username }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ user_form.email.id_for_label }}">Correo</label>
-            {{ user_form.email }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ user_form.first_name.id_for_label }}">Nombre</label>
-            {{ user_form.first_name }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ user_form.last_name.id_for_label }}">Apellido</label>
-            {{ user_form.last_name }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ user_form.password.id_for_label }}">Contraseña</label>
-            <div class="input-group">
-              {{ user_form.password }}
-              <button type="button" class="btn btn-outline-secondary" id="togglePassword">
-                <i class="bi bi-eye" id="icon-eye"></i>
-              </button>
+          <div class="row">
+            <div class="col-md-6">
+              <h4>Datos de Usuario</h4>
+              <div class="mb-3">
+                <label for="{{ user_form.username.id_for_label }}">Usuario</label>
+                {{ user_form.username }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.email.id_for_label }}">Correo</label>
+                {{ user_form.email }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.first_name.id_for_label }}">Nombre</label>
+                {{ user_form.first_name }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.last_name.id_for_label }}">Apellido</label>
+                {{ user_form.last_name }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.password.id_for_label }}">Contraseña</label>
+                <div class="input-group">
+                  {{ user_form.password }}
+                  <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                    <i class="bi bi-eye" id="icon-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h4>Perfil</h4>
+              {{ perfil_form.as_p }}
             </div>
           </div>
-
-          <h4>Perfil</h4>
-          {{ perfil_form.as_p }}
         </div>
         <div class="modal-footer">
           <button type="submit" class="btn btn-primary">Guardar</button>
@@ -86,7 +91,7 @@
 
         <!-- Modal de edición -->
         <div class="modal fade" id="editarUsuarioModal{{ usuario.pk }}" tabindex="-1" aria-labelledby="editarUsuarioModalLabel{{ usuario.pk }}" aria-hidden="true">
-          <div class="modal-dialog">
+          <div class="modal-dialog modal-lg">
             <div class="modal-content">
               <form method="post" action="{% url 'usuario_update' usuario.pk %}">
                 {% csrf_token %}
@@ -94,12 +99,18 @@
                   <h5 class="modal-title" id="editarUsuarioModalLabel{{ usuario.pk }}">Editar Usuario</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                  <div class="modal-body">
-                    <h4>Datos de Usuario</h4>
-                    {{ edit_forms|dict_get:usuario.pk|dict_get:"user_form"|as_p }}
-                    <h4>Perfil</h4>
-                    {{ edit_forms|dict_get:usuario.pk|dict_get:"perfil_form"|as_p }}
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <h4>Datos de Usuario</h4>
+                      {{ edit_forms|dict_get:usuario.pk|dict_get:"user_form"|as_p }}
+                    </div>
+                    <div class="col-md-6">
+                      <h4>Perfil</h4>
+                      {{ edit_forms|dict_get:usuario.pk|dict_get:"perfil_form"|as_p }}
+                    </div>
                   </div>
+                </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Guardar</button>
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
