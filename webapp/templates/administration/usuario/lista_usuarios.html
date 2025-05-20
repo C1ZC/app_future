@@ -41,6 +41,14 @@
             {{ user_form.email }}
           </div>
           <div class="mb-3">
+            <label for="{{ user_form.first_name.id_for_label }}">Nombre</label>
+            {{ user_form.first_name }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ user_form.last_name.id_for_label }}">Apellido</label>
+            {{ user_form.last_name }}
+          </div>
+          <div class="mb-3">
             <label for="{{ user_form.password.id_for_label }}">Contraseña</label>
             <div class="input-group">
               {{ user_form.password }}
@@ -49,6 +57,7 @@
               </button>
             </div>
           </div>
+
           <h4>Perfil</h4>
           {{ perfil_form.as_p }}
         </div>
