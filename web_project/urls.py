@@ -10,6 +10,8 @@ from webapp.views.upload_views import upload_pdf, upload_pdf_private
 from webapp.service.empresas_crud import empresa_list, empresa_create, empresa_update, empresa_delete
 from webapp.service.servicio_crud import servicio_list, servicio_create, servicio_update, servicio_delete
 from webapp.service.usuario_crud import usuario_list, usuario_create, usuario_update, usuario_delete
+from webapp.views.profile_views import perfil_view
+from webapp.views.administration import administracion
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +35,8 @@ urlpatterns = [
     path('usuarios/nuevo/', usuario_create, name='usuario_create'),
     path('usuarios/<int:pk>/editar/', usuario_update, name='usuario_update'),
     path('usuarios/<int:pk>/eliminar/', usuario_delete, name='usuario_delete'),
+    path('perfil/', perfil_view, name='perfil'),
+    path('administracion/', administracion, name='administracion'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

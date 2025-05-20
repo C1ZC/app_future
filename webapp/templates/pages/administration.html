@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Administración de Cuentas{% endblock %}
+{% block content %}
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<h1 class="mb-4">Administración de Cuentas</h1>
+
+<div class="row">
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 card-hover">
+        <div class="card-body text-center">
+          <h5 class="card-title"> Empresas</h5>
+          <p class="display-4">{{ empresas|length }}</p>
+          <p class="card-text">Empresas registradas</p>
+          <a href="{% url 'lista_empresas' %}" class="btn btn-primary shadow">Ver Empresas</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' or user.perfil.rol == 'admin_empresa' %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 card-hover">
+        <div class="card-body text-center">
+          <h5 class="card-title">Servicios</h5>
+          <p class="display-4">{{ servicios|length }}</p>
+          <p class="card-text">Servicios registrados</p>
+          <a href="{% url 'lista_servicios' %}" class="btn btn-success shadow">Ver Servicios</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' or user.perfil.rol == 'admin_empresa' or user.perfil.rol == 'admin_servicio' %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 card-hover">
+        <div class="card-body text-center">
+          <h5 class="card-title">Usuarios</h5>
+          <p class="display-4">{{ usuarios|length }}</p>
+          <p class="card-text">Usuarios registrados</p>
+          <a href="{% url 'lista_usuarios' %}" class="btn btn-info shadow">Ver Usuarios</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

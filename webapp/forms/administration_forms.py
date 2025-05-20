@@ -1,6 +1,8 @@
 from django import forms
 from webapp.models import Empresa, Servicio, PerfilUsuario
 from django.contrib.auth.models import User
+from django.contrib.auth import password_validation
+
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
@@ -62,3 +64,43 @@ class UserEditForm(forms.ModelForm):
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
     
+class PerfilUsuarioEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+class PasswordChangeCustomForm(forms.Form):
+    old_password = forms.CharField(label="Contraseña actual", widget=forms.PasswordInput)
+    new_password1 = forms.CharField(label="Nueva contraseña", widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label="Confirmar nueva contraseña", widget=forms.PasswordInput)
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+    def clean_old_password(self):
+        old_password = self.cleaned_data["old_password"]
+        if not self.user.check_password(old_password):
+            raise forms.ValidationError("La contraseña actual es incorrecta.")
+        return old_password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("new_password1")
+        p2 = cleaned_data.get("new_password2")
+        if p1 and p2 and p1 != p2:
+            self.add_error("new_password2", "Las contraseñas no coinciden.")
+        password_validation.validate_password(p1, self.user)
+        return cleaned_data
+
+    def save(self, commit=True):
+        self.user.set_password(self.cleaned_data["new_password1"])
+        if commit:
+            self.user.save()

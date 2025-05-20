@@ -12,9 +12,14 @@
 <h1>Lista de Servicios</h1>
 
 <!-- Botón para abrir modal de creación -->
-<button type="button" class="btn btn-success mb-2" data-bs-toggle="modal" data-bs-target="#servicioModal">
+<div class="d-flex justify-content-between mb-3">
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#servicioModal">
   Nuevo Servicio
 </button>
+<a href="{% url 'administracion' %}" class="btn btn-secondary">
+  ← Volver a Administración
+</a>
+</div>
 
 <!-- Modal de creación -->
 <div class="modal fade" id="servicioModal" tabindex="-1" aria-labelledby="servicioModalLabel" aria-hidden="true">

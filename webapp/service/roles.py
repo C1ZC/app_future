@@ -17,6 +17,6 @@ def rol_requerido(*roles):
                 return redirect('login')
             if perfil.rol in roles:
                 return view_func(request, *args, **kwargs)
-            return redirect('dashboard')
+            return redirect('home')
         return _wrapped_view
     return decorator
