@@ -6,7 +6,6 @@ class Empresa(models.Model):
     nombre = models.CharField(max_length=255)
     direccion = models.CharField(max_length=255)
     telefono = models.CharField(max_length=20)
-    email = models.EmailField()
     RUT = models.CharField(max_length=12, unique=True)  # RUT de la empresa
     # Otros campos relevantes
 

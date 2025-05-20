@@ -2,7 +2,8 @@ from django import forms
 from webapp.models import Empresa, Servicio, PerfilUsuario
 from django.contrib.auth.models import User
 from django.contrib.auth import password_validation
-
+import re
+from django.core.exceptions import ValidationError
 
 class EmpresaForm(forms.ModelForm):
     class Meta:
@@ -13,6 +14,28 @@ class EmpresaForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        # Solo números, opcionalmente con +56 al inicio
+        telefono = re.sub(r'\D', '', telefono)
+        if len(telefono) < 9:
+            raise ValidationError("El teléfono debe tener al menos 9 dígitos.")
+        return telefono
+
+    def clean_RUT(self):
+        rut = self.cleaned_data['RUT']
+        rut = re.sub(r'\D', '', rut)  # Solo números
+        if len(rut) < 8 or len(rut) > 9:
+            raise ValidationError("El RUT debe tener 8 o 9 dígitos.")
+        # Formatear a xx.xxx.xxx-x
+        cuerpo = rut[:-1]
+        dv = rut[-1]
+        cuerpo = cuerpo[::-1]
+        partes = [cuerpo[i:i+3][::-1] for i in range(0, len(cuerpo), 3)]
+        cuerpo_formateado = '.'.join(partes[::-1])
+        rut_formateado = f"{cuerpo_formateado}-{dv}"
+        return rut_formateado
 
 class ServicioForm(forms.ModelForm):
     class Meta:
