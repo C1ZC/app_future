@@ -20,6 +20,10 @@ class Servicio(models.Model):
         Empresa, on_delete=models.CASCADE, related_name='servicios')
     # Otros campos relevantes
 
+    class Meta:
+        unique_together = ('nombre', 'empresa')
+        verbose_name_plural = "Servicios"
+
     def __str__(self):
         return f"{self.nombre} ({self.empresa.nombre})"
 

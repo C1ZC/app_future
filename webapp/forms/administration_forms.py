@@ -31,9 +31,30 @@ class PerfilUsuarioForm(forms.ModelForm):
         fields = ['servicio', 'empresa', 'rol']
 
     def __init__(self, *args, **kwargs):
+        user = kwargs.pop('request_user', None)
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+        if user:
+            perfil = getattr(user, 'perfil', None)
+            if perfil:
+                if perfil.es_admin_empresa():
+                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
+                    self.fields['servicio'].queryset = Servicio.objects.filter(empresa=perfil.empresa)
+                    self.fields['rol'].choices = [
+                        (choice, label) for choice, label in self.fields['rol'].choices
+                        if choice in ['admin_servicio', 'usuario_servicio']
+                    ]
+                elif perfil.es_admin_servicio():
+                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
+                    self.fields['servicio'].queryset = Servicio.objects.filter(pk=perfil.servicio_id)
+                    self.fields['rol'].choices = [
+                        (choice, label) for choice, label in self.fields['rol'].choices
+                        if choice == 'usuario_servicio'
+                    ]
+                elif perfil.es_superadmin():
+                    self.fields['empresa'].queryset = Empresa.objects.all()
+                    self.fields['servicio'].queryset = Servicio.objects.all()
 
 
 class UserForm(forms.ModelForm):

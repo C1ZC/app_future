@@ -12,7 +12,7 @@ def rol_requerido(*roles):
             if request.user.is_superuser or request.user.is_staff:
                 return view_func(request, *args, **kwargs)
             try:
-                perfil = request.user.perfilusuario
+                perfil = request.user.perfil
             except PerfilUsuario.DoesNotExist:
                 return redirect('login')
             if perfil.rol in roles:

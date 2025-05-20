@@ -5,14 +5,14 @@ from webapp.forms.administration_forms import PerfilUsuarioForm, UserForm, UserE
 from webapp.service.roles import rol_requerido, RolUsuario
 from django.contrib.auth.models import User
 
-@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA)
+@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
 def usuario_list(request):
     usuarios = PerfilUsuario.objects.all()
     user_form = UserForm()
-    perfil_form = PerfilUsuarioForm()
+    perfil_form = PerfilUsuarioForm(request_user=request.user)
     edit_forms = {}
     for usuario in usuarios:
-        perfil_form_edit = PerfilUsuarioForm(instance=usuario)
+        perfil_form_edit = PerfilUsuarioForm(instance=usuario, request_user=request.user)
         user_form_edit = UserEditForm(instance=usuario.user)
         edit_forms[usuario.pk] = {
             'perfil_form': perfil_form_edit,
@@ -25,11 +25,12 @@ def usuario_list(request):
         'edit_forms': edit_forms,
     })
 
+
 @rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
 def usuario_create(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST)
-        perfil_form = PerfilUsuarioForm(request.POST)
+        perfil_form = PerfilUsuarioForm(request.POST, request_user=request.user)
         if user_form.is_valid() and perfil_form.is_valid():
             user = user_form.save()
             perfil = perfil_form.save(commit=False)
@@ -38,9 +39,8 @@ def usuario_create(request):
             messages.success(request, "Usuario creado correctamente.")
             return redirect('lista_usuarios')
         else:
-            # Si hay errores, vuelve a la lista y muestra el modal abierto
             usuarios = PerfilUsuario.objects.all()
-            edit_forms = {usuario.pk: PerfilUsuarioForm(instance=usuario) for usuario in usuarios}
+            edit_forms = {usuario.pk: PerfilUsuarioForm(instance=usuario, request_user=request.user) for usuario in usuarios}
             return render(request, 'administration/usuario/lista_usuarios.html', {
                 'usuarios': usuarios,
                 'user_form': user_form,
@@ -51,12 +51,13 @@ def usuario_create(request):
     else:
         return redirect('lista_usuarios')
     
+@rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
 def usuario_update(request, pk):
     perfil = get_object_or_404(PerfilUsuario, pk=pk)
     user = perfil.user
     if request.method == 'POST':
         user_form = UserEditForm(request.POST, instance=user)
-        perfil_form = PerfilUsuarioForm(request.POST, instance=perfil)
+        perfil_form = PerfilUsuarioForm(request.POST, instance=perfil, request_user=request.user)
         if user_form.is_valid() and perfil_form.is_valid():
             user_form.save()
             perfil_form.save()
@@ -64,7 +65,7 @@ def usuario_update(request, pk):
             return redirect('lista_usuarios')
     else:
         user_form = UserEditForm(instance=user)
-        perfil_form = PerfilUsuarioForm(instance=perfil)
+        perfil_form = PerfilUsuarioForm(instance=perfil, request_user=request.user)
     return render(request, 'administration/usuario/users_forms.html', {'user_form': user_form, 'perfil_form': perfil_form})
 
 @rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
