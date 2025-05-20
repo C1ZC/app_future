@@ -48,7 +48,7 @@ def empresa_update(request, pk):
             return redirect('lista_empresas')
     else:
         form = EmpresaForm(instance=empresa)
-    return render(request, 'administration/empresa/empresa_form.html', {'form': form})
+    return render(request, 'administration/empresa/lista_empresas.html', {'form': form})
 
 @rol_requerido(RolUsuario.SUPERADMIN)
 def empresa_delete(request, pk):
@@ -57,4 +57,4 @@ def empresa_delete(request, pk):
         empresa.delete()
         messages.success(request, "Empresa eliminada correctamente.")
         return redirect('lista_empresas')
-    return render(request, 'administration/empresa/empresa_confirm_delete.html', {'empresa': empresa})
+    return render(request, 'administration/empresa/lista_empresas.html', {'empresa': empresa})

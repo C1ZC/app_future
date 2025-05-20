@@ -58,7 +58,9 @@
                 <button type="button" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarServicioModal{{ servicio.pk }}">
                     Editar
                 </button>
-                <a href="{% url 'servicio_delete' servicio.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteServicioModal{{ servicio.pk }}">
+                  Eliminar
+                </button>
             </span>
         </li>
 
@@ -77,6 +79,28 @@
                 </div>
                 <div class="modal-footer">
                   <button type="submit" class="btn btn-primary">Guardar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal de confirmación de eliminación -->
+        <div class="modal fade" id="deleteServicioModal{{ servicio.pk }}" tabindex="-1" aria-labelledby="deleteServicioModalLabel{{ servicio.pk }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="{% url 'servicio_delete' servicio.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteServicioModalLabel{{ servicio.pk }}">Eliminar Servicio</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar el servicio <strong>{{ servicio.nombre }}</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
               </form>

@@ -66,7 +66,7 @@ def usuario_update(request, pk):
     else:
         user_form = UserEditForm(instance=user)
         perfil_form = PerfilUsuarioForm(instance=perfil, request_user=request.user)
-    return render(request, 'administration/usuario/users_forms.html', {'user_form': user_form, 'perfil_form': perfil_form})
+    return render(request, 'administration/usuario/lista_usuarios.html', {'user_form': user_form, 'perfil_form': perfil_form})
 
 @rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA, RolUsuario.ADMIN_SERVICIO)
 def usuario_delete(request, pk):
@@ -76,4 +76,4 @@ def usuario_delete(request, pk):
         perfil.delete()
         messages.success(request, "Usuario eliminado correctamente.")
         return redirect('lista_usuarios')
-    return render(request, 'administration/usuario/users_confirm_delete.html', {'perfil': perfil})
+    return render(request, 'administration/usuario/lista_usuarios.html', {'perfil': perfil})

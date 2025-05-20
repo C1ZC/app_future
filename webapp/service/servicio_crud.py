@@ -47,7 +47,7 @@ def servicio_update(request, pk):
             return redirect('lista_servicios')
     else:
         form = ServicioForm(instance=servicio)
-    return render(request, 'administration/servicio/service_forms.html', {'form': form})
+    return render(request, 'administration/servicio/lista_servicios.html', {'form': form})
 
 @rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA)
 def servicio_delete(request, pk):
@@ -56,4 +56,4 @@ def servicio_delete(request, pk):
         servicio.delete()
         messages.success(request, "Servicio eliminado correctamente.")
         return redirect('lista_servicios')
-    return render(request, 'administration/servicio/service_comfirm_delete.html', {'servicio': servicio})
+    return render(request, 'administration/servicio/lista_servicios.html', {'servicio': servicio})

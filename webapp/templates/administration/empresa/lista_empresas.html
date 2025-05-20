@@ -59,9 +59,33 @@
                 <button type="button" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarEmpresaModal{{ empresa.pk }}">
                     Editar
                 </button>
-                <a href="{% url 'empresa_delete' empresa.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpresaModal{{ empresa.pk }}">
+                  Eliminar
+                </button>
             </span>
         </li>
+
+        <!-- Modal de confirmación de eliminación -->
+        <div class="modal fade" id="deleteEmpresaModal{{ empresa.pk }}" tabindex="-1" aria-labelledby="deleteEmpresaModalLabel{{ empresa.pk }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="{% url 'empresa_delete' empresa.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteEmpresaModalLabel{{ empresa.pk }}">Eliminar Empresa</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar la empresa <strong>{{ empresa.nombre }}</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
         <!-- Modal de edición -->
         <div class="modal fade" id="editarEmpresaModal{{ empresa.pk }}" tabindex="-1" aria-labelledby="editarEmpresaModalLabel{{ empresa.pk }}" aria-hidden="true">
