@@ -24,6 +24,9 @@ def perfil_view(request):
                 password_form.save()
                 messages.success(request, "Contraseña cambiada correctamente.")
                 return redirect('perfil')
+            else:
+                messages.success(
+                    request, "Corrige los errores en el formulario de contraseña.")
 
     return render(request, 'pages/perfiles.html', {
         'form': perfil_form,

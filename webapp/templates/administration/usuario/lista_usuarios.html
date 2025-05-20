@@ -32,7 +32,23 @@
         </div>
         <div class="modal-body">
           <h4>Datos de Usuario</h4>
-          {{ user_form.as_p }}
+          <div class="mb-3">
+            <label for="{{ user_form.username.id_for_label }}">Usuario</label>
+            {{ user_form.username }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ user_form.email.id_for_label }}">Correo</label>
+            {{ user_form.email }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ user_form.password.id_for_label }}">Contraseña</label>
+            <div class="input-group">
+              {{ user_form.password }}
+              <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                <i class="bi bi-eye" id="icon-eye"></i>
+              </button>
+            </div>
+          </div>
           <h4>Perfil</h4>
           {{ perfil_form.as_p }}
         </div>
@@ -93,5 +109,26 @@
   });
 </script>
 {% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('togglePassword');
+    var passwordInput = document.getElementById('id_password');
+    var icon = document.getElementById('icon-eye');
+    if (toggle && passwordInput && icon) {
+      toggle.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    }
+  });
+</script>
 
 {% endblock %}

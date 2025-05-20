@@ -119,9 +119,19 @@ class PerfilUsuarioEditForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 class PasswordChangeCustomForm(forms.Form):
-    old_password = forms.CharField(label="Contraseña actual", widget=forms.PasswordInput)
-    new_password1 = forms.CharField(label="Nueva contraseña", widget=forms.PasswordInput)
-    new_password2 = forms.CharField(label="Confirmar nueva contraseña", widget=forms.PasswordInput)
+    old_password = forms.CharField(
+        label="Contraseña actual",
+        widget=forms.PasswordInput,
+    )
+    new_password1 = forms.CharField(
+        label="Nueva contraseña",
+        widget=forms.PasswordInput,
+        help_text=password_validation.password_validators_help_text_html()
+    )
+    new_password2 = forms.CharField(
+        label="Confirmar nueva contraseña",
+        widget=forms.PasswordInput,
+    )
 
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
