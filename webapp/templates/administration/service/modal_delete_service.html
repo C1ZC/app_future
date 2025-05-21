@@ -1,0 +1,21 @@
+        <!-- Modal de confirmación de eliminación -->
+        <div class="modal fade" id="deleteServicioModal{{ servicio.pk }}" tabindex="-1" aria-labelledby="deleteServicioModalLabel{{ servicio.pk }}" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <form method="post" action="{% url 'servicio_delete' servicio.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteServicioModalLabel{{ servicio.pk }}">Eliminar Servicio</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                  <p>¿Estás seguro de que deseas eliminar el servicio <strong>{{ servicio.nombre }}</strong>?</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-danger">Eliminar</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>

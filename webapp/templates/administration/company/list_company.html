@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static form_filters %}
+{% block title %}Lista de Empresas{% endblock %}
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<h1>Lista de Empresas</h1>
+
+<!-- Botón para abrir modal -->
+<div class="d-flex justify-content-between mb-3">
+  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#empresaModal">
+    Nueva Empresa
+  </button>
+  <a href="{% url 'administracion' %}" class="btn btn-secondary">
+    ← Volver a Administración
+  </a>
+</div>
+
+{% include "administration/company/modal_create_company.html" %}
+
+<ul class="list-group">
+    {% for empresa in empresas %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+                {{ empresa.nombre }}
+            </span>
+            <span>
+                <button type="button" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarEmpresaModal{{ empresa.pk }}">
+                    Editar
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteEmpresaModal{{ empresa.pk }}">
+                  Eliminar
+                </button>
+            </span>
+        </li>
+        {% include "administration/company/modal_edit_company.html" with empresa=empresa %}
+        {% include "administration/company/modal_delete_company.html" with empresa=empresa %}
+    {% endfor %}
+</ul>
+
+{% if abrir_modal %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('empresaModal'));
+    myModal.show();
+  });
+</script>
+{% endif %}
+
+{% endblock %}

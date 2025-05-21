@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static form_filters %}
+{% block title %}Lista de Usuarios{% endblock %}
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<h1>Lista de Usuarios</h1>
+
+<!-- Botón para abrir modal de creación -->
+<div class="d-flex justify-content-between mb-3">
+<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#usuarioModal">
+  Nuevo Usuario
+</button>
+<a href="{% url 'administracion' %}" class="btn btn-success">
+  ← Volver a Administración
+</a>
+</div>
+
+{% include "administration/users/modal_create_users.html" %}
+
+<ul class="list-group">
+    {% for usuario in usuarios %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+                {{ usuario.user.username }} ({{ usuario.empresa.nombre }})
+            </span>
+            <span>
+                <button type="button" class="btn btn-sm btn-primary me-2" data-bs-toggle="modal" data-bs-target="#editarUsuarioModal{{ usuario.pk }}">
+                    Editar
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUsuarioModal{{ usuario.pk }}">
+                  Eliminar
+                </button>
+            </span>
+        </li>
+        {% include "administration/users/modal_edit_users.html" with usuario=usuario %}
+        {% include "administration/users/modal_delete_users.html" with usuario=usuario %}
+    {% endfor %}
+</ul>
+{% if abrir_modal %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('usuarioModal'));
+    myModal.show();
+  });
+</script>
+{% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('togglePassword');
+    var passwordInput = document.getElementById('id_password');
+    var icon = document.getElementById('icon-eye');
+    if (toggle && passwordInput && icon) {
+      toggle.addEventListener('click', function() {
+        if (passwordInput.type === 'password') {
+          passwordInput.type = 'text';
+          icon.classList.remove('bi-eye');
+          icon.classList.add('bi-eye-slash');
+        } else {
+          passwordInput.type = 'password';
+          icon.classList.remove('bi-eye-slash');
+          icon.classList.add('bi-eye');
+        }
+      });
+    }
+  });
+</script>
+
+{% endblock %}

@@ -7,9 +7,9 @@ from webapp.views.auth_views import register
 from webapp.views.home_views import home
 from webapp.views.dashboard_views import dashboard
 from webapp.views.upload_views import upload_pdf, upload_pdf_private
-from webapp.service.empresas_crud import empresa_list, empresa_create, empresa_update, empresa_delete
-from webapp.service.servicio_crud import servicio_list, servicio_create, servicio_update, servicio_delete
-from webapp.service.usuario_crud import usuario_list, usuario_create, usuario_update, usuario_delete
+from webapp.service.company_crud import empresa_list, empresa_create, empresa_update, empresa_delete
+from webapp.service.service_crud import servicio_list, servicio_create, servicio_update, servicio_delete
+from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
 from webapp.views.profile_views import perfil_view
 from webapp.views.administration import administracion
 

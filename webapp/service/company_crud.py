@@ -10,7 +10,7 @@ def empresa_list(request):
     empresas = Empresa.objects.all()
     form = EmpresaForm()
     edit_forms = {empresa.pk: EmpresaForm(instance=empresa) for empresa in empresas}  # <-- esto es clave
-    return render(request, 'administration/empresa/lista_empresas.html', {
+    return render(request, 'administration/company/list_company.html', {
         'empresas': empresas,
         'form': form,
         'edit_forms': edit_forms,  # <-- esto es clave
@@ -28,7 +28,7 @@ def empresa_create(request):
             # Si hay errores, vuelve a la lista y muestra el modal abierto
             empresas = Empresa.objects.all()
             edit_forms = {empresa.pk: EmpresaForm(instance=empresa) for empresa in empresas}
-            return render(request, 'administration/empresa/lista_empresas.html', {
+            return render(request, 'administration/company/list_company.html', {
                 'empresas': empresas,
                 'form': form,  # este form tiene los errores
                 'edit_forms': edit_forms,
@@ -48,7 +48,7 @@ def empresa_update(request, pk):
             return redirect('lista_empresas')
     else:
         form = EmpresaForm(instance=empresa)
-    return render(request, 'administration/empresa/lista_empresas.html', {'form': form})
+    return render(request, 'administration/company/list_company.html', {'form': form})
 
 @rol_requerido(RolUsuario.SUPERADMIN)
 def empresa_delete(request, pk):
@@ -57,4 +57,4 @@ def empresa_delete(request, pk):
         empresa.delete()
         messages.success(request, "Empresa eliminada correctamente.")
         return redirect('lista_empresas')
-    return render(request, 'administration/empresa/lista_empresas.html', {'empresa': empresa})
+    return render(request, 'administration/company/list_company.html', {'empresa': empresa})

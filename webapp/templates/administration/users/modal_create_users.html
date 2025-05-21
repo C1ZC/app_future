@@ -1,0 +1,55 @@
+{% load static form_filters %}
+<!-- Modal de creación -->
+<div class="modal fade" id="usuarioModal" tabindex="-1" aria-labelledby="usuarioModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="post" action="{% url 'usuario_create' %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="usuarioModalLabel">Crear Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <h4>Datos de Usuario</h4>
+              <div class="mb-3">
+                <label for="{{ user_form.username.id_for_label }}">Usuario</label>
+                {{ user_form.username }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.email.id_for_label }}">Correo</label>
+                {{ user_form.email }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.first_name.id_for_label }}">Nombre</label>
+                {{ user_form.first_name }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.last_name.id_for_label }}">Apellido</label>
+                {{ user_form.last_name }}
+              </div>
+              <div class="mb-3">
+                <label for="{{ user_form.password.id_for_label }}">Contraseña</label>
+                <div class="input-group">
+                  {{ user_form.password }}
+                  <button type="button" class="btn btn-outline-secondary" id="togglePassword">
+                    <i class="bi bi-eye" id="icon-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <h4>Perfil</h4>
+              {{ perfil_form.as_p }}
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

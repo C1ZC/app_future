@@ -9,7 +9,7 @@ def servicio_list(request):
     servicios = Servicio.objects.all()
     form = ServicioForm()
     edit_forms = {servicio.pk: ServicioForm(instance=servicio) for servicio in servicios}
-    return render(request, 'administration/servicio/lista_servicios.html', {
+    return render(request, 'administration/service/list_service.html', {
         'servicios': servicios,
         'form': form,
         'edit_forms': edit_forms,
@@ -27,7 +27,7 @@ def servicio_create(request):
             # Si hay errores, vuelve a la lista y muestra el modal abierto
             servicios = Servicio.objects.all()
             edit_forms = {servicio.pk: ServicioForm(instance=servicio) for servicio in servicios}
-            return render(request, 'administration/servicio/lista_servicios.html', {
+            return render(request, 'administration/service/list_service.html', {
                 'servicios': servicios,
                 'form': form,  # este form tiene los errores
                 'edit_forms': edit_forms,
@@ -47,7 +47,7 @@ def servicio_update(request, pk):
             return redirect('lista_servicios')
     else:
         form = ServicioForm(instance=servicio)
-    return render(request, 'administration/servicio/lista_servicios.html', {'form': form})
+    return render(request, 'administration/service/list_service.html', {'form': form})
 
 @rol_requerido(RolUsuario.SUPERADMIN, RolUsuario.ADMIN_EMPRESA)
 def servicio_delete(request, pk):
