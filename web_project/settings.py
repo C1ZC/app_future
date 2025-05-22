@@ -121,3 +121,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # LOGIN URL
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+# Configuración para n8n
+N8N_WEBHOOK_URL = "https://tu-servidor-n8n.com/webhook/documento-nuevo"  # Cambia esta URL
+# Clave para autenticar solicitudes de n8n
+N8N_API_KEY = "tu_api_key_secreta_aqui"

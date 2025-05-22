@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Detalle de Documento{% endblock %}
+
+{% block content %}
+<div class="mb-3">
+    <a href="{% url 'documento_lista' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver a la Lista
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="card shadow mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Información del Documento</h5>
+                <span class="badge {% if documento.status == 'en_espera' %}bg-warning{% elif documento.status == 'procesando' %}bg-info{% elif documento.status == 'completado' %}bg-success{% elif documento.status == 'error' %}bg-danger{% endif %}">
+                    {{ documento.get_status_display }}
+                </span>
+            </div>
+            <div class="card-body">
+                <div class="mb-3 text-center">
+                    {% if "image/" in documento.tipo_archivo %}
+                        <img src="{{ documento.ruta_documento }}?width=600" class="img-fluid border rounded" alt="Vista previa" style="max-height: 300px;">
+                    {% elif documento.tipo_archivo == "application/pdf" %}
+                        <div class="border rounded p-2 text-center bg-light">
+                            <embed src="{{ documento.ruta_documento }}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="300px" />
+                            <p class="mt-2 text-muted" style="font-size: 0.9em;">Vista previa PDF</p>
+                        </div>
+                    {% else %}
+                        <div class="border rounded p-5 text-center text-muted">
+                            <i class="bi bi-file-earmark fs-1"></i>
+                            <p>Vista previa no disponible</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <table class="table table-sm">
+                    <tr>
+                        <th style="width: 35%">Nombre:</th>
+                        <td>{{ documento.nombre_documento }}</td>
+                    </tr>
+                    <tr>
+                        <th>Subido por:</th>
+                        <td>{{ documento.usuario.username }}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de carga:</th>
+                        <td>{{ documento.created_at|date:"d/m/Y H:i:s" }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tamaño:</th>
+                        <td>{{ documento.file_size|floatformat:2 }} KB</td>
+                    </tr>
+                    <tr>
+                        <th>Tipo:</th>
+                        <td>{{ documento.tipo_archivo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Páginas:</th>
+                        <td>{{ documento.cantidad_hojas }}</td>
+                    </tr>
+                    {% if documento.grupo %}
+                    <tr>
+                        <th>Grupo:</th>
+                        <td>{{ documento.grupo }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if documento.modulo %}
+                    <tr>
+                        <th>Módulo:</th>
+                        <td>{{ documento.modulo }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                
+                <div class="d-grid gap-2">
+                    <a href="{{ documento.ruta_documento }}" target="_blank" class="btn btn-primary">
+                        <i class="bi bi-download"></i> Descargar Documento
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Información Extraída</h5>
+            </div>
+            <div class="card-body">
+                {% if documento.json_data %}
+                    <div class="mb-4">
+                        <h6>Datos Estructurados</h6>
+                        <div class="border rounded bg-light p-2">
+                            <pre class="mb-0"><code>{{ json_data_pretty }}</code></pre>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if documento.ocr_data %}
+                    <div>
+                        <h6>Texto Extraído (OCR)</h6>
+                        <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                            {{ documento.ocr_data|linebreaks }}
+                        </div>
+                    </div>
+                {% endif %}
+                
+                {% if not documento.json_data and not documento.ocr_data %}
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-hourglass-split fs-1"></i>
+                        <p class="mt-2">Este documento aún no ha sido procesado.</p>
+                        <p>El procesamiento de texto e información estructurada se realizará en breve.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

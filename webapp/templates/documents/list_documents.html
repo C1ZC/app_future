@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_filters %}
+
+{% block title %}Documentos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Documentos</h1>
+    <a href="{% url 'documento_upload' %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Nuevo Documento
+    </a>
+</div>
+
+{% if messages %}
+<div class="mb-4">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-6">
+                <label for="{{ filter_form.texto_busqueda.id_for_label }}" class="form-label">{{ filter_form.texto_busqueda.label }}</label>
+                {{ filter_form.texto_busqueda|addclass:"form-control" }}
+            </div>
+            <div class="col-md-3">
+                <label for="{{ filter_form.estado.id_for_label }}" class="form-label">{{ filter_form.estado.label }}</label>
+                {{ filter_form.estado|addclass:"form-select" }}
+            </div>
+            <div class="col-md-3">
+                <label for="{{ filter_form.fecha_desde.id_for_label }}" class="form-label">{{ filter_form.fecha_desde.label }}</label>
+                {{ filter_form.fecha_desde|addclass:"form-control" }}
+            </div>
+            <div class="col-md-3">
+                <label for="{{ filter_form.fecha_hasta.id_for_label }}" class="form-label">{{ filter_form.fecha_hasta.label }}</label>
+                {{ filter_form.fecha_hasta|addclass:"form-control" }}
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search"></i> Filtrar
+                </button>
+                <a href="{% url 'documento_lista' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Limpiar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Creación</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Tamaño</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documentos %}
+                    <tr>
+                        <td>{{ doc.nombre_documento }}</td>
+                        <td>{{ doc.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>{{ doc.tipo_archivo }}</td>
+                        <td>
+                            {% if doc.status == 'en_espera' %}
+                                <span class="badge bg-warning">En espera</span>
+                            {% elif doc.status == 'procesando' %}
+                                <span class="badge bg-info">Procesando</span>
+                            {% elif doc.status == 'completado' %}
+                                <span class="badge bg-success">Completado</span>
+                            {% elif doc.status == 'error' %}
+                                <span class="badge bg-danger">Error</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ doc.file_size|floatformat:2 }} KB</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'documento_detalle' doc.id %}" class="btn btn-outline-primary" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ doc.ruta_documento }}" target="_blank" class="btn btn-outline-success" title="Descargar">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <p class="text-muted mb-0">No hay documentos disponibles</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if documentos.has_other_pages %}
+        <nav aria-label="Paginación de documentos">
+            <ul class="pagination justify-content-center mt-4">
+                {% if documentos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Primera">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.previous_page_number }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in documentos.paginator.page_range %}
+                    {% if documentos.number == i %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% elif i > documentos.number|add:'-3' and i < documentos.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if documentos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.next_page_number }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.paginator.num_pages }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Última">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

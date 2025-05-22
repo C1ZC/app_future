@@ -12,6 +12,7 @@ from webapp.service.service_crud import servicio_list, servicio_create, servicio
 from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
 from webapp.views.profile_views import perfil_view
 from webapp.views.administration import administracion
+from webapp.views.document_views import documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,14 +30,19 @@ urlpatterns = [
     path('servicios/', servicio_list, name='lista_servicios'),
     path('servicios/nuevo/', servicio_create, name='servicio_create'),
     path('servicios/<int:pk>/editar/', servicio_update, name='servicio_update'),
-    path('servicios/<int:pk>/eliminar/',
-         servicio_delete, name='servicio_delete'),
+    path('servicios/<int:pk>/eliminar/', servicio_delete, name='servicio_delete'),
     path('usuarios/', usuario_list, name='lista_usuarios'),
     path('usuarios/nuevo/', usuario_create, name='usuario_create'),
     path('usuarios/<int:pk>/editar/', usuario_update, name='usuario_update'),
     path('usuarios/<int:pk>/eliminar/', usuario_delete, name='usuario_delete'),
     path('perfil/', perfil_view, name='perfil'),
     path('administracion/', administracion, name='administracion'),
+    # URLs para documentos
+    path('documentos/', documento_lista, name='documento_lista'),
+    path('documentos/upload/', documento_upload, name='documento_upload'),
+    path('documentos/<uuid:doc_id>/', documento_detalle, name='documento_detalle'),
+    path('api/documentos/webhook/', documento_webhook, name='documento_webhook'),
+    path('api/documentos/pendientes/', documento_pendientes, name='documento_pendientes'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
