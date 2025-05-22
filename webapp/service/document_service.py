@@ -189,6 +189,7 @@ class DocumentoService:
                 "cantidad_hojas": documento.cantidad_hojas,
                 "created_at": documento.created_at.isoformat(),
                 "empresa_id": str(documento.empresa.id) if documento.empresa else None,
+                "servicio_id": str(documento.servicio.id) if documento.servicio else None,
                 "usuario_id": documento.usuario.id,
                 "status": documento.status
             }

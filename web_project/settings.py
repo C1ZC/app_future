@@ -26,12 +26,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',  # Añadir esta línea
     'webapp',  # Your custom app
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Añadir esta línea
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -123,6 +125,21 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Configuración para n8n
-N8N_WEBHOOK_URL = "https://tu-servidor-n8n.com/webhook/documento-nuevo"  # Cambia esta URL
+# Cambia esta URL
+N8N_WEBHOOK_URL = "http://localhost:5678/webhook-test/d17344cb-d1fa-4f64-bdef-78651c11094d"
 # Clave para autenticar solicitudes de n8n
-N8N_API_KEY = "tu_api_key_secreta_aqui"
+N8N_API_KEY = "4tVC1zrNwl9lD3xM5JO8ugF7DYshwEd-Xy2P0sABCDE"
+
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-api-key',  # Añadir este header específicamente
+]

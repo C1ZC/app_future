@@ -190,6 +190,7 @@ def documento_pendientes(request):
                 'cantidad_hojas': doc.cantidad_hojas,
                 'created_at': doc.created_at.isoformat(),
                 'empresa_id': str(doc.empresa.id) if doc.empresa else None,
+                'servicio_id': str(doc.servicio.id) if doc.servicio else None,
                 'usuario_id': doc.usuario.id if doc.usuario else None
             })
         
