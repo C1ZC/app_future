@@ -170,3 +170,8 @@
         justify-content: center;
     }
 }
+
+/* Destacar servicios */
+.service-menu {
+    border-left: 3px solid var(--accent-color);
+}

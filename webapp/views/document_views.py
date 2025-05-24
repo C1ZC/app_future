@@ -48,6 +48,11 @@ def documento_lista(request):
     # Inicializar formulario de filtro y query base
     filter_form = DocumentoFilterForm(request.GET)
     query = Q()
+
+    # Filtrar por servicio si se proporciona en la URL
+    servicio_id = request.GET.get('servicio')
+    if servicio_id:
+        query &= Q(servicio_id=servicio_id)
     
     # Aplicar filtros del usuario actual según rol
     if not request.user.is_superuser:
