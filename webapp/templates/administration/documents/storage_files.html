@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_filters %}
+
+{% block title %}Gestión de Archivos en Storage{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestión de Archivos en Storage</h1>
+    <div>
+        <a href="{% url 'admin_documentos' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a Administración de Documentos
+        </a>
+    </div>
+</div>
+
+{% if messages %}
+<div class="mb-4">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="card-title mb-0">Resumen de Archivos</h5>
+    </div>
+    <div class="card-body">
+        <div class="row text-center">
+            <div class="col-md-6">
+                <h3>{{ total_archivos }}</h3>
+                <p>Total de archivos en storage</p>
+            </div>
+            <div class="col-md-6">
+                <h3 class="{% if total_huerfanos > 0 %}text-danger{% endif %}">{{ total_huerfanos }}</h3>
+                <p>Archivos huérfanos (sin referencia en base de datos)</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-header bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">Archivos en Storage</h5>
+            <div>
+                <span class="badge bg-warning me-2">Huérfano</span> = Sin referencia en base de datos
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        {% if archivos %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre del archivo</th>
+                        <th>Tamaño</th>
+                        <th>Fecha de creación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for archivo in archivos %}
+                    <tr {% if archivo.huerfano %}class="table-warning"{% endif %}>
+                        <td>{{ archivo.name }}</td>
+                        <td>{{ archivo.metadata.size|filesizeformat }}</td>
+                        <td>{{ archivo.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if archivo.huerfano %}
+                                <span class="badge bg-warning">Huérfano</span>
+                            {% else %}
+                                <span class="badge bg-success">Referenciado</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ supabase_url }}/storage/v1/object/public/documents/{{ archivo.name }}" 
+                                   class="btn btn-outline-primary" target="_blank" title="Ver archivo">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger eliminar-archivo" 
+                                    data-nombre="{{ archivo.name }}" 
+                                    title="Eliminar del storage">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if archivos.has_other_pages %}
+        <nav aria-label="Paginación de archivos">
+            <ul class="pagination justify-content-center mt-4">
+                {% if archivos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="Primera">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ archivos.previous_page_number }}" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in archivos.paginator.page_range %}
+                    {% if archivos.number == i %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% elif i > archivos.number|add:'-3' and i < archivos.number|add:'3' %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if archivos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ archivos.next_page_number }}" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ archivos.paginator.num_pages }}" aria-label="Última">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+        
+        {% else %}
+        <div class="text-center py-5">
+            <p class="text-muted mb-0">No hay archivos en el storage</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar el archivo <strong id="nombre-archivo"></strong> del storage?</p>
+        <p class="text-danger">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmar-eliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Eliminar archivo individual
+    const btnsEliminar = document.querySelectorAll('.eliminar-archivo');
+    const modalEliminar = new bootstrap.Modal(document.getElementById('eliminarModal'));
+    const nombreArchivoEl = document.getElementById('nombre-archivo');
+    let archivoActual = null;
+    
+    btnsEliminar.forEach(btn => {
+        btn.addEventListener('click', function() {
+            archivoActual = this.dataset.nombre;
+            nombreArchivoEl.textContent = archivoActual;
+            modalEliminar.show();
+        });
+    });
+    
+    document.getElementById('confirmar-eliminar').addEventListener('click', function() {
+        if (!archivoActual) return;
+        
+        // Enviar solicitud para eliminar
+        fetch(`/administration/documentos/storage/${encodeURIComponent(archivoActual)}/eliminar/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error}`);
+        })
+        .finally(() => {
+            modalEliminar.hide();
+        });
+    });
+    
+    // Función auxiliar para obtener cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %}

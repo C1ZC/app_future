@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% load static %}
+{% load form_filters %}
+
+{% block title %}Administración de Documentos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-4">
+    <h1>Administración de Documentos</h1>
+    <div class="d-flex flex-column gap-2">
+        <a href="{% url 'administracion' %}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a Administración
+        </a>
+        <a href="{% url 'listar_archivos_storage' %}" class="btn btn-outline-primary">
+            <i class="bi bi-hdd"></i> Gestionar Archivos Storage
+        </a>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#limpiarModal">
+            <i class="bi bi-trash"></i> Limpiar Todos los Documentos
+        </button>
+    </div>
+</div>
+
+{% if messages %}
+<div class="mb-4">
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="card shadow mb-4">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Filtros</h5>
+    </div>
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-5">
+                <label for="empresa" class="form-label">Empresa</label>
+                <select name="empresa" id="empresa" class="form-select">
+                    <option value="">Todas las empresas</option>
+                    {% for empresa in empresas %}
+                        <option value="{{ empresa.id }}" {% if empresa_seleccionada == empresa.id|stringformat:"s" %}selected{% endif %}>
+                            {{ empresa.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-5">
+                <label for="servicio" class="form-label">Servicio</label>
+                <select name="servicio" id="servicio" class="form-select">
+                    <option value="">Todos los servicios</option>
+                    {% for servicio in servicios %}
+                        <option value="{{ servicio.id }}" {% if servicio_seleccionado == servicio.id|stringformat:"s" %}selected{% endif %}>
+                            {{ servicio.nombre }} ({{ servicio.empresa.nombre }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-filter"></i> Filtrar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Empresa</th>
+                        <th>Servicio</th>
+                        <th>Usuario</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Hojas</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doc in documentos %}
+                    <tr>
+                        <td>{{ doc.nombre_documento }}</td>
+                        <td>{{ doc.empresa.nombre|default:"--" }}</td>
+                        <td>{{ doc.servicio.nombre|default:"--" }}</td>
+                        <td>{{ doc.usuario.username|default:"--" }}</td>
+                        <td>{{ doc.created_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if doc.status == 'en_espera' %}
+                                <span class="badge bg-warning">En espera</span>
+                            {% elif doc.status == 'procesando' %}
+                                <span class="badge bg-info">Procesando</span>
+                            {% elif doc.status == 'completado' %}
+                                <span class="badge bg-success">Completado</span>
+                            {% elif doc.status == 'error' %}
+                                <span class="badge bg-danger">Error</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ doc.cantidad_hojas }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{% url 'documento_detalle' doc.id %}" class="btn btn-outline-primary" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ doc.ruta_documento }}" target="_blank" class="btn btn-outline-success" title="Descargar">
+                                    <i class="bi bi-download"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-danger eliminar-documento" 
+                                    data-id="{{ doc.id }}" 
+                                    data-nombre="{{ doc.nombre_documento }}" 
+                                    title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-4">
+                            <p class="text-muted mb-0">No hay documentos disponibles</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if documentos.has_other_pages %}
+        <nav aria-label="Paginación de documentos">
+            <ul class="pagination justify-content-center mt-4">
+                {% if documentos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}" aria-label="Primera">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.previous_page_number }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}" aria-label="Anterior">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% for i in documentos.paginator.page_range %}
+                    {% if documentos.number == i %}
+                        <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% elif i > documentos.number|add:'-3' and i < documentos.number|add:'3' %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ i }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if documentos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.next_page_number }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}" aria-label="Siguiente">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ documentos.paginator.num_pages }}{% if request.GET.empresa %}&empresa={{ request.GET.empresa }}{% endif %}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}" aria-label="Última">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal de confirmación de eliminación -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="eliminarModalLabel">Confirmar Eliminación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Estás seguro de que deseas eliminar el documento <strong id="nombre-documento"></strong>?</p>
+        <p class="text-danger">Esta acción no se puede deshacer.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmar-eliminar">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación para limpiar todos los documentos -->
+<div class="modal fade" id="limpiarModal" tabindex="-1" aria-labelledby="limpiarModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="limpiarModalLabel">Confirmación</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-danger">
+          <h4 class="alert-heading">¡Advertencia!</h4>
+          <p>Estás a punto de eliminar <strong>TODOS los documentos</strong> del sistema.</p>
+          <p>Esta acción eliminará:</p>
+          <ul>
+            <li>Todos los registros de documentos en la base de datos</li>
+            <li>Todos los archivos almacenados en Supabase</li>
+            <li>Todos los vectores y datos extraídos</li>
+          </ul>
+          <p class="mb-0"><strong>Esta acción NO se puede deshacer.</strong></p>
+        </div>
+        <p>Escribe "CONFIRMAR" en el campo de abajo para continuar:</p>
+        <input type="text" id="confirmacion-texto" class="form-control" placeholder="CONFIRMAR">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-danger" id="confirmar-limpiar" disabled>Eliminar Todos los Documentos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Eliminar documento individual
+    const btnsEliminar = document.querySelectorAll('.eliminar-documento');
+    const modalEliminar = new bootstrap.Modal(document.getElementById('eliminarModal'));
+    const nombreDocumentoEl = document.getElementById('nombre-documento');
+    let documentoIdActual = null;
+    
+    btnsEliminar.forEach(btn => {
+        btn.addEventListener('click', function() {
+            documentoIdActual = this.dataset.id;
+            nombreDocumentoEl.textContent = this.dataset.nombre;
+            modalEliminar.show();
+        });
+    });
+    
+    document.getElementById('confirmar-eliminar').addEventListener('click', function() {
+        if (!documentoIdActual) return;
+        
+        // Enviar solicitud para eliminar
+        fetch(`/administration/documentos/${documentoIdActual}/eliminar/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error}`);
+        })
+        .finally(() => {
+            modalEliminar.hide();
+        });
+    });
+    
+    // Limpiar todos los documentos
+    const confirmacionTexto = document.getElementById('confirmacion-texto');
+    const btnConfirmarLimpiar = document.getElementById('confirmar-limpiar');
+    
+    confirmacionTexto.addEventListener('input', function() {
+        btnConfirmarLimpiar.disabled = this.value !== 'CONFIRMAR';
+    });
+    
+    btnConfirmarLimpiar.addEventListener('click', function() {
+        if (confirmacionTexto.value !== 'CONFIRMAR') return;
+        
+        // Enviar solicitud para limpiar
+        fetch('/administration/documentos/limpiar/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error}`);
+        });
+    });
+    
+    // Función auxiliar para obtener cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+</script>
+{% endblock %}

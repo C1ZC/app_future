@@ -3,6 +3,7 @@ from django.urls import include, path
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
+from webapp.views.admin_documents import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
 from webapp.views.auth_views import register
 from webapp.views.home_views import home
 from webapp.views.dashboard_views import dashboard
@@ -44,6 +45,16 @@ urlpatterns = [
     path('api/documentos/webhook/', documento_webhook, name='documento_webhook'),
     path('api/documentos/update_fragmentos/', documento_update_fragmentos, name='documento_update_fragmentos'),
     path('api/documentos/pendientes/', documento_pendientes, name='documento_pendientes'),
+    path('administration/documentos/', admin_documentos, name='admin_documentos'),
+    path('administration/documentos/<uuid:doc_id>/eliminar/',
+         eliminar_documento, name='eliminar_documento'),
+    path('administration/documentos/limpiar/',
+         limpiar_documentos, name='limpiar_documentos'),
+    path('administration/documentos/storage/', listar_archivos_storage,
+         name='listar_archivos_storage'),
+    path('administration/documentos/storage/<str:filename>/eliminar/',
+         eliminar_archivo_storage, name='eliminar_archivo_storage'),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

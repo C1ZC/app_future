@@ -127,6 +127,7 @@ LOGOUT_REDIRECT_URL = 'home'
 # Configuración para n8n
 # Clave para autenticar solicitudes de n8n
 N8N_API_KEY = os.getenv("N8N_API_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
 
 CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
 CORS_ALLOW_HEADERS = [
