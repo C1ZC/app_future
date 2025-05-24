@@ -1,3 +1,4 @@
+from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -157,7 +158,7 @@ def documento_webhook(request):
         documento.status = status
         documento.save()
         
-        return JsonResponse({'success': True, 'documento_id': str(doc_id)})
+        return JsonResponse({'success': True, 'documento_id': str(doc_id), 'data': data})
         
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
@@ -196,5 +197,53 @@ def documento_pendientes(request):
         
         return JsonResponse({'documentos': docs_list})
     
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@csrf_exempt
+def documento_update_fragmentos(request):
+    """
+    Endpoint para actualizar la tabla documents:
+    - Coloca el document_id en las filas donde está NULL,
+      solo la cantidad de veces indicada por cantidad_fragmentos.
+    - Luego actualiza el modelo Documento con ese conteo.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+
+    api_key = request.headers.get('X-Api-Key')
+    if not api_key or api_key != settings.N8N_API_KEY:
+        return JsonResponse({'error': 'No autorizado'}, status=401)
+
+    try:
+        if request.content_type == 'application/json':
+            data = json.loads(request.body)
+        else:
+            data = request.POST
+        doc_id = data.get('document_id')
+        cantidad_fragmentos = data.get('cantidad_fragmentos')
+        if not doc_id or cantidad_fragmentos is None:
+            return JsonResponse({'error': 'Faltan parámetros'}, status=400)
+
+        # Actualizar las filas en documents donde document_id IS NULL
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE documents
+                SET document_id = %s
+                WHERE id IN (
+                    SELECT id FROM documents
+                    WHERE document_id IS NULL
+                    ORDER BY id
+                    LIMIT %s
+                )
+            """, [doc_id, cantidad_fragmentos])
+
+        # Actualizar el modelo Documento
+        documento = Documento.objects.get(pk=doc_id)
+        documento.cantidad_fragmentos = cantidad_fragmentos
+        documento.save()
+
+        return JsonResponse({'success': True, 'documento_id': doc_id, 'cantidad_fragmentos': cantidad_fragmentos})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)

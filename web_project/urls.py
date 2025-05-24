@@ -12,7 +12,7 @@ from webapp.service.service_crud import servicio_list, servicio_create, servicio
 from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
 from webapp.views.profile_views import perfil_view
 from webapp.views.administration import administracion
-from webapp.views.document_views import documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes
+from webapp.views.document_views import documento_update_fragmentos, documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,6 +42,7 @@ urlpatterns = [
     path('documentos/upload/', documento_upload, name='documento_upload'),
     path('documentos/<uuid:doc_id>/', documento_detalle, name='documento_detalle'),
     path('api/documentos/webhook/', documento_webhook, name='documento_webhook'),
+    path('api/documentos/update_fragmentos/', documento_update_fragmentos, name='documento_update_fragmentos'),
     path('api/documentos/pendientes/', documento_pendientes, name='documento_pendientes'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
