@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=(ji0qhb)1=*9=mc18h^b@53218&^qkp^f8wmyl%z3&wpwdjhq'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,10 +125,8 @@ LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
 # Configuración para n8n
-# Cambia esta URL
-N8N_WEBHOOK_URL = "http://localhost:5678/webhook-test/0cbe616f-8cb3-43d5-9a81-a380f8537ccb"
 # Clave para autenticar solicitudes de n8n
-N8N_API_KEY = "4tVC1zrNwl9lD3xM5JO8ugF7DYshwEd-Xy2P0sABCDE"
+N8N_API_KEY = os.getenv("N8N_API_KEY")
 
 CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
 CORS_ALLOW_HEADERS = [

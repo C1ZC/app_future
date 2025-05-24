@@ -150,9 +150,7 @@ class DocumentoService:
                 if empresa:
                     DocumentoService.actualizar_licencia(empresa, cantidad_hojas)
                 
-                # Notificar a n8n (opcional)
-                DocumentoService.notificar_documento_nuevo(documento)
-                
+
                 return True, documento
             
             except Exception as e:
@@ -160,61 +158,3 @@ class DocumentoService:
                 
         except Exception as e:
             return False, f"Error general: {str(e)}"
-
-    @staticmethod
-    def notificar_documento_nuevo(documento):
-        """
-        Envía un webhook a n8n para iniciar el procesamiento
-        """
-        import requests
-        import json
-        from django.conf import settings
-        
-        # URL del webhook en n8n (configúralo en settings.py o .env)
-        # Por ejemplo: N8N_WEBHOOK_URL = "https://n8n.tudominio.com/webhook/documento-nuevo"
-        webhook_url = getattr(settings, 'N8N_WEBHOOK_URL', None)
-        
-        if not webhook_url:
-            print("No se ha configurado N8N_WEBHOOK_URL en settings.py")
-            return False
-            
-        try:
-            # Preparar los datos a enviar
-            payload = {
-                "documento_id": str(documento.id),
-                "nombre_documento": documento.nombre_documento,
-                "nombre_unico": documento.nombre_unico,
-                "ruta_documento": documento.ruta_documento,
-                "tipo_archivo": documento.tipo_archivo,
-                "cantidad_hojas": documento.cantidad_hojas,
-                "created_at": documento.created_at.isoformat(),
-                "empresa_id": str(documento.empresa.id) if documento.empresa else None,
-                "servicio_id": str(documento.servicio.id) if documento.servicio else None,
-                "usuario_id": documento.usuario.id,
-                "status": documento.status
-            }
-            
-            # Enviar la solicitud POST a n8n
-            headers = {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-            
-            response = requests.post(
-                webhook_url, 
-                data=json.dumps(payload),
-                headers=headers,
-                timeout=10  # Timeout de 10 segundos
-            )
-            
-            # Verificar la respuesta
-            if response.status_code >= 200 and response.status_code < 300:
-                print(f"Notificación enviada correctamente a n8n. Respuesta: {response.text}")
-                return True
-            else:
-                print(f"Error al enviar notificación: {response.status_code} - {response.text}")
-                return False
-                
-        except Exception as e:
-            print(f"Error al notificar a n8n: {str(e)}")
-            return False
