@@ -7,7 +7,6 @@ from webapp.views.admin_documents import admin_documentos, eliminar_documento, l
 from webapp.views.auth_views import register
 from webapp.views.home_views import home
 from webapp.views.dashboard_views import dashboard
-from webapp.views.upload_views import upload_pdf, upload_pdf_private
 from webapp.service.company_crud import empresa_list, empresa_create, empresa_update, empresa_delete
 from webapp.service.service_crud import servicio_list, servicio_create, servicio_update, servicio_delete
 from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
@@ -22,8 +21,6 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
     path('dashboard/', dashboard, name='dashboard'),
-    path('upload-pdf/', upload_pdf, name='upload_pdf'),
-    path('upload-pdf-private/', upload_pdf_private, name='upload_pdf_private'),
     path('empresas/', empresa_list, name='lista_empresas'),
     path('empresas/nueva/', empresa_create, name='empresa_create'),
     path('empresas/<int:pk>/editar/', empresa_update, name='empresa_update'),
