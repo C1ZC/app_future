@@ -2,13 +2,15 @@ import os
 import uuid
 import mimetypes
 from io import BytesIO
-from PIL import Image
 import PyPDF2
 from webapp.models import Documento, ConfigTenant, DocumentoStatus
 from webapp.service.supabase_client import supabase_public
 from django.utils.text import slugify
+from docx import Document as DocxDocument
+import openpyxl
 
-ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg', 'png', 'gif', 'txt'}
+ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg',
+                      'png', 'gif', 'txt', 'docx', 'xlsx'}
 SUPABASE_BUCKET = "documents"
 
 class DocumentoService:
@@ -93,33 +95,41 @@ class DocumentoService:
             
             # Contar páginas/hojas
             cantidad_hojas = 1
-            if filename.endswith('.pdf'):
+            ext = filename.lower().rsplit('.', 1)[-1]
+            if ext == 'pdf':
                 try:
                     with BytesIO(file_bytes) as pdf_bytes:
                         pdf_reader = PyPDF2.PdfReader(pdf_bytes)
                         cantidad_hojas = len(pdf_reader.pages)
                 except Exception as e:
                     print(f"Error contando páginas del PDF: {str(e)}")
-            
-            # Convertir imagen a PDF si es necesario
-            if tipo_archivo.startswith('image/') and not filename.endswith('.pdf'):
+            elif ext == 'txt':
                 try:
-                    img_bytes = BytesIO(file_bytes)
-                    img = Image.open(img_bytes)
-                    
-                    # Guardar como PDF
-                    pdf_bytes = BytesIO()
-                    img.save(pdf_bytes, 'PDF')
-                    pdf_bytes.seek(0)
-                    
-                    # Actualizar variables
-                    file_bytes = pdf_bytes.getvalue()
-                    nombre_base = os.path.splitext(nombre_unico)[0]
-                    nombre_unico = f"{nombre_base}.pdf"
-                    tipo_archivo = "application/pdf"
+                    text = file_bytes.decode('utf-8', errors='ignore')
+                    lineas = text.splitlines()
+                    # 50 líneas por hoja (ajustable)
+                    cantidad_hojas = max(1, len(lineas) // 50)
                 except Exception as e:
-                    return False, f"Error convirtiendo imagen a PDF: {str(e)}"
-            
+                    print(f"Error contando hojas en TXT: {str(e)}")
+            elif ext == 'docx':
+                try:
+                    with BytesIO(file_bytes) as docx_bytes:
+                        doc = DocxDocument(docx_bytes)
+                        # Cuenta saltos de página (estimación)
+                        page_breaks = sum(
+                            1 for p in doc.paragraphs if 'pageBreak' in p._element.xml)
+                        cantidad_hojas = max(1, page_breaks + 1)
+                except Exception as e:
+                    print(f"Error contando hojas en DOCX: {str(e)}")
+            elif ext == 'xlsx':
+                try:
+                    with BytesIO(file_bytes) as xlsx_bytes:
+                        wb = openpyxl.load_workbook(xlsx_bytes, read_only=True)
+                        cantidad_hojas = len(wb.sheetnames)
+                except Exception as e:
+                    print(f"Error contando hojas en XLSX: {str(e)}")
+            # Para imágenes y otros, cantidad_hojas queda en 1
+
             # Subir archivo a Supabase
             try:
                 res = supabase_public.storage.from_(SUPABASE_BUCKET).upload(
