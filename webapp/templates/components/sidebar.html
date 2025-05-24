@@ -55,8 +55,11 @@
           </button>
           <ul class="sub-menu">
             <div>
+              <!-- Opción de Documentos común para TODOS los servicios -->
+              <li><a href="{% url 'documento_lista' %}?servicio={{ servicio.id }}">Documentos</a></li>
+              
+              <!-- Opciones específicas según el tipo de servicio -->
               {% if servicio.nombre == "Control De Calidad" %}
-                <li><a href="#">Documentos QA</a></li>
                 <li><a href="#">Reportes QA</a></li>
                 <li><a href="#">Incidencias</a></li>
               {% elif servicio.nombre == "Desarrollo" %}
@@ -68,8 +71,7 @@
                 <li><a href="#">Analytics</a></li>
                 <li><a href="#">Social Media</a></li>
               {% else %}
-                <!-- Opciones genéricas para cualquier otro servicio -->
-                <li><a href="{% url 'documento_lista' %}?servicio={{ servicio.id }}">Documentos</a></li>
+                <!-- Opciones genéricas adicionales para servicios sin configuración específica -->
                 <li><a href="#">Tareas</a></li>
                 <li><a href="#">Reportes</a></li>
               {% endif %}
