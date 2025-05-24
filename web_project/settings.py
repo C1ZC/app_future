@@ -126,7 +126,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Configuración para n8n
 # Cambia esta URL
-N8N_WEBHOOK_URL = "http://localhost:5678/webhook-test/d17344cb-d1fa-4f64-bdef-78651c11094d"
+N8N_WEBHOOK_URL = "http://localhost:5678/webhook-test/0cbe616f-8cb3-43d5-9a81-a380f8537ccb"
 # Clave para autenticar solicitudes de n8n
 N8N_API_KEY = "4tVC1zrNwl9lD3xM5JO8ugF7DYshwEd-Xy2P0sABCDE"
 
