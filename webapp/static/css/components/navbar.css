@@ -13,48 +13,66 @@
 .navbar .navbar-brand {
     color: var(--navbar-text) !important;
 }
+
 .navbar .nav-link.active,
 .navbar .nav-link:focus,
 .navbar .nav-link:hover {
     color: var(--primary) !important;
 }
 
-[data-theme="dark"] .nav-model,
-[data-theme="dark"] .navbar,
-[data-theme="dark"] .nav-link,
-[data-theme="dark"] .navbar-brand,
-[data-theme="dark"] .dropdown-menu {
-    background: var(--navbar-bg) !important;
-    color: var(--navbar-text) !important;
+/* Dropdown menu */
+.dropdown-menu {
+    border: 1px solid var(--line-clr);
 }
 
-/* Corregir color del botón cerrar sesión en modo dark */
+.dropdown-menu .dropdown-item {
+    color: var(--text) !important;
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    color: var(--accent-color) !important;
+}
+
+/* Dark mode para dropdown */
+[data-theme="dark"] .dropdown-menu {
+    background-color: #23272b !important;
+    border-color: var(--line-clr) !important;
+}
+
 [data-theme="dark"] .dropdown-menu .dropdown-item {
     color: var(--navbar-text) !important;
-    background: var(--navbar-bg) !important;
-}
-[data-theme="dark"] .dropdown-menu .dropdown-item:hover,
-[data-theme="dark"] .dropdown-menu .dropdown-item:focus {
-    color: var(--accent-color) !important;
-    background: var(--line-clr) !important;
 }
 
+[data-theme="dark"] .dropdown-menu .dropdown-item:hover,
+[data-theme="dark"] .dropdown-menu .dropdown-item:focus {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: var(--accent-color) !important;
+}
+
+/* Tema toggle button */
 [data-theme="light"] #theme-toggle svg {
     fill: var(--icon-color-light);
 }
+
 [data-theme="dark"] #theme-toggle svg {
     fill: var(--icon-color-light);
 }
+
 #theme-toggle svg:last-child {
     display: none;
 }
+
 [data-theme="dark"] #theme-toggle svg:first-child {
     display: none;
 }
+
 [data-theme="dark"] #theme-toggle svg:last-child {
     display: block;
 }
 
+/* Botones y elementos de la barra de navegación */
 .nav-model .button {
     border: none;
     padding: .8em 2em;
@@ -66,9 +84,11 @@
     font-weight: 500;
     cursor: pointer;
 }
+
 .nav-model .cta-button {
     background-color: var(--accent-color);
 }
+
 #theme-toggle {
     width: 50px;
     padding: 0;
@@ -78,6 +98,13 @@
     justify-content: center;
     align-items: center;
 }
+
 .nav-model .navbar-nav {
     padding-left: 270px;
+}
+
+@media (max-width: 992px) {
+    .nav-model .navbar-nav {
+        padding-left: 0;
+    }
 }

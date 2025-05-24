@@ -28,8 +28,10 @@
     margin-bottom: 16px;
 }
 
-#sidebar ul li.active a {
+#sidebar ul li.active a, 
+#sidebar ul li.active .dropdown-btn {
     color: var(--accent-color);
+    font-weight: 500;
 }
 
 #sidebar a,
@@ -69,6 +71,11 @@
     color: var(--sidebar-bg);
 }
 
+#sidebar a:hover svg,
+#sidebar .dropdown-btn:hover svg {
+    fill: var(--sidebar-bg);
+}
+
 #sidebar .sub-menu {
     display: grid;
     grid-template-rows: 0fr;
@@ -88,7 +95,7 @@
 }
 
 .rotate svg:last-child {
-    rotate: 180deg;
+    transform: rotate(180deg);
 }
 
 #sidebar .sub-menu a {
@@ -106,9 +113,40 @@
 
 #toggle-btn:hover {
     background-color: var(--accent-color);
-    color: var(--sidebar-bg);
 }
 
+#toggle-btn:hover svg {
+    fill: var(--sidebar-bg);
+}
+
+/* Destacar elementos activos en dark mode */
+[data-theme="dark"] #sidebar li.active a, 
+[data-theme="dark"] #sidebar li.active .dropdown-btn {
+    background-color: var(--accent-color);
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] #sidebar li.active a svg, 
+[data-theme="dark"] #sidebar li.active .dropdown-btn svg {
+    fill: #ffffff !important;
+}
+
+/* Submenu en dark mode */
+[data-theme="dark"] #sidebar .sub-menu {
+    background-color: #181a1b !important;
+}
+
+[data-theme="dark"] #sidebar .sub-menu a:hover {
+    background-color: var(--accent-color) !important;
+    color: #fff !important;
+}
+
+/* Estilo para los servicios */
+.service-menu {
+    border-left: 3px solid var(--accent-color);
+}
+
+/* Adaptación para móviles */
 @media(max-width: 800px) {
     #sidebar {
         height: 60px;
@@ -121,6 +159,7 @@
         bottom: 0;
         left: 0;
     }
+    
     #sidebar > ul {
         padding: 0;
         display: grid;
@@ -129,9 +168,11 @@
         align-items: center;
         overflow-x: scroll;
     }
+    
     #sidebar ul li {
         height: 100%;
     }
+    
     #sidebar ul a,
     #sidebar ul .dropdown-btn {
         width: 60px;
@@ -140,11 +181,13 @@
         border-radius: 0;
         justify-content: center;
     }
+    
     #sidebar ul li span,
     #sidebar ul li:first-child,
     .dropdown-btn svg:last-child {
         display: none;
     }
+    
     #sidebar ul li .sub-menu.show {
         position: fixed;
         bottom: 60px;
@@ -157,21 +200,25 @@
         display: flex;
         justify-content: center;
     }
+    
     #sidebar ul li .sub-menu.show > div {
         overflow-x: auto;
     }
+    
     #sidebar ul li .sub-menu.show li {
         display: inline-flex;
     }
+    
     #sidebar ul li .sub-menu.show a {
         box-sizing: border-box;
         padding: 1em;
         width: auto;
         justify-content: center;
+        color: var(--sidebar-bg);
     }
-}
-
-/* Destacar servicios */
-.service-menu {
-    border-left: 3px solid var(--accent-color);
+    
+    [data-theme="dark"] #sidebar ul li .sub-menu.show {
+        background-color: #2a2e32;
+        border-color: var(--line-clr);
+    }
 }
