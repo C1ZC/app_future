@@ -1,0 +1,40 @@
+<div class="modal fade" id="deleteLicenciaModal{{ periodo.pk }}" tabindex="-1" aria-labelledby="deleteLicenciaModalLabel{{ periodo.pk }}" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{% url 'eliminar_licencia' periodo.pk %}?modal=true">
+        {% csrf_token %}
+        <input type="hidden" name="modal" value="true">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteLicenciaModalLabel{{ periodo.pk }}">Eliminar Periodo de Licencia</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="alert alert-warning">
+            <strong>Importante:</strong> Esta acción no se puede deshacer. Considera desactivar el periodo en lugar de eliminarlo si solo quieres que no se use temporalmente.
+          </div>
+          
+          <div class="card bg-light mb-3">
+            <div class="card-body">
+              <h5 class="card-title">{{ periodo.empresa.nombre }}</h5>
+              <p class="card-text mb-1">
+                <strong>Tipo:</strong> {{ periodo.get_tipo_periodo_display }}
+              </p>
+              <p class="card-text mb-1">
+                <strong>Periodo:</strong> {{ periodo.fecha_inicio|date:"d/m/Y" }} - {{ periodo.fecha_fin|date:"d/m/Y" }}
+              </p>
+              <p class="card-text mb-1">
+                <strong>Límites:</strong> {{ periodo.hojas_licencia_periodo }} hojas / {{ periodo.storage_licencia_mb_periodo }} MB
+              </p>
+            </div>
+          </div>
+          
+          <p>¿Estás seguro de que deseas eliminar este periodo de licencia?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Eliminar Definitivamente</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

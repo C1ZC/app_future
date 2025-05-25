@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load licencia_tags %}
+{% load form_filters %}
 
 {% block title %}Gestión de Licencias{% endblock %}
 
@@ -8,9 +9,9 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-file-earmark-bar-graph"></i> Gestión de Licencias</h1>
-        <a href="{% url 'crear_licencia' %}" class="btn btn-primary">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#licenciaModal">
             <i class="bi bi-plus-circle"></i> Nueva Licencia
-        </a>
+        </button>
     </div>
 
     {% if messages %}
@@ -113,7 +114,7 @@
                                     <td>
                                         {% with storage_usado_kb=periodo.storage_consumido_kb_periodo %}
                                             {% with storage_total_kb=periodo.storage_licencia_mb_periodo|multiply:1024 %}
-                                                {{ storage_usado_kb|floatformat:2 }} KB / {{ periodo.storage_licencia_mb_periodo }} MB
+                                                {{ storage_usado_kb|floatformat:2 }} KB / {{ storage_total_kb|floatformat:2 }} KB
                                                 <div class="progress mt-1" style="height: 5px;">
                                                     <div class="progress-bar {% if storage_usado_kb > storage_total_kb %}bg-danger{% elif storage_usado_kb > storage_total_kb|divisibleby:4|mult:3 %}bg-warning{% else %}bg-success{% endif %}" 
                                                         role="progressbar" 
@@ -138,19 +139,29 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a href="{% url 'detalle_licencia' periodo.id %}" class="btn btn-sm btn-outline-primary" title="Ver detalles">
+                                        <div class="btn-group">
+                                            <a href="{% url 'detalle_licencia' periodo.pk %}" class="btn btn-sm btn-outline-info" title="Ver detalles">
                                                 <i class="bi bi-eye"></i>
                                             </a>
-                                            <a href="{% url 'editar_licencia' periodo.id %}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#editarLicenciaModal{{ periodo.pk }}" 
+                                                    title="Editar">
                                                 <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="{% url 'eliminar_licencia' periodo.id %}" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deleteLicenciaModal{{ periodo.pk }}" 
+                                                    title="Eliminar">
                                                 <i class="bi bi-trash"></i>
-                                            </a>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
+                                
+                                <!-- Incluir modales para este periodo -->
+                                {% include "administration/licences/modal_edit_licence.html" with periodo=periodo %}
+                                {% include "administration/licences/modal_delete_licence.html" with periodo=periodo %}
                             {% endfor %}
                         </tbody>
                     </table>
@@ -158,16 +169,16 @@
                 
                 <!-- Paginación -->
                 {% if page_obj.paginator.num_pages > 1 %}
-                <nav aria-label="Paginación de licencias">
+                <nav aria-label="Paginación de licencias" class="mt-4">
                     <ul class="pagination justify-content-center">
                         {% if page_obj.has_previous %}
                             <li class="page-item">
-                                <a class="page-link" href="?page=1{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Primera">
+                                <a class="page-link" href="?page=1{% for key, value in filtros.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Primera">
                                     <span aria-hidden="true">&laquo;&laquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Anterior">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in filtros.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Anterior">
                                     <span aria-hidden="true">&laquo;</span>
                                 </a>
                             </li>
@@ -180,26 +191,26 @@
                             </li>
                         {% endif %}
                         
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if num == page_obj.number %}
-                                <li class="page-item active" aria-current="page">
-                                    <span class="page-link">{{ num }}</span>
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if i == page_obj.number %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ i }}</span>
                                 </li>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            {% elif i > page_obj.number|add:"-3" and i < page_obj.number|add:"3" %}
                                 <li class="page-item">
-                                    <a class="page-link" href="?page={{ num }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                    <a class="page-link" href="?page={{ i }}{% for key, value in filtros.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
                                 </li>
                             {% endif %}
                         {% endfor %}
                         
                         {% if page_obj.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Siguiente">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in filtros.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Siguiente">
                                     <span aria-hidden="true">&raquo;</span>
                                 </a>
                             </li>
                             <li class="page-item">
-                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Última">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in filtros.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Última">
                                     <span aria-hidden="true">&raquo;&raquo;</span>
                                 </a>
                             </li>
@@ -216,10 +227,24 @@
                 {% endif %}
             {% else %}
                 <div class="alert alert-info text-center">
-                    <i class="bi bi-info-circle me-2"></i> No se encontraron periodos de licencia con los filtros seleccionados.
+                    <i class="bi bi-info-circle me-2"></i> No se encontraron periodos de licencia.
                 </div>
             {% endif %}
         </div>
     </div>
 </div>
+
+<!-- Modal para crear nueva licencia -->
+{% include "administration/licences/modal_create_licence.html" %}
+
+<!-- Scripts para controlar la apertura de modal si hay errores -->
+{% if abrir_modal %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var myModal = new bootstrap.Modal(document.getElementById('licenciaModal'));
+    myModal.show();
+  });
+</script>
+{% endif %}
+
 {% endblock %}

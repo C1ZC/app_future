@@ -8,7 +8,6 @@ from django.core.paginator import Paginator
 from django import forms
 from datetime import timedelta, date
 from django.http import JsonResponse
-from django.template.loader import render_to_string
 
 class PeriodoLicenciaForm(forms.ModelForm):
     class Meta:
@@ -59,66 +58,77 @@ def es_admin(user):
 @login_required
 @user_passes_test(es_admin)
 def lista_licencias(request):
-    # Filtramos por empresa si el usuario es admin_empresa
-    if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
-        periodos = PeriodoLicencia.objects.filter(empresa=request.user.perfil.empresa).order_by('-fecha_fin')
-    else:  # Superadmin ve todo
-        periodos = PeriodoLicencia.objects.all().order_by('-fecha_fin')
-    
     # Filtros
     empresa_id = request.GET.get('empresa')
     tipo_periodo = request.GET.get('tipo_periodo')
     solo_activos = request.GET.get('activos') == 'on'
     
+    # Iniciar queryset
+    periodos = PeriodoLicencia.objects.all().select_related('empresa')
+
+    # Aplicar filtros
     if empresa_id:
         periodos = periodos.filter(empresa_id=empresa_id)
     if tipo_periodo:
         periodos = periodos.filter(tipo_periodo=tipo_periodo)
     if solo_activos:
-        periodos = periodos.filter(activo=True, fecha_fin__gte=timezone.now().date())
+        now = timezone.now().date()
+        periodos = periodos.filter(
+            activo=True, fecha_inicio__lte=now, fecha_fin__gte=now)
+
+    # Permisos para admin_empresa
+    if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
+        periodos = periodos.filter(empresa=request.user.perfil.empresa)
+
+    # Ordenar
+    periodos = periodos.order_by('-fecha_inicio')
     
     # Paginación
-    paginator = Paginator(periodos, 10)  # 10 periodos por página
-    page_number = request.GET.get('page')
+    paginator = Paginator(periodos, 10)
+    page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
-    # Datos para filtros
-    empresas = Empresa.objects.all().order_by('nombre')
+    # Para los modales
+    form = PeriodoLicenciaForm()
+    edit_forms = {periodo.pk: PeriodoLicenciaForm(
+        instance=periodo) for periodo in page_obj}
+
+    # Restricción para admin_empresa
+    if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
+        form.fields['empresa'].queryset = Empresa.objects.filter(
+            id=request.user.perfil.empresa.id)
+        form.fields['empresa'].initial = request.user.perfil.empresa
+        for pk, edit_form in edit_forms.items():
+            edit_form.fields['empresa'].queryset = Empresa.objects.filter(
+                id=request.user.perfil.empresa.id)
+            edit_form.fields['empresa'].widget.attrs['disabled'] = 'disabled'
     
     context = {
         'page_obj': page_obj,
-        'empresas': empresas,
+        'empresas': Empresa.objects.all().order_by('nombre'),
         'filtros': {
             'empresa_id': empresa_id,
             'tipo_periodo': tipo_periodo,
             'solo_activos': solo_activos,
-        }
+        },
+        'now': timezone.now().date(),
+        'form': form,
+        'edit_forms': edit_forms,
+        'abrir_modal': False,  # Se activará si hay errores de validación
     }
+
     return render(request, 'administration/licences/licences_list.html', context)
 
 @login_required
 @user_passes_test(es_admin)
 def crear_licencia(request):
-    is_modal = request.GET.get('modal') == 'true' or request.POST.get('modal') == 'true'
-    
     if request.method == 'POST':
         form = PeriodoLicenciaForm(request.POST)
         if form.is_valid():
             form.save()
-            if is_modal:
-                return JsonResponse({
-                    'success': True,
-                    'message': 'Periodo de licencia creado exitosamente.'
-                })
-            else:
-                messages.success(request, 'Periodo de licencia creado exitosamente.')
-                return redirect('lista_licencias')
-        elif is_modal:
-            return JsonResponse({
-                'success': False,
-                'message': 'Por favor, corrige los errores en el formulario.',
-                'errors': form.errors.as_json()
-            })
+            messages.success(
+                request, 'Periodo de licencia creado exitosamente.')
+            return redirect('lista_licencias')
     else:
         # Valores iniciales
         empresa_id = request.GET.get('empresa')
@@ -160,29 +170,22 @@ def crear_licencia(request):
         'form': form,
         'es_edicion': False,
     }
-    
-    if is_modal:
-        return render(request, 'administration/licences/licences_form_modal.html', context)
-    return render(request, 'administration/licences/licences_form.html', context)
+    return render(request, 'administration/licences/modal_create_licence.html', context)
 
 @login_required
 @user_passes_test(es_admin)
 def editar_licencia(request, pk):
     periodo = get_object_or_404(PeriodoLicencia, pk=pk)
-    is_modal = request.GET.get('modal') == 'true' or request.POST.get('modal') == 'true'
     
     # Verificar permisos para admin_empresa
     if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
         if periodo.empresa != request.user.perfil.empresa:
-            if is_modal:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'No tienes permiso para editar este periodo de licencia.'
-                })
-            else:
-                messages.error(request, 'No tienes permiso para editar este periodo de licencia.')
-                return redirect('lista_licencias')
+            messages.error(
+                request, 'No tienes permiso para editar este periodo de licencia.')
+            return redirect('lista_licencias')
     
+    is_modal = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
     if request.method == 'POST':
         form = PeriodoLicenciaForm(request.POST, instance=periodo)
         if form.is_valid():
@@ -196,6 +199,7 @@ def editar_licencia(request, pk):
                 messages.success(request, 'Periodo de licencia actualizado exitosamente.')
                 return redirect('lista_licencias')
         elif is_modal:
+            # En caso de error de validación en un modal, retornar JSON con errores
             return JsonResponse({
                 'success': False,
                 'message': 'Por favor, corrige los errores en el formulario.',
@@ -214,59 +218,36 @@ def editar_licencia(request, pk):
         'periodo': periodo,
         'es_edicion': True,
     }
-    
-    if is_modal:
-        return render(request, 'administration/licences/licences_form_modal.html', context)
-    return render(request, 'administration/licences/licences_form.html', context)
+    return render(request, 'administration/licences/modal_edit_licence.html', context)
 
 @login_required
 @user_passes_test(es_admin)
 def eliminar_licencia(request, pk):
     periodo = get_object_or_404(PeriodoLicencia, pk=pk)
-    is_modal = request.GET.get('modal') == 'true' or request.POST.get('modal') == 'true'
     
     # Verificar permisos para admin_empresa
     if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
         if periodo.empresa != request.user.perfil.empresa:
-            if is_modal:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'No tienes permiso para eliminar este periodo de licencia.'
-                })
-            else:
-                messages.error(request, 'No tienes permiso para eliminar este periodo de licencia.')
-                return redirect('lista_licencias')
+            messages.error(
+                request, 'No tienes permiso para eliminar este periodo de licencia.')
+            return redirect('lista_licencias')
     
     if request.method == 'POST':
         # Verificar si tiene historial de consumo
         if HistorialConsumo.objects.filter(periodo_licencia=periodo).exists():
-            mensaje_error = 'No se puede eliminar este periodo porque tiene historial de consumo asociado. Considere desactivarlo en su lugar.'
-            if is_modal:
-                return JsonResponse({
-                    'success': False,
-                    'message': mensaje_error
-                })
-            else:
-                messages.error(request, mensaje_error)
-                return redirect('lista_licencias')
+            messages.error(
+                request, 'No se puede eliminar este periodo porque tiene historial de consumo asociado. Considere desactivarlo en su lugar.')
+            return redirect('lista_licencias')
         
         periodo.delete()
-        if is_modal:
-            return JsonResponse({
-                'success': True,
-                'message': 'Periodo de licencia eliminado exitosamente.'
-            })
-        else:
-            messages.success(request, 'Periodo de licencia eliminado exitosamente.')
-            return redirect('lista_licencias')
+        messages.success(
+            request, 'Periodo de licencia eliminado exitosamente.')
+        return redirect('lista_licencias')
     
     context = {
         'periodo': periodo,
     }
-    
-    if is_modal:
-        return render(request, 'administration/licences/licences_confirm_delete_modal.html', context)
-    return render(request, 'administration/licences/licences_confirm_delete.html', context)
+    return render(request, 'administration/licences/licences_modal_delete.html', context)
 
 @login_required
 @user_passes_test(es_admin)
@@ -296,4 +277,3 @@ def detalle_licencia(request, pk):
         'storage_porcentaje': (periodo.storage_consumido_kb_periodo() / (periodo.storage_licencia_mb_periodo * 1024) * 100) if periodo.storage_licencia_mb_periodo > 0 else 0,
     }
     return render(request, 'administration/licences/licences_detail.html', context)
-

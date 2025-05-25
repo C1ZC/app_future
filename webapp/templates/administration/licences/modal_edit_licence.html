@@ -1,0 +1,116 @@
+{% load static %}
+{% load form_filters %}
+<div class="modal fade" id="editarLicenciaModal{{ periodo.pk }}" tabindex="-1" aria-labelledby="editarLicenciaModalLabel{{ periodo.pk }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <form method="post" action="{% url 'editar_licencia' periodo.pk %}?modal=true" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="modal" value="true">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarLicenciaModalLabel{{ periodo.pk }}">Editar Periodo de Licencia</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          {% with form=edit_forms|dict_get:periodo.pk %}
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger">
+                {% for error in form.non_field_errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.empresa.id_for_label }}" class="form-label">Empresa *</label>
+                {{ form.empresa }}
+                {% if form.empresa.errors %}
+                  <div class="text-danger">
+                    {% for error in form.empresa.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.tipo_periodo.id_for_label }}" class="form-label">Tipo de Periodo *</label>
+                {{ form.tipo_periodo }}
+                {% if form.tipo_periodo.errors %}
+                  <div class="text-danger">
+                    {% for error in form.tipo_periodo.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label">Fecha de Inicio *</label>
+                {{ form.fecha_inicio }}
+                {% if form.fecha_inicio.errors %}
+                  <div class="text-danger">
+                    {% for error in form.fecha_inicio.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.fecha_fin.id_for_label }}" class="form-label">Fecha de Fin *</label>
+                {{ form.fecha_fin }}
+                {% if form.fecha_fin.errors %}
+                  <div class="text-danger">
+                    {% for error in form.fecha_fin.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label for="{{ form.hojas_licencia_periodo.id_for_label }}" class="form-label">Límite de Hojas *</label>
+                {{ form.hojas_licencia_periodo }}
+                {% if form.hojas_licencia_periodo.errors %}
+                  <div class="text-danger">
+                    {% for error in form.hojas_licencia_periodo.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <label for="{{ form.storage_licencia_mb_periodo.id_for_label }}" class="form-label">Límite de Almacenamiento (MB) *</label>
+                {{ form.storage_licencia_mb_periodo }}
+                {% if form.storage_licencia_mb_periodo.errors %}
+                  <div class="text-danger">
+                    {% for error in form.storage_licencia_mb_periodo.errors %}
+                      {{ error }}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+            <div class="mb-3 form-check">
+              {{ form.activo }}
+              <label for="{{ form.activo.id_for_label }}" class="form-check-label">
+                Periodo de Licencia Activo
+              </label>
+              {% if form.activo.errors %}
+                <div class="text-danger">
+                  {% for error in form.activo.errors %}
+                    {{ error }}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endwith %}
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
