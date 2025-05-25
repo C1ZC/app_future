@@ -4,6 +4,11 @@
 {% block title %}Detalle de Documento{% endblock %}
 
 {% block content %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/components/document-detail.css' %}">
+{% endblock %}
+
 <div class="mb-3">
     <a href="{% url 'documento_lista' %}" class="btn btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Volver a la Lista
@@ -24,7 +29,7 @@
                     {% if "image/" in documento.tipo_archivo %}
                         <img src="{{ documento.ruta_documento }}?width=600" class="img-fluid border rounded" alt="Vista previa" style="max-height: 300px;">
                     {% elif documento.tipo_archivo == "application/pdf" %}
-                        <div class="border rounded p-2 text-center bg-light">
+                        <div class="border rounded p-2 text-center pdf-preview">
                             <embed src="{{ documento.ruta_documento }}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" width="100%" height="300px" />
                             <p class="mt-2 text-muted" style="font-size: 0.9em;">Vista previa PDF</p>
                         </div>
@@ -85,30 +90,50 @@
     </div>
     
     <div class="col-md-7">
+        <!-- BLOQUE ACTUALIZADO CON TABS -->
         <div class="card shadow mb-4">
             <div class="card-header">
                 <h5 class="card-title mb-0">Información Extraída</h5>
             </div>
             <div class="card-body">
-                {% if documento.json_data %}
-                    <div class="mb-4">
-                        <h6>Datos Estructurados</h6>
-                        <div class="border rounded bg-light p-2">
-                            <pre class="mb-0"><code>{{ json_data_pretty }}</code></pre>
+                {% if documento.json_data or documento.ocr_data %}
+                    <!-- Sistema de pestañas -->
+                    <ul class="nav nav-tabs" id="documentDataTabs" role="tablist">
+                        {% if documento.json_data %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="structured-tab" data-bs-toggle="tab" data-bs-target="#structured-data" type="button" role="tab" aria-controls="structured-data" aria-selected="true">
+                                Datos Estructurados
+                            </button>
+                        </li>
+                        {% endif %}
+                        {% if documento.ocr_data %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if not documento.json_data %}active{% endif %}" id="ocr-tab" data-bs-toggle="tab" data-bs-target="#ocr-data" type="button" role="tab" aria-controls="ocr-data" aria-selected="{% if documento.json_data %}false{% else %}true{% endif %}">
+                                Texto Extraído (OCR)
+                            </button>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    
+                    <!-- Contenido de las pestañas -->
+                    <div class="tab-content" id="documentDataTabsContent">
+                        {% if documento.json_data %}
+                        <div class="tab-pane fade show active" id="structured-data" role="tabpanel" aria-labelledby="structured-tab">
+                            <div id="json-container">
+                                <pre class="json-viewer" id="jsonViewer"></pre>
+                            </div>
                         </div>
-                    </div>
-                {% endif %}
-                
-                {% if documento.ocr_data %}
-                    <div>
-                        <h6>Texto Extraído (OCR)</h6>
-                        <div class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
-                            {{ documento.ocr_data|linebreaks }}
+                        {% endif %}
+                        
+                        {% if documento.ocr_data %}
+                        <div class="tab-pane fade {% if not documento.json_data %}show active{% endif %}" id="ocr-data" role="tabpanel" aria-labelledby="ocr-tab">
+                            <div class="ocr-content border rounded">
+                                {{ documento.ocr_data|linebreaks }}
+                            </div>
                         </div>
+                        {% endif %}
                     </div>
-                {% endif %}
-                
-                {% if not documento.json_data and not documento.ocr_data %}
+                {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-hourglass-split fs-1"></i>
                         <p class="mt-2">Este documento aún no ha sido procesado.</p>
@@ -119,4 +144,24 @@
         </div>
     </div>
 </div>
+
+
+{% block scripts %}
+<script src="{% static 'js/detail_documents.js' %}"></script>
+<script>
+    // Configurar y inicializar el visor de documentos
+    let jsonData = null;
+    
+    {% if json_data_pretty %}
+        jsonData = {{ json_data_pretty|safe }};
+    {% elif documento.json_data %}
+        jsonData = "{{ documento.json_data|escapejs }}";
+    {% endif %}
+    
+    // Inicializar el visor con los datos
+    DocumentViewer.init({
+        jsonData: jsonData
+    });
+</script>
+{% endblock %}
 {% endblock %}

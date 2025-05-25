@@ -56,6 +56,45 @@
     background-color: rgba(255, 255, 255, 0.075) !important;
 }
 
+/* ===== MEJORAS PARA TABLAS EN DARK MODE ===== */
+/* Asegurar visibilidad en hover para filas de tablas en dark mode */
+[data-theme="dark"] .table tbody tr:hover {
+    background-color: rgba(0, 113, 255, 0.15) !important;
+    color: #ffffff !important;
+}
+
+/* Mantener textos visibles en hover */
+[data-theme="dark"] .table tbody tr:hover td,
+[data-theme="dark"] .table tbody tr:hover a,
+[data-theme="dark"] .table tbody tr:hover .badge,
+[data-theme="dark"] .table tbody tr:hover span {
+    color: #ffffff !important;
+}
+
+/* Mejorar visibilidad de botones en tablas */
+[data-theme="dark"] .table .btn:hover {
+    opacity: 0.9;
+}
+
+/* Destacar mejor las etiquetas de estado */
+[data-theme="dark"] .badge {
+    font-weight: 500;
+}
+
+[data-theme="dark"] .badge-warning,
+[data-theme="dark"] .badge-pending,
+[data-theme="dark"] .badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+[data-theme="dark"] .table tbody tr:hover .badge-warning,
+[data-theme="dark"] .table tbody tr:hover .badge-pending,
+[data-theme="dark"] .table tbody tr:hover .badge.bg-warning {
+    background-color: #ffd454 !important;
+    color: #212529 !important;
+}
+
 /* ===== ESTILOS DE LISTAS ===== */
 [data-theme="dark"] .list-group-item {
     background-color: #23272b !important;
@@ -110,6 +149,12 @@
 
 [data-theme="dark"] .close {
     color: #f8f9fa !important;
+}
+
+/* Mejora el contraste de botones en modales */
+[data-theme="dark"] .modal-footer .btn-secondary {
+    background-color: #3a3f44 !important;
+    border-color: #3a3f44 !important;
 }
 
 /* ===== ESTILOS DE PAGINACIÓN ===== */
@@ -173,4 +218,62 @@
 
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
     background: #495057 !important;
+}
+
+/* ===== ESTILOS PARA VISUALIZACIÓN DE DOCUMENTOS ===== */
+/* Colores para JSON en modo oscuro */
+[data-theme="dark"] pre.json-viewer {
+    color: #f8f9fa;
+}
+
+[data-theme="dark"] .json-key {
+    color: #88c0d0;
+}
+
+[data-theme="dark"] .json-string {
+    color: #a3be8c;
+}
+
+[data-theme="dark"] .json-number {
+    color: #b48ead;
+}
+
+[data-theme="dark"] .json-boolean {
+    color: #ebcb8b;
+}
+
+[data-theme="dark"] .json-null {
+    color: #bf616a;
+}
+
+/* Pestañas en modo oscuro */
+[data-theme="dark"] .nav-tabs .nav-link {
+    color: #f8f9fa;
+}
+
+[data-theme="dark"] .nav-tabs .nav-link.active {
+    background-color: #23272b;
+    color: #f8f9fa;
+    border-color: #42434a #42434a transparent;
+}
+
+[data-theme="dark"] .tab-content {
+    border-color: #42434a;
+    background-color: #23272b;
+}
+
+/* Vista previa PDF en modo oscuro */
+[data-theme="dark"] .pdf-preview {
+    background-color: #2a2e32;
+    border-color: var(--line-clr);
+}
+
+/* Corregir fondos claros en elementos específicos */
+[data-theme="dark"] .border.rounded.bg-light {
+    background-color: #23272b !important;
+}
+
+[data-theme="dark"] .border.rounded.bg-light pre,
+[data-theme="dark"] .border.rounded.bg-light code {
+    color: #f8f9fa;
 }

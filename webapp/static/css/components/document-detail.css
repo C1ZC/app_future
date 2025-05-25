@@ -1,0 +1,57 @@
+/* Estilos para la visualización de JSON */
+pre.json-viewer {
+    background: transparent;
+    padding: 0.5rem;
+    margin: 0;
+    overflow: auto;
+    max-height: 500px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Colores para la sintaxis JSON en tema claro */
+.json-key {
+    color: #0550ae;
+}
+
+.json-string {
+    color: #008000;
+}
+
+.json-number {
+    color: #a31515;
+}
+
+.json-boolean {
+    color: #0000ff;
+}
+
+.json-null {
+    color: #808080;
+}
+
+/* Estilos para la visualización de OCR */
+.ocr-content {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 1rem;
+    white-space: pre-wrap;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Borde inferior para las pestañas */
+.tab-content {
+    border-left: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px;
+    border-radius: 0 0 0.25rem 0.25rem;
+}
+
+/* Estilos para vista previa de PDF */
+.pdf-preview {
+    background-color: #f8f9fa;
+    border-radius: 0.25rem;
+}

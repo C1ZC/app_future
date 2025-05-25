@@ -114,17 +114,27 @@ def documento_detalle(request, doc_id):
             messages.error(request, "No tiene permiso para ver este documento")
             return redirect('documento_lista')
     
+    # Formatear el JSON para la plantilla
     json_data_pretty = None
     if documento.json_data:
         try:
-            json_data_pretty = json.dumps(documento.json_data, indent=4)
-        except:
-            json_data_pretty = str(documento.json_data)
-
-    return render(request, 'documents/detail_document.html', {
+            # Convertir a formato para la plantilla
+            import json
+            if isinstance(documento.json_data, str):
+                json_data = json.loads(documento.json_data)
+            else:
+                json_data = documento.json_data
+                
+            json_data_pretty = json.dumps(json_data)
+        except Exception as e:
+            print(f"Error procesando JSON: {e}")
+            json_data_pretty = "{}"
+    
+    context = {
         'documento': documento,
-        'json_data_pretty': json_data_pretty
-    })
+        'json_data_pretty': json_data_pretty,
+    }
+    return render(request, 'documents/detail_document.html', context)
 
 
 
