@@ -35,7 +35,7 @@ urlpatterns = [
     path('usuarios/<int:pk>/eliminar/', usuario_delete, name='usuario_delete'),
     path('perfil/', perfil_view, name='perfil'),
     path('administracion_user/', administracion_user, name='administracion_user'),
-    path('administracion/', administracion, name='administracion'),
+    path('administration/', administracion, name='administration'),
     # URLs para documentos
     path('documentos/', documento_lista, name='documento_lista'),
     path('documentos/upload/', documento_upload, name='documento_upload'),
