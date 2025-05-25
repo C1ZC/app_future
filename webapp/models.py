@@ -137,16 +137,16 @@ class PeriodoLicencia(models.Model):
     def hojas_consumidas_periodo(self):
         consumo = HistorialConsumo.objects.filter(
             periodo_licencia=self,
-            fecha_consumo__gte=self.fecha_inicio,
-            fecha_consumo__lte=self.fecha_fin # Considerar hasta el final del día de fecha_fin
+            fecha_consumo__date__gte=self.fecha_inicio,  # ← Solo compara la fecha
+            fecha_consumo__date__lte=self.fecha_fin      # ← Solo compara la fecha
         ).aggregate(total_hojas=Sum('hojas_consumidas'))
         return consumo['total_hojas'] or 0
 
     def storage_consumido_kb_periodo(self):
         consumo = HistorialConsumo.objects.filter(
             periodo_licencia=self,
-            fecha_consumo__gte=self.fecha_inicio,
-            fecha_consumo__lte=self.fecha_fin 
+            fecha_consumo__date__gte=self.fecha_inicio,  # ← Solo compara la fecha
+            fecha_consumo__date__lte=self.fecha_fin      # ← Solo compara la fecha
         ).aggregate(total_storage=Sum('storage_consumido_kb'))
         return consumo['total_storage'] or 0
 
