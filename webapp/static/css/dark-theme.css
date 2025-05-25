@@ -37,28 +37,30 @@
     opacity: 0.7 !important;
 }
 
-/* ===== ESTILOS DE TABLAS ===== */
-[data-theme="dark"] .table {
+/* ===== MEJORAS PARA TABLAS EN DARK MODE ===== */
+/* Asegurar visibilidad en hover para filas de tablas en dark mode */
+[data-theme="dark"] .table,
+[data-theme="dark"] .table-hover,
+[data-theme="dark"] .table-striped,
+[data-theme="dark"] .table thead th,
+[data-theme="dark"] .table tbody td,
+[data-theme="dark"] .table-hover tbody tr:hover {
+    background-color: #23272b !important;
     color: #f8f9fa !important;
     border-color: var(--line-clr) !important;
 }
 
 [data-theme="dark"] .table thead th {
-    border-color: var(--line-clr) !important;
     background-color: #2a2e32 !important;
+    color: #f8f9fa !important;
+    border-color: var(--line-clr) !important;
 }
 
 [data-theme="dark"] .table-striped tbody tr:nth-of-type(odd) {
-    background-color: rgba(255, 255, 255, 0.05) !important;
+    background-color: rgba(255,255,255,0.05) !important;
 }
 
 [data-theme="dark"] .table-hover tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.075) !important;
-}
-
-/* ===== MEJORAS PARA TABLAS EN DARK MODE ===== */
-/* Asegurar visibilidad en hover para filas de tablas en dark mode */
-[data-theme="dark"] .table tbody tr:hover {
     background-color: rgba(0, 113, 255, 0.15) !important;
     color: #ffffff !important;
 }
