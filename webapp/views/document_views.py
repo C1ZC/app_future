@@ -67,8 +67,13 @@ def documento_lista(request):
 
     # Filtrar por servicio si se proporciona en la URL
     servicio_id = request.GET.get('servicio')
+    servicio_actual = None
     if servicio_id:
-        query &= Q(servicio_id=servicio_id)
+        try:
+            servicio_actual = Servicio.objects.get(id=servicio_id)
+            query &= Q(servicio_id=servicio_id)
+        except Servicio.DoesNotExist:
+            messages.warning(request, "El servicio seleccionado no existe.")
     
     # Aplicar filtros del usuario actual según rol
     if not request.user.is_superuser:
@@ -110,7 +115,8 @@ def documento_lista(request):
 
     return render(request, 'documents/list_documents.html', {
         'documentos': documentos_pagina,
-        'filter_form': filter_form
+        'filter_form': filter_form,
+        'servicio_actual': servicio_actual  # ✅ Agregar servicio actual
     })
 
 @login_required

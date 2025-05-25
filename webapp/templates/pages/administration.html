@@ -3,54 +3,64 @@
 {% block title %}Administración General{% endblock %}
 {% block content %}
 
-
-<h1 class="mb-4">Administración de Generales</h1>
+<h1 class="mb-4">Panel de Administración</h1>
 
 <div class="row">
   {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm h-100 card-hover">
         <div class="card-body text-center">
-          <h5 class="card-title">Documentos</h5>
-          <p class="display-4"><i class="bi bi-file-earmark-text"></i></p>
-          <p class="card-text">Administración de documentos</p>
-          <a href="{% url 'admin_documentos' %}" class="btn btn-danger shadow">Administrar Documentos</a>
+          <h5 class="card-title">Gestión de Documentos</h5>
+          <p class="display-4 text-primary"><i class="bi bi-file-earmark-text"></i></p>
+          <p class="card-text">Administra y supervisa todos los documentos del sistema, incluyendo estado, metadatos y procesamiento OCR</p>
+          <a href="{% url 'admin_documentos' %}" class="btn btn-primary shadow">
+            <i class="bi bi-gear me-2"></i>Gestionar Documentos
+          </a>
         </div>
       </div>
     </div>
   {% endif %}
-    {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm h-100 card-hover">
         <div class="card-body text-center">
-          <h5 class="card-title">Documentos Storage</h5>
-          <p class="display-4"><i class="bi bi-file-earmark-text"></i></p>
-          <p class="card-text">Administración de documentos Storage</p>
-          <a href="{% url 'listar_archivos_storage' %}" class="btn btn-danger shadow">Administrar Documentos Storage</a>
+          <h5 class="card-title">Almacenamiento</h5>
+          <p class="display-4 text-success"><i class="bi bi-cloud-arrow-up"></i></p>
+          <p class="card-text">Supervisa y administra el almacenamiento en la nube, archivos y consumo de espacio por empresa</p>
+          <a href="{% url 'listar_archivos_storage' %}" class="btn btn-success shadow">
+            <i class="bi bi-hdd-stack me-2"></i>Gestionar Storage
+          </a>
         </div>
       </div>
     </div>
   {% endif %}
-    {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm h-100 card-hover">
         <div class="card-body text-center">
-          <h5 class="card-title">Lista de Servicios</h5>
-          <p class="display-4"><i class="bi bi-file-earmark-text"></i></p>
-          <p class="card-text">Administración de servicios</p>
-          <a href="{% url 'lista_servicios' %}" class="btn btn-danger shadow">Administrar Servicios</a>
+          <h5 class="card-title">Servicios Empresariales</h5>
+          <p class="display-4 text-warning"><i class="bi bi-building"></i></p>
+          <p class="card-text">Configura y administra los servicios disponibles para cada empresa y sus usuarios</p>
+          <a href="{% url 'lista_servicios' %}" class="btn btn-warning shadow">
+            <i class="bi bi-list-ul me-2"></i>Administrar Servicios
+          </a>
         </div>
       </div>
     </div>
   {% endif %}
-    {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
     <div class="col-md-4 mb-4">
       <div class="card shadow-sm h-100 card-hover">
         <div class="card-body text-center">
-          <h5 class="card-title">Gestión de Licencias</h5>
-          <p class="display-4"><i class="bi bi-file-earmark-bar-graph"></i></p>
-          <p class="card-text">Administración de periodos de licencia, límites de hojas y almacenamiento</p>
-          <a href="{% url 'lista_licencias' %}" class="btn btn-primary shadow">Gestionar Licencias</a>
+          <h5 class="card-title">Control de Licencias</h5>
+          <p class="display-4 text-info"><i class="bi bi-shield-check"></i></p>
+          <p class="card-text">Gestiona períodos de licencia, límites de procesamiento de hojas y cuotas de almacenamiento por empresa</p>
+          <a href="{% url 'lista_licencias' %}" class="btn btn-info shadow">
+            <i class="bi bi-key me-2"></i>Gestionar Licencias
+          </a>
         </div>
       </div>
     </div>

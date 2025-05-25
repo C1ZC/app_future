@@ -6,7 +6,16 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Documentos</h1>
+    <h1>
+        Documentos
+        {% if request.GET.servicio %}
+            {% for servicio in servicios_usuario %}
+                {% if servicio.id|stringformat:"s" == request.GET.servicio %}
+                    - {{ servicio.nombre }}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </h1>
     <a href="{% url 'documento_upload' %}" class="btn btn-primary">
         <i class="bi bi-plus-circle"></i> Nuevo Documento
     </a>
@@ -29,6 +38,11 @@
     </div>
     <div class="card-body">
         <form method="get" class="row g-3">
+            <!-- ✅ AGREGAR CAMPO HIDDEN PARA PRESERVAR EL SERVICIO -->
+            {% if request.GET.servicio %}
+                <input type="hidden" name="servicio" value="{{ request.GET.servicio }}">
+            {% endif %}
+            
             <div class="col-md-6">
                 <label for="{{ filter_form.texto_busqueda.id_for_label }}" class="form-label">{{ filter_form.texto_busqueda.label }}</label>
                 {{ filter_form.texto_busqueda|addclass:"form-control" }}
@@ -49,9 +63,16 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-search"></i> Filtrar
                 </button>
-                <a href="{% url 'documento_lista' %}" class="btn btn-outline-secondary">
-                    <i class="bi bi-x-circle"></i> Limpiar
-                </a>
+                <!-- ✅ MODIFICAR EL BOTÓN LIMPIAR PARA PRESERVAR SERVICIO -->
+                {% if request.GET.servicio %}
+                    <a href="{% url 'documento_lista' %}?servicio={{ request.GET.servicio }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Limpiar
+                    </a>
+                {% else %}
+                    <a href="{% url 'documento_lista' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Limpiar
+                    </a>
+                {% endif %}
             </div>
         </form>
     </div>
@@ -111,17 +132,18 @@
             </table>
         </div>
         
+        <!-- ✅ MODIFICAR TODOS LOS ENLACES DE PAGINACIÓN -->
         {% if documentos.has_other_pages %}
         <nav aria-label="Paginación de documentos">
             <ul class="pagination justify-content-center mt-4">
                 {% if documentos.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page=1{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Primera">
+                        <a class="page-link" href="?page=1{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Primera">
                             <span aria-hidden="true">&laquo;&laquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ documentos.previous_page_number }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Anterior">
+                        <a class="page-link" href="?page={{ documentos.previous_page_number }}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Anterior">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
@@ -132,19 +154,19 @@
                         <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
                     {% elif i > documentos.number|add:'-3' and i < documentos.number|add:'3' %}
                         <li class="page-item">
-                            <a class="page-link" href="?page={{ i }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}">{{ i }}</a>
+                            <a class="page-link" href="?page={{ i }}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}">{{ i }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
 
                 {% if documentos.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ documentos.next_page_number }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Siguiente">
+                        <a class="page-link" href="?page={{ documentos.next_page_number }}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Siguiente">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ documentos.paginator.num_pages }}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Última">
+                        <a class="page-link" href="?page={{ documentos.paginator.num_pages }}{% if request.GET.servicio %}&servicio={{ request.GET.servicio }}{% endif %}{% if request.GET.texto_busqueda %}&texto_busqueda={{ request.GET.texto_busqueda }}{% endif %}{% if request.GET.estado %}&estado={{ request.GET.estado }}{% endif %}{% if request.GET.fecha_desde %}&fecha_desde={{ request.GET.fecha_desde }}{% endif %}{% if request.GET.fecha_hasta %}&fecha_hasta={{ request.GET.fecha_hasta }}{% endif %}" aria-label="Última">
                             <span aria-hidden="true">&raquo;&raquo;</span>
                         </a>
                     </li>
