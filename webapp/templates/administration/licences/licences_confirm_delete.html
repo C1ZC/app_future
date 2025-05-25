@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Eliminar Periodo de Licencia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-exclamation-triangle-fill me-2"></i> Confirmar Eliminación</h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <p class="lead">¿Estás seguro que deseas eliminar el siguiente periodo de licencia?</p>
+                    
+                    <div class="alert alert-warning">
+                        <strong>Importante:</strong> Esta acción no se puede deshacer. Considera desactivar el periodo en lugar de eliminarlo si solo quieres que no se use temporalmente.
+                    </div>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ periodo.empresa.nombre }}</h5>
+                            <p class="card-text mb-1">
+                                <strong>Tipo:</strong> {{ periodo.get_tipo_periodo_display }}
+                            </p>
+                            <p class="card-text mb-1">
+                                <strong>Periodo:</strong> {{ periodo.fecha_inicio|date:"d/m/Y" }} - {{ periodo.fecha_fin|date:"d/m/Y" }}
+                            </p>
+                            <p class="card-text mb-1">
+                                <strong>Límites:</strong> {{ periodo.hojas_licencia_periodo }} hojas / {{ periodo.storage_licencia_mb_periodo }} MB
+                            </p>
+                            <p class="card-text mb-0">
+                                <strong>Estado:</strong>
+                                {% if not periodo.activo %}
+                                    <span class="badge bg-secondary">Inactivo</span>
+                                {% elif periodo.fecha_fin < now %}
+                                    <span class="badge bg-danger">Caducado</span>
+                                {% elif periodo.fecha_inicio > now %}
+                                    <span class="badge bg-info">Futuro</span>
+                                {% else %}
+                                    <span class="badge bg-success">Activo</span>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'lista_licencias' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Eliminar Definitivamente
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

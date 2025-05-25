@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if es_edicion %}Editar{% else %}Crear{% endif %} Periodo de Licencia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">
+                        {% if es_edicion %}
+                            <i class="bi bi-pencil-square"></i> Editar Periodo de Licencia
+                        {% else %}
+                            <i class="bi bi-plus-circle"></i> Nuevo Periodo de Licencia
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.empresa.id_for_label }}" class="form-label">Empresa *</label>
+                                {{ form.empresa }}
+                                {% if form.empresa.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.empresa.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.tipo_periodo.id_for_label }}" class="form-label">Tipo de Periodo *</label>
+                                {{ form.tipo_periodo }}
+                                {% if form.tipo_periodo.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.tipo_periodo.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    El tipo afecta a la validación de fechas de inicio y fin.
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.fecha_inicio.id_for_label }}" class="form-label">Fecha de Inicio *</label>
+                                {{ form.fecha_inicio }}
+                                {% if form.fecha_inicio.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.fecha_inicio.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.fecha_fin.id_for_label }}" class="form-label">Fecha de Fin *</label>
+                                {{ form.fecha_fin }}
+                                {% if form.fecha_fin.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.fecha_fin.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.hojas_licencia_periodo.id_for_label }}" class="form-label">Límite de Hojas *</label>
+                                {{ form.hojas_licencia_periodo }}
+                                {% if form.hojas_licencia_periodo.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.hojas_licencia_periodo.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    Número máximo de hojas que se pueden procesar en este periodo.
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.storage_licencia_mb_periodo.id_for_label }}" class="form-label">Límite de Almacenamiento (MB) *</label>
+                                {{ form.storage_licencia_mb_periodo }}
+                                {% if form.storage_licencia_mb_periodo.errors %}
+                                    <div class="text-danger">
+                                        {% for error in form.storage_licencia_mb_periodo.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="form-text text-muted">
+                                    Tamaño máximo de almacenamiento en megabytes (1024 MB = 1 GB).
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.activo }}
+                            <label for="{{ form.activo.id_for_label }}" class="form-check-label">
+                                Periodo de Licencia Activo
+                            </label>
+                            {% if form.activo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.activo.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="form-text text-muted d-block">
+                                Un periodo inactivo no permitirá el procesamiento de documentos.
+                            </small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'lista_licencias' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Volver a la lista
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> 
+                                {% if es_edicion %}
+                                    Guardar Cambios
+                                {% else %}
+                                    Crear Periodo de Licencia
+                                {% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Actualizar fecha fin al cambiar tipo periodo
+        const tipoPeriodoSelect = document.getElementById('{{ form.tipo_periodo.id_for_label }}');
+        const fechaInicioInput = document.getElementById('{{ form.fecha_inicio.id_for_label }}');
+        const fechaFinInput = document.getElementById('{{ form.fecha_fin.id_for_label }}');
+        
+        tipoPeriodoSelect.addEventListener('change', function() {
+            if (!fechaInicioInput.value) return; // Salir si no hay fecha inicio
+            
+            const fechaInicio = new Date(fechaInicioInput.value);
+            let fechaFin = new Date(fechaInicio);
+            
+            switch(this.value) {
+                case 'mensual':
+                    fechaFin.setMonth(fechaFin.getMonth() + 1);
+                    fechaFin.setDate(fechaFin.getDate() - 1);
+                    break;
+                case 'anual':
+                    fechaFin.setFullYear(fechaFin.getFullYear() + 1);
+                    fechaFin.setDate(fechaFin.getDate() - 1);
+                    break;
+                case 'personalizado':
+                    // No hacer nada, dejar que el usuario lo seleccione
+                    return;
+            }
+            
+            // Formatear la fecha como YYYY-MM-DD para el input type="date"
+            const mes = (fechaFin.getMonth() + 1).toString().padStart(2, '0');
+            const dia = fechaFin.getDate().toString().padStart(2, '0');
+            fechaFinInput.value = `${fechaFin.getFullYear()}-${mes}-${dia}`;
+        });
+        
+        // También actualizar al cambiar la fecha de inicio
+        fechaInicioInput.addEventListener('change', function() {
+            if (tipoPeriodoSelect.value !== 'personalizado') {
+                // Simular un cambio en el tipo de periodo para recalcular
+                tipoPeriodoSelect.dispatchEvent(new Event('change'));
+            }
+        });
+    });
+</script>
+{% endblock %}

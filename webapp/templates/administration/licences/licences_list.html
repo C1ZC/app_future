@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load licencia_tags %}
+
+{% block title %}Gestión de Licencias{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-file-earmark-bar-graph"></i> Gestión de Licencias</h1>
+        <a href="{% url 'crear_licencia' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Nueva Licencia
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Filtros -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Filtros</h5>
+        </div>
+        <div class="card-body">
+            <form method="get" action="{% url 'lista_licencias' %}">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label for="empresa" class="form-label">Empresa</label>
+                        <select name="empresa" id="empresa" class="form-select">
+                            <option value="">Todas las empresas</option>
+                            {% for empresa in empresas %}
+                                <option value="{{ empresa.id }}" {% if filtros.empresa_id == empresa.id|stringformat:"s" %}selected{% endif %}>{{ empresa.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="tipo_periodo" class="form-label">Tipo de Periodo</label>
+                        <select name="tipo_periodo" id="tipo_periodo" class="form-select">
+                            <option value="">Todos los tipos</option>
+                            <option value="mensual" {% if filtros.tipo_periodo == 'mensual' %}selected{% endif %}>Mensual</option>
+                            <option value="anual" {% if filtros.tipo_periodo == 'anual' %}selected{% endif %}>Anual</option>
+                            <option value="personalizado" {% if filtros.tipo_periodo == 'personalizado' %}selected{% endif %}>Personalizado</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check mt-4">
+                            <input class="form-check-input" type="checkbox" id="activos" name="activos" {% if filtros.solo_activos %}checked{% endif %}>
+                            <label class="form-check-label" for="activos">
+                                Solo activos y vigentes
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="d-grid gap-2 w-100">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-filter"></i> Filtrar
+                            </button>
+                            <a href="{% url 'lista_licencias' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Limpiar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tabla de Periodos de Licencia -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            {% if page_obj %}
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Tipo</th>
+                                <th>Duración</th>
+                                <th>Hojas</th>
+                                <th>Almacenamiento</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for periodo in page_obj %}
+                                <tr>
+                                    <td>{{ periodo.empresa.nombre }}</td>
+                                    <td>{{ periodo.get_tipo_periodo_display }}</td>
+                                    <td>
+                                        {{ periodo.fecha_inicio|date:"d/m/Y" }} - {{ periodo.fecha_fin|date:"d/m/Y" }}
+                                    </td>
+                                    <td>
+                                        {% with hojas_usadas=periodo.hojas_consumidas_periodo %}
+                                            {{ hojas_usadas }} / {{ periodo.hojas_licencia_periodo }}
+                                            <div class="progress mt-1" style="height: 5px;">
+                                                <div class="progress-bar {% if hojas_usadas > periodo.hojas_licencia_periodo %}bg-danger{% elif hojas_usadas > periodo.hojas_licencia_periodo|divisibleby:4|mult:3 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                    role="progressbar" 
+                                                    style="width: {% widthratio hojas_usadas periodo.hojas_licencia_periodo 100 %}%;" 
+                                                    aria-valuenow="{% widthratio hojas_usadas periodo.hojas_licencia_periodo 100 %}" 
+                                                    aria-valuemin="0" 
+                                                    aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        {% endwith %}
+                                    </td>
+                                    <td>
+                                        {% with storage_usado_kb=periodo.storage_consumido_kb_periodo %}
+                                            {% with storage_total_kb=periodo.storage_licencia_mb_periodo|multiply:1024 %}
+                                                {{ storage_usado_kb|floatformat:2 }} KB / {{ periodo.storage_licencia_mb_periodo }} MB
+                                                <div class="progress mt-1" style="height: 5px;">
+                                                    <div class="progress-bar {% if storage_usado_kb > storage_total_kb %}bg-danger{% elif storage_usado_kb > storage_total_kb|divisibleby:4|mult:3 %}bg-warning{% else %}bg-success{% endif %}" 
+                                                        role="progressbar" 
+                                                        style="width: {% widthratio storage_usado_kb storage_total_kb 100 %}%;" 
+                                                        aria-valuenow="{% widthratio storage_usado_kb storage_total_kb 100 %}" 
+                                                        aria-valuemin="0" 
+                                                        aria-valuemax="100">
+                                                    </div>
+                                                </div>
+                                            {% endwith %}
+                                        {% endwith %}
+                                    </td>
+                                    <td>
+                                        {% if not periodo.activo %}
+                                            <span class="badge bg-secondary">Inactivo</span>
+                                        {% elif periodo.fecha_fin < now %}
+                                            <span class="badge bg-danger">Caducado</span>
+                                        {% elif periodo.fecha_inicio > now %}
+                                            <span class="badge bg-info">Futuro</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Activo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'detalle_licencia' periodo.id %}" class="btn btn-sm btn-outline-primary" title="Ver detalles">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{% url 'editar_licencia' periodo.id %}" class="btn btn-sm btn-outline-secondary" title="Editar">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a href="{% url 'eliminar_licencia' periodo.id %}" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Paginación -->
+                {% if page_obj.paginator.num_pages > 1 %}
+                <nav aria-label="Paginación de licencias">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Primera">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Anterior">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;&laquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                        {% endif %}
+                        
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if num == page_obj.number %}
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Siguiente">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% for key, value in filtros.items %}{% if value %}&{{ key }}={{ value }}{% endif %}{% endfor %}" aria-label="Última">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle me-2"></i> No se encontraron periodos de licencia con los filtros seleccionados.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

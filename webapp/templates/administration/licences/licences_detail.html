@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalles de Periodo de Licencia{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="bi bi-info-circle"></i> Detalles del Periodo de Licencia
+                        </h4>
+                        <div>
+                            <a href="{% url 'editar_licencia' periodo.id %}" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-pencil"></i> Editar
+                            </a>
+                            <a href="{% url 'lista_licencias' %}" class="btn btn-outline-secondary btn-sm">
+                                <i class="bi bi-arrow-left"></i> Volver
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Información General</h5>
+                            <dl class="row">
+                                <dt class="col-sm-4">Empresa:</dt>
+                                <dd class="col-sm-8">{{ periodo.empresa.nombre }}</dd>
+                                
+                                <dt class="col-sm-4">Tipo de periodo:</dt>
+                                <dd class="col-sm-8">{{ periodo.get_tipo_periodo_display }}</dd>
+                                
+                                <dt class="col-sm-4">Fecha de inicio:</dt>
+                                <dd class="col-sm-8">{{ periodo.fecha_inicio|date:"d/m/Y" }}</dd>
+                                
+                                <dt class="col-sm-4">Fecha de fin:</dt>
+                                <dd class="col-sm-8">{{ periodo.fecha_fin|date:"d/m/Y" }}</dd>
+                                
+                                <dt class="col-sm-4">Estado:</dt>
+                                <dd class="col-sm-8">
+                                    {% if not periodo.activo %}
+                                        <span class="badge bg-secondary">Inactivo</span>
+                                    {% elif periodo.fecha_fin < now %}
+                                        <span class="badge bg-danger">Caducado</span>
+                                    {% elif periodo.fecha_inicio > now %}
+                                        <span class="badge bg-info">Futuro</span>
+                                    {% else %}
+                                        <span class="badge bg-success">Activo</span>
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="border-bottom pb-2">Límites y Consumo</h5>
+                            
+                            <h6 class="mt-3">Hojas</h6>
+                            <p>
+                                <strong>Límite:</strong> {{ periodo.hojas_licencia_periodo }} hojas<br>
+                                <strong>Consumido:</strong> {{ hojas_consumidas }} hojas ({{ hojas_porcentaje|floatformat:2 }}%)
+                            </p>
+                            <div class="progress mb-3" style="height: 20px;">
+                                <div class="progress-bar {% if hojas_porcentaje > 90 %}bg-danger{% elif hojas_porcentaje > 75 %}bg-warning{% else %}bg-success{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ hojas_porcentaje }}%;" 
+                                     aria-valuenow="{{ hojas_porcentaje }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                     {{ hojas_porcentaje|floatformat:2 }}%
+                                </div>
+                            </div>
+                            
+                            <h6 class="mt-3">Almacenamiento</h6>
+                            <p>
+                                <strong>Límite:</strong> {{ periodo.storage_licencia_mb_periodo }} MB<br>
+                                <strong>Consumido:</strong> {{ storage_consumido_kb|floatformat:2 }} KB ({{ storage_porcentaje|floatformat:2 }}%)
+                            </p>
+                            <div class="progress" style="height: 20px;">
+                                <div class="progress-bar {% if storage_porcentaje > 90 %}bg-danger{% elif storage_porcentaje > 75 %}bg-warning{% else %}bg-success{% endif %}" 
+                                     role="progressbar" 
+                                     style="width: {{ storage_porcentaje }}%;" 
+                                     aria-valuenow="{{ storage_porcentaje }}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                     {{ storage_porcentaje|floatformat:2 }}%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Historial de Consumo -->
+        <div class="col-md-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h4 class="mb-0">
+                        <i class="bi bi-clock-history"></i> Historial de Consumo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    {% if historial %}
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Documento</th>
+                                        <th>Hojas</th>
+                                        <th>Almacenamiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in historial %}
+                                        <tr>
+                                            <td>{{ item.fecha_consumo|date:"d/m/Y H:i" }}</td>
+                                            <td>
+                                                {% if item.usuario %}
+                                                    {{ item.usuario.username }}
+                                                {% else %}
+                                                    <em>Sistema</em>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if item.documento %}
+                                                    <a href="{% url 'documento_detalle' item.documento.id %}" target="_blank" title="Ver documento">
+                                                        {{ item.documento.nombre_documento|truncatechars:30 }}
+                                                    </a>
+                                                {% else %}
+                                                    <em>No disponible</em>
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ item.hojas_consumidas }}</td>
+                                            <td>{{ item.storage_consumido_kb|floatformat:2 }} KB</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Paginación -->
+                        {% if historial.paginator.num_pages > 1 %}
+                        <nav aria-label="Paginación de historial">
+                            <ul class="pagination justify-content-center">
+                                {% if historial.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page=1" aria-label="Primera">
+                                            <span aria-hidden="true">&laquo;&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ historial.previous_page_number }}" aria-label="Anterior">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">&laquo;&laquo;</span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">&laquo;</span>
+                                    </li>
+                                {% endif %}
+                                
+                                {% for num in historial.paginator.page_range %}
+                                    {% if num == historial.number %}
+                                        <li class="page-item active" aria-current="page">
+                                            <span class="page-link">{{ num }}</span>
+                                        </li>
+                                    {% elif num > historial.number|add:'-3' and num < historial.number|add:'3' %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                
+                                {% if historial.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ historial.next_page_number }}" aria-label="Siguiente">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ historial.paginator.num_pages }}" aria-label="Última">
+                                            <span aria-hidden="true">&raquo;&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">&raquo;</span>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">&raquo;&raquo;</span>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-info text-center">
+                            <i class="bi bi-info-circle me-2"></i> No hay registros de consumo para este periodo de licencia.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

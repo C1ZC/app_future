@@ -43,5 +43,17 @@
       </div>
     </div>
   {% endif %}
+    {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 card-hover">
+        <div class="card-body text-center">
+          <h5 class="card-title">Gestión de Licencias</h5>
+          <p class="display-4"><i class="bi bi-file-earmark-bar-graph"></i></p>
+          <p class="card-text">Administración de periodos de licencia, límites de hojas y almacenamiento</p>
+          <a href="{% url 'lista_licencias' %}" class="btn btn-primary shadow">Gestionar Licencias</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
 </div>
 {% endblock %}

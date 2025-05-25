@@ -3,16 +3,17 @@ from django.urls import include, path
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
-from webapp.views.admin_documents import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
-from webapp.views.administration import administracion
+from webapp.views.admin_documents_views import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
+from webapp.views.administration_views import administracion
 from webapp.views.auth_views import register
 from webapp.views.dashboard_cosumo_view import dashboard_consumo_empresa
 from webapp.views.home_views import home
 from webapp.service.company_crud import empresa_list, empresa_create, empresa_update, empresa_delete
 from webapp.service.service_crud import servicio_list, servicio_create, servicio_update, servicio_delete
 from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
+from webapp.views.licences_views import crear_licencia, editar_licencia, lista_licencias, eliminar_licencia, detalle_licencia
 from webapp.views.profile_views import perfil_view
-from webapp.views.administration_user import administracion_user
+from webapp.views.administration_user_views import administracion_user
 from webapp.views.document_views import documento_update_fragmentos, documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes
 
 urlpatterns = [
@@ -55,7 +56,13 @@ urlpatterns = [
      
      # Nueva URL para el Dashboard de Consumo
     path('dashboard/consumo/', dashboard_consumo_empresa, name='dashboard_consumo_empresa'),
-
+    # URLs de gestión de licencias
+    path('administration/licencias/', lista_licencias, name='lista_licencias'),
+    path('administration/licencias/crear/', crear_licencia, name='crear_licencia'),
+    path('administration/licencias/<int:pk>/editar/', editar_licencia, name='editar_licencia'),
+    path('administration/licencias/<int:pk>/eliminar/', eliminar_licencia, name='eliminar_licencia'),
+    path('administration/licencias/<int:pk>/detalle/', detalle_licencia, name='detalle_licencia'),
+    
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
