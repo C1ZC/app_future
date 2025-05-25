@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',  # Asegúrate de que esta línea exista
     'corsheaders',  # Añadir esta línea
     'webapp',  # Your custom app
 ]

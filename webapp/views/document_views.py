@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from webapp.forms.document_forms import DocumentoUploadForm, DocumentoFilterForm
-from webapp.models import Documento, DocumentoStatus
+from webapp.models import Documento, DocumentoStatus, Servicio  # Importar Servicio
 from webapp.service.document_service import DocumentoService
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -18,25 +18,41 @@ def documento_upload(request):
         form = DocumentoUploadForm(request.POST, request.FILES)
         if form.is_valid():
             archivo = request.FILES.get('archivo')
+            grupo = form.cleaned_data.get('grupo')
+            modulo = form.cleaned_data.get('modulo')
+            # Si tienes un campo para seleccionar el servicio en el formulario:
+            servicio_id = form.cleaned_data.get('servicio_id')
+            servicio_obj = None
+            if servicio_id:
+                try:
+                    servicio_obj = Servicio.objects.get(id=servicio_id)
+                except Servicio.DoesNotExist:
+                    messages.error(request, "Servicio seleccionado no válido.")
+                    return render(request, 'documents/upload_documents.html', {'form': form})
             
             if not archivo:
-                messages.error(request, "Debe seleccionar un archivo")
-                return redirect('documento_upload')
-            
-            success, result = DocumentoService.procesar_archivo(
-                archivo, 
-                archivo.name, 
-                request.user
-            )
-            
-            if success:
-                messages.success(request, "Documento subido correctamente")
-                # Si queremos redirigir al detalle del documento:
-                # return redirect('documento_detalle', doc_id=result.id)
-                return redirect('documento_lista')
+                messages.error(request, "Debe seleccionar un archivo.")
             else:
-                messages.error(request, f"Error al procesar el documento: {result}")
+                # Pasar servicio_obj si lo obtienes del formulario, sino se tomará del perfil del usuario si existe
+                success, message, documento_creado = DocumentoService.procesar_archivo(
+                    file=archivo,
+                    filename=archivo.name,
+                    usuario=request.user,
+                    grupo=grupo,
+                    modulo=modulo
+                    # servicio_obj=servicio_obj # Descomentar si obtienes servicio del form
+                )
+            
+                if success:
+                    messages.success(
+                        request, f"Documento '{documento_creado.nombre_documento}' subido. {message}")
+                    # O a 'documento_detalle' si prefieres
+                    return redirect('documento_lista')
+                else:
+                    messages.error(
+                        request, f"Error al procesar el documento: {message}")
     else:
+        # Puedes pasar request.user al form si necesitas filtrar campos (ej. servicios)
         form = DocumentoUploadForm()
     
     return render(request, 'documents/upload_documents.html', {

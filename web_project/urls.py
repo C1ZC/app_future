@@ -5,8 +5,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from webapp.views.admin_documents import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
 from webapp.views.auth_views import register
+from webapp.views.dashboard_cosumo_view import dashboard_consumo_empresa
 from webapp.views.home_views import home
-from webapp.views.dashboard_views import dashboard
 from webapp.service.company_crud import empresa_list, empresa_create, empresa_update, empresa_delete
 from webapp.service.service_crud import servicio_list, servicio_create, servicio_update, servicio_delete
 from webapp.service.users_crud import usuario_list, usuario_create, usuario_update, usuario_delete
@@ -20,7 +20,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('register/', register, name='register'),
     path('logout/', LogoutView.as_view(next_page='home'), name='logout'),
-    path('dashboard/', dashboard, name='dashboard'),
     path('empresas/', empresa_list, name='lista_empresas'),
     path('empresas/nueva/', empresa_create, name='empresa_create'),
     path('empresas/<int:pk>/editar/', empresa_update, name='empresa_update'),
@@ -51,6 +50,10 @@ urlpatterns = [
          name='listar_archivos_storage'),
     path('administration/documentos/storage/<str:filename>/eliminar/',
          eliminar_archivo_storage, name='eliminar_archivo_storage'),
+     
+     # Nueva URL para el Dashboard de Consumo
+    path('dashboard/consumo/', dashboard_consumo_empresa, name='dashboard_consumo_empresa'),
+
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

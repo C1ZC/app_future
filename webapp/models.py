@@ -3,6 +3,7 @@ import json
 import uuid
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Sum
 
 
 class Empresa(models.Model):
@@ -109,17 +110,88 @@ class Documento(models.Model):
         ordering = ['-created_at']
 
 
-class ConfigTenant(models.Model):
-    empresa = models.OneToOneField(
-        Empresa, on_delete=models.CASCADE,
-        related_name='config_tenant'
+class PeriodoLicencia(models.Model):
+    TIPO_PERIODO_CHOICES = [
+        ('mensual', 'Mensual'),
+        ('anual', 'Anual'),
+        ('personalizado', 'Personalizado'),
+    ]
+    empresa = models.ForeignKey(
+        Empresa, on_delete=models.CASCADE, 
+        related_name='periodos_licencia'
     )
-    hojas_leidas = models.IntegerField(default=0)
-    hojas_licencia = models.IntegerField(default=1000)
+    tipo_periodo = models.CharField(
+        max_length=20, 
+        choices=TIPO_PERIODO_CHOICES, 
+        default='mensual'
+    )
+    fecha_inicio = models.DateField(default=timezone.now)
+    fecha_fin = models.DateField()
+    hojas_licencia_periodo = models.IntegerField(default=1000)
+    storage_licencia_mb_periodo = models.IntegerField(default=1024) # Límite en Megabytes
     activo = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"Config: {self.empresa.nombre}"
+        return f"Licencia para {self.empresa.nombre} ({self.get_tipo_periodo_display()}: {self.fecha_inicio.strftime('%d/%m/%Y')} - {self.fecha_fin.strftime('%d/%m/%Y')})"
 
-    def licencia_disponible(self, hojas_adicionales=1):
-        return self.hojas_leidas + hojas_adicionales <= self.hojas_licencia
+    def hojas_consumidas_periodo(self):
+        consumo = HistorialConsumo.objects.filter(
+            periodo_licencia=self,
+            fecha_consumo__gte=self.fecha_inicio,
+            fecha_consumo__lte=self.fecha_fin # Considerar hasta el final del día de fecha_fin
+        ).aggregate(total_hojas=Sum('hojas_consumidas'))
+        return consumo['total_hojas'] or 0
+
+    def storage_consumido_kb_periodo(self):
+        consumo = HistorialConsumo.objects.filter(
+            periodo_licencia=self,
+            fecha_consumo__gte=self.fecha_inicio,
+            fecha_consumo__lte=self.fecha_fin 
+        ).aggregate(total_storage=Sum('storage_consumido_kb'))
+        return consumo['total_storage'] or 0
+
+    def licencia_hojas_disponible(self, hojas_adicionales=0):
+        if not self.activo or self.fecha_fin < timezone.now().date():
+            return False, "Periodo de licencia inactivo o caducado."
+        
+        disponible = (self.hojas_consumidas_periodo() + hojas_adicionales) <= self.hojas_licencia_periodo
+        if not disponible:
+            return False, f"Límite de hojas ({self.hojas_licencia_periodo}) excedido."
+        return True, "OK"
+
+    def licencia_storage_disponible_kb(self, storage_adicional_kb=0):
+        if not self.activo or self.fecha_fin < timezone.now().date():
+            # Este chequeo ya se hace en licencia_hojas_disponible, pero es bueno tenerlo por si se llama directamente
+            return False, "Periodo de licencia inactivo o caducado."
+
+        storage_licencia_kb = self.storage_licencia_mb_periodo * 1024.0
+        disponible = (self.storage_consumido_kb_periodo() + storage_adicional_kb) <= storage_licencia_kb
+        if not disponible:
+            return False, f"Límite de almacenamiento ({self.storage_licencia_mb_periodo}MB) excedido."
+        return True, "OK"
+
+    class Meta:
+        ordering = ['empresa', '-fecha_fin', '-fecha_inicio'] # Más reciente primero
+        verbose_name = "Periodo de Licencia"
+        verbose_name_plural = "Periodos de Licencia"
+        constraints = [
+            models.CheckConstraint(check=models.Q(fecha_fin__gte=models.F('fecha_inicio')), name='fecha_fin_gte_fecha_inicio')
+        ]
+
+class HistorialConsumo(models.Model):
+    periodo_licencia = models.ForeignKey(PeriodoLicencia, on_delete=models.CASCADE, related_name='historial_consumo')
+    documento = models.ForeignKey(Documento, on_delete=models.SET_NULL, null=True, blank=True)
+    usuario = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    fecha_consumo = models.DateTimeField(default=timezone.now)
+    hojas_consumidas = models.IntegerField(default=0)
+    storage_consumido_kb = models.FloatField(default=0) # Consumo en Kilobytes
+
+    def __str__(self):
+        user_str = self.usuario.username if self.usuario else "Sistema"
+        doc_str = f" - Doc: {self.documento.nombre_documento[:20]}..." if self.documento else ""
+        return f"Consumo por {user_str} el {self.fecha_consumo.strftime('%Y-%m-%d %H:%M')}{doc_str}"
+
+    class Meta:
+        ordering = ['-fecha_consumo']
+        verbose_name = "Historial de Consumo"
+        verbose_name_plural = "Historiales de Consumo"

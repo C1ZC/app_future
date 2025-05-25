@@ -1,9 +1,113 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %} <!-- Para filesizeformat si lo tienes, o crea un custom filter -->
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard de Consumo de Licencia{% endblock %}
 
 {% block content %}
-<h2>Welcome to WebApp! dashboard</h2>
-<p>This is a protected page, visible only to authenticated users.</p>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Dashboard de Consumo</h1>
+        {% if user.is_superuser %}
+            <button class="btn btn-sm btn-outline-primary" type="button" data-bs-toggle="collapse" data-bs-target="#selectorEmpresaSuperadmin" aria-expanded="false" aria-controls="selectorEmpresaSuperadmin">
+                <i class="bi bi-building"></i> Seleccionar Empresa
+            </button>
+        {% endif %}
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if user.is_superuser %}
+    <div class="collapse {% if not empresa_actual_dashboard and empresas_disponibles_para_superadmin %}show{% endif %}" id="selectorEmpresaSuperadmin">
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <form method="get" action="{% url 'dashboard_consumo_empresa' %}">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-8">
+                            <label for="empresa_id_selector" class="form-label">Ver consumo para la empresa:</label>
+                            <select name="empresa_id" id="empresa_id_selector" class="form-select form-select-sm">
+                                <option value="">-- Seleccione una empresa --</option>
+                                {% for emp in empresas_disponibles_para_superadmin %}
+                                    <option value="{{ emp.id }}" {% if empresa_actual_dashboard and empresa_actual_dashboard.id == emp.id %}selected{% endif %}>
+                                        {{ emp.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
+                                <i class="bi bi-search"></i> Ver Consumo
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if consumo_data and periodo_activo %}
+    <div class="card shadow border-left-primary">
+        <div class="card-header bg-light py-3">
+            <h5 class="mb-0 text-primary">
+                <i class="bi bi-bar-chart-line-fill"></i> Consumo para: <strong>{{ consumo_data.empresa_nombre }}</strong>
+            </h5>
+            <small class="text-muted">{{ consumo_data.periodo_info }}</small>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="bi bi-file-earmark-text"></i> Consumo de Hojas</span>
+                        <span class="fw-bold">{{ consumo_data.hojas_usadas|intcomma }}/{{ consumo_data.hojas_total|intcomma }}</span>
+                    </div>
+                    <div class="progress mt-1" style="height: 25px;">
+                        <div class="progress-bar {% if consumo_data.hojas_porcentaje > 90 %}bg-danger{% elif consumo_data.hojas_porcentaje > 75 %}bg-warning{% else %}bg-success{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ consumo_data.hojas_porcentaje|floatformat:2 }}%;" 
+                             aria-valuenow="{{ consumo_data.hojas_porcentaje|floatformat:2 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                             {{ consumo_data.hojas_porcentaje|floatformat:2 }}%
+                        </div>
+                    </div>
+                    <small class="text-muted">Restantes: {{ consumo_data.hojas_restantes|intcomma }} hojas</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span><i class="bi bi-hdd"></i> Consumo de Almacenamiento</span>
+                        <span class="fw-bold">{{ consumo_data.storage_usado_kb|floatformat:2|intcomma }} KB / {{ consumo_data.storage_total_kb|floatformat:2|intcomma }} KB</span>
+                    </div>
+                    <div class="progress mt-1" style="height: 25px;">
+                        <div class="progress-bar {% if consumo_data.storage_porcentaje > 90 %}bg-danger{% elif consumo_data.storage_porcentaje > 75 %}bg-warning{% else %}bg-success{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ consumo_data.storage_porcentaje|floatformat:2 }}%;" 
+                             aria-valuenow="{{ consumo_data.storage_porcentaje|floatformat:2 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                             {{ consumo_data.storage_porcentaje|floatformat:2 }}%
+                        </div>
+                    </div>
+                     <small class="text-muted">Restante: {{ consumo_data.storage_restante_mb|floatformat:2|intcomma }} MB</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% elif empresa_actual_dashboard and not periodo_activo %}
+        <!-- Mensaje ya mostrado por Django messages -->
+    {% elif not empresa_actual_dashboard and not user.is_superuser %}
+        <!-- Mensaje ya mostrado por Django messages -->
+    {% elif user.is_superuser and not empresa_actual_dashboard %}
+        <div class="alert alert-light text-center" role="alert">
+            <i class="bi bi-info-circle"></i> Seleccione una empresa para visualizar su consumo de licencia.
+        </div>
+    {% endif %}
+</div>
 {% endblock %}
