@@ -55,3 +55,9 @@ pre.json-viewer {
     background-color: #f8f9fa;
     border-radius: 0.25rem;
 }
+
+/* Estilos para controlar el desbordamiento de texto */
+.table-sm td {
+    word-break: break-word;
+    max-width: 0;  /* Forzar que la celda respete el ancho */
+}
