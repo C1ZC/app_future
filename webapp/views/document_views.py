@@ -178,6 +178,8 @@ def documento_webhook(request):
         doc_id = data.get('documento_id')
         ocr_data = data.get('ocr_data')
         json_data = data.get('json_data')
+        grupo = data.get('grupo')  
+        modulo = data.get('modulo') 
         status = data.get('status', DocumentoStatus.COMPLETADO)
         
         if not doc_id:
@@ -188,14 +190,23 @@ def documento_webhook(request):
         # Actualizar documento con datos de OCR/IA
         if ocr_data:
             documento.ocr_data = ocr_data
-        
         if json_data:
             documento.json_data = json_data
+        if grupo:
+            documento.grupo = grupo
+        if modulo:
+            documento.modulo = modulo
         
         documento.status = status
         documento.save()
         
-        return JsonResponse({'success': True, 'documento_id': str(doc_id), 'data': data})
+        return JsonResponse({
+            'success': True,
+            'documento_id': str(doc_id),
+            'data': data,
+            'grupo_actualizado': grupo,  
+            'modulo_actualizado': modulo  
+        })
         
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
