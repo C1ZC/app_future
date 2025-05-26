@@ -114,3 +114,26 @@
     </div>
   </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Formatear fechas para inputs de tipo date al abrir los modales de edición
+    var modales = document.querySelectorAll('[id^="editarLicenciaModal"]');
+    
+    modales.forEach(function(modal) {
+        modal.addEventListener('shown.bs.modal', function() {
+            // Obtener inputs de fecha en este modal específico
+            var inputs = this.querySelectorAll('input[type="date"]');
+            
+            inputs.forEach(function(input) {
+                if (input.value) {
+                    // Convertir DD/MM/YYYY a YYYY-MM-DD si es necesario
+                    if (input.value.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+                        var parts = input.value.split('/');
+                        input.value = parts[2] + '-' + parts[1] + '-' + parts[0];
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
