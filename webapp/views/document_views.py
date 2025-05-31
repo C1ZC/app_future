@@ -212,8 +212,6 @@ def documento_webhook(request):
         doc_id = data.get('documento_id')
         ocr_data = data.get('ocr_data')
         json_data = data.get('json_data')
-        grupo = data.get('grupo')
-        modulo = data.get('modulo')
         status = data.get('status', DocumentoStatus.COMPLETADO)
 
         if not doc_id:
@@ -227,32 +225,13 @@ def documento_webhook(request):
         if json_data:
             documento.json_data = json_data
 
-        # Actualizar grupo y módulo
-        if grupo:
-            documento.grupo = grupo
-            # Buscar o crear objeto Grupo relacionado
-            grupo_obj, _ = Grupo.objects.get_or_create(nombre=grupo)
-            documento.grupo_obj = grupo_obj
-
-        if modulo and grupo:
-            documento.modulo = modulo
-            # Buscar o crear objeto Módulo relacionado
-            grupo_obj = documento.grupo_obj or Grupo.objects.get(nombre=grupo)
-            modulo_obj, _ = Modulo.objects.get_or_create(
-                nombre=modulo,
-                grupo=grupo_obj
-            )
-            documento.modulo_obj = modulo_obj
-
         documento.status = status
         documento.save()
 
         return JsonResponse({
             'success': True,
             'documento_id': str(doc_id),
-            'data': data,
-            'grupo_actualizado': grupo,
-            'modulo_actualizado': modulo
+            'data': data
         })
 
     except Exception as e:
