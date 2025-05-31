@@ -4,7 +4,10 @@ from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
 from webapp.views.admin_documents_views import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
-from webapp.views.administration_views import admin_grupos_modulos, administracion, crear_grupo, crear_modulo, toggle_grupo_activo
+from webapp.views.administration_views import (
+    admin_grupos_modulos, administracion, crear_grupo, crear_modulo,
+    toggle_grupo_activo, eliminar_grupo, eliminar_modulo
+)
 from webapp.views.auth_views import register
 from webapp.views.dashboard_cosumo_view import dashboard_consumo_empresa
 from webapp.views.home_views import home
@@ -72,6 +75,10 @@ urlpatterns = [
          crear_modulo, name='crear_modulo'),
     path('administration/documentos/grupos/<int:grupo_id>/toggle-activo/',
          toggle_grupo_activo, name='toggle_grupo_activo'),
+    path('administration/documentos/grupos/<int:grupo_id>/eliminar/',
+         eliminar_grupo, name='eliminar_grupo'),
+    path('administration/documentos/modulos/<int:modulo_id>/eliminar/',
+         eliminar_modulo, name='eliminar_modulo'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -32,6 +32,7 @@
         {% for grupo in grupos %}
             <div class="col-md-6 mb-4">
                 <div class="card shadow-sm h-100">
+                    <!-- Modificar el encabezado de la tarjeta de grupo -->
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">{{ grupo.nombre }}</h5>
                         <div>
@@ -39,6 +40,10 @@
                                     data-bs-toggle="modal" data-bs-target="#crearModuloModal" 
                                     data-grupo-id="{{ grupo.id }}" data-grupo-nombre="{{ grupo.nombre }}">
                                 <i class="bi bi-plus-circle"></i> Agregar Módulo
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger eliminar-grupo" 
+                                    data-grupo-id="{{ grupo.id }}" data-grupo-nombre="{{ grupo.nombre }}">
+                                <i class="bi bi-trash"></i>
                             </button>
                         </div>
                     </div>
@@ -52,13 +57,20 @@
                             {% if modulos %}
                                 <ul class="list-group">
                                     {% for modulo in modulos %}
+                                        <!-- Modificar cada elemento de módulo en la lista -->
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {{ modulo.nombre }}
-                                            {% if modulo.activo %}
-                                                <span class="badge bg-success">Activo</span>
-                                            {% else %}
-                                                <span class="badge bg-secondary">Inactivo</span>
-                                            {% endif %}
+                                            <span>{{ modulo.nombre }}</span>
+                                            <div>
+                                                {% if modulo.activo %}
+                                                    <span class="badge bg-success">Activo</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Inactivo</span>
+                                                {% endif %}
+                                                <button type="button" class="btn btn-sm btn-outline-danger eliminar-modulo ms-2"
+                                                        data-modulo-id="{{ modulo.id }}" data-modulo-nombre="{{ modulo.nombre }}">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -150,6 +162,48 @@
     </div>
 </div>
 
+<!-- Modal para confirmar eliminación de grupo -->
+<div class="modal fade" id="eliminarGrupoModal" tabindex="-1" aria-labelledby="eliminarGrupoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarGrupoModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i> Esta acción eliminará el grupo <strong id="nombre-grupo-eliminar"></strong> y todos sus módulos asociados.
+                </div>
+                <p>Esta acción no se puede deshacer. ¿Estás seguro?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmar-eliminar-grupo">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para confirmar eliminación de módulo -->
+<div class="modal fade" id="eliminarModuloModal" tabindex="-1" aria-labelledby="eliminarModuloModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eliminarModuloModalLabel">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar el módulo <strong id="nombre-modulo-eliminar"></strong>?</p>
+                <p>Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="confirmar-eliminar-modulo">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -197,6 +251,87 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.checked = !nuevoEstado;
                 alert(`Error: ${error}`);
             });
+        });
+    });
+    
+    // Manejo de eliminación de grupos
+    const botonesEliminarGrupo = document.querySelectorAll('.eliminar-grupo');
+    const modalEliminarGrupo = new bootstrap.Modal(document.getElementById('eliminarGrupoModal'));
+    const nombreGrupoEliminar = document.getElementById('nombre-grupo-eliminar');
+    let grupoIdEliminar = null;
+
+    botonesEliminarGrupo.forEach(btn => {
+        btn.addEventListener('click', function() {
+            grupoIdEliminar = this.dataset.grupoId;
+            nombreGrupoEliminar.textContent = this.dataset.grupoNombre;
+            modalEliminarGrupo.show();
+        });
+    });
+
+    document.getElementById('confirmar-eliminar-grupo').addEventListener('click', function() {
+        if (!grupoIdEliminar) return;
+        
+        fetch(`/administration/documentos/grupos/${grupoIdEliminar}/eliminar/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error}`);
+        })
+        .finally(() => {
+            modalEliminarGrupo.hide();
+        });
+    });
+
+    // Manejo de eliminación de módulos
+    const botonesEliminarModulo = document.querySelectorAll('.eliminar-modulo');
+    const modalEliminarModulo = new bootstrap.Modal(document.getElementById('eliminarModuloModal'));
+    const nombreModuloEliminar = document.getElementById('nombre-modulo-eliminar');
+    let moduloIdEliminar = null;
+
+    botonesEliminarModulo.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Evitar que el evento se propague al elemento padre
+            moduloIdEliminar = this.dataset.moduloId;
+            nombreModuloEliminar.textContent = this.dataset.moduloNombre;
+            modalEliminarModulo.show();
+        });
+    });
+
+    document.getElementById('confirmar-eliminar-modulo').addEventListener('click', function() {
+        if (!moduloIdEliminar) return;
+        
+        fetch(`/administration/documentos/modulos/${moduloIdEliminar}/eliminar/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        })
+        .catch(error => {
+            alert(`Error: ${error}`);
+        })
+        .finally(() => {
+            modalEliminarModulo.hide();
         });
     });
     

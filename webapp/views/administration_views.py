@@ -85,3 +85,41 @@ def toggle_grupo_activo(request, grupo_id):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+@login_required
+@rol_requerido(RolUsuario.SUPERADMIN)
+def eliminar_grupo(request, grupo_id):
+    """Elimina un grupo y todos sus módulos asociados"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    try:
+        grupo = get_object_or_404(Grupo, id=grupo_id)
+        nombre_grupo = grupo.nombre
+        
+        # Eliminará automáticamente los módulos por la relación CASCADE
+        grupo.delete()
+        
+        messages.success(request, f"Grupo '{nombre_grupo}' y todos sus módulos eliminados correctamente")
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+@login_required
+@rol_requerido(RolUsuario.SUPERADMIN)
+def eliminar_modulo(request, modulo_id):
+    """Elimina un módulo específico"""
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Método no permitido'}, status=405)
+    
+    try:
+        modulo = get_object_or_404(Modulo, id=modulo_id)
+        nombre_modulo = modulo.nombre
+        grupo_nombre = modulo.grupo.nombre
+        
+        modulo.delete()
+        
+        messages.success(request, f"Módulo '{nombre_modulo}' del grupo '{grupo_nombre}' eliminado correctamente")
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
