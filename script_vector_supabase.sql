@@ -7,7 +7,7 @@ create table if not exists documents (
   document_id uuid references webapp_documento(id), -- Relación con Django
   content text, -- contenido del documento
   metadata jsonb, -- metadatos como grupo, módulo, etc.
-  embedding vector(1536) -- vector de embedding
+  embedding vector(1536) --  (cambiar si usa embedings de 768 dimensiones )
 );
 
 -- Crear índice para búsqueda vectorial
@@ -15,7 +15,7 @@ create index on documents using ivfflat (embedding vector_cosine_ops) with (list
 
 -- Función para búsqueda por similitud
 create or replace function match_documents (
-  query_embedding vector(1536),
+  query_embedding vector(1536), -- (cambiar si usa embedings de 768 dimensiones)
   match_count int default 10,
   filter jsonb DEFAULT '{}'
 ) returns table (
