@@ -13,43 +13,47 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
+
 @login_required
 def documento_upload(request):
     if request.method == 'POST':
-        form = DocumentoUploadForm(request.POST, request.FILES, request_user=request.user)
-        
+        form = DocumentoUploadForm(
+            request.POST, request.FILES, request_user=request.user)
+
         # Debug: Verificar si hay archivos en la solicitud
         print("FILES:", request.FILES)
-        
+
         # Debug: Verificar los datos enviados
         print("POST data:", request.POST)
-        
+
         if form.is_valid():
             print("Formulario es válido")
             archivo = request.FILES.get('archivo')
             grupo_obj = form.cleaned_data.get('grupo_id')
             modulo_obj = form.cleaned_data.get('modulo_id')
-            
+
             # Debug: Verificar valores obtenidos
-            print(f"Archivo: {archivo}, Grupo: {grupo_obj}, Módulo: {modulo_obj}")
-            
+            print(
+                f"Archivo: {archivo}, Grupo: {grupo_obj}, Módulo: {modulo_obj}")
+
             # Obtener nombres para compatibilidad
             grupo_texto = grupo_obj.nombre if grupo_obj else None
             modulo_texto = modulo_obj.nombre if modulo_obj else None
-            
+
             if not archivo:
                 messages.error(request, "Debe seleccionar un archivo.")
                 return render(request, 'documents/upload_documents.html', {'form': form})
-            
+
             try:
                 # Servicios y procesamiento
                 servicio_obj = None
                 if hasattr(request.user, 'perfil') and hasattr(request.user.perfil, 'servicio'):
                     servicio_obj = request.user.perfil.servicio
-                
+
                 # Debug: Verificar antes de procesar
-                print(f"Procesando archivo: {archivo.name}, tamaño: {archivo.size}")
-                
+                print(
+                    f"Procesando archivo: {archivo.name}, tamaño: {archivo.size}")
+
                 success, message, documento_creado = DocumentoService.procesar_archivo(
                     file=archivo,
                     filename=archivo.name,
@@ -58,30 +62,36 @@ def documento_upload(request):
                     modulo=modulo_texto,
                     servicio_obj=servicio_obj
                 )
-                
+
                 # Debug: Resultado del procesamiento
-                print(f"Resultado: success={success}, mensaje={message}, documento={documento_creado}")
-                
+                print(
+                    f"Resultado: success={success}, mensaje={message}, documento={documento_creado}")
+
                 if success and documento_creado:
                     documento_creado.grupo_obj = grupo_obj
                     documento_creado.modulo_obj = modulo_obj
                     documento_creado.save()
-                    
-                    messages.success(request, f"Documento '{documento_creado.nombre_documento}' subido correctamente.")
+
+                    messages.success(
+                        request, f"Documento '{documento_creado.nombre_documento}' subido correctamente.")
                     return redirect('documento_lista')
                 else:
-                    messages.error(request, f"Error al procesar el documento: {message}")
+                    messages.error(
+                        request, f"Error al procesar el documento: {message}")
             except Exception as e:
                 print(f"ERROR EN PROCESAMIENTO: {str(e)}")
                 messages.error(request, f"Error inesperado: {str(e)}")
         else:
             print("Formulario NO es válido, errores:", form.errors)
-            print("Módulos disponibles:", list(form.fields['modulo_id'].queryset.values('id', 'nombre')))
-            messages.error(request, "El formulario contiene errores. Por favor revise los campos.")
+            print("Módulos disponibles:", list(
+                form.fields['modulo_id'].queryset.values('id', 'nombre')))
+            messages.error(
+                request, "El formulario contiene errores. Por favor revise los campos.")
     else:
         form = DocumentoUploadForm(request_user=request.user)
-    
+
     return render(request, 'documents/upload_documents.html', {'form': form})
+
 
 @login_required
 def documento_lista(request):
@@ -98,7 +108,7 @@ def documento_lista(request):
             query &= Q(servicio_id=servicio_id)
         except Servicio.DoesNotExist:
             messages.warning(request, "El servicio seleccionado no existe.")
-    
+
     # Aplicar filtros del usuario actual según rol
     if not request.user.is_superuser:
         perfil = request.user.perfil
@@ -111,26 +121,27 @@ def documento_lista(request):
         else:
             # Usuario normal, solo ve sus documentos
             query &= Q(usuario=request.user)
-    
+
     # Aplicar filtros de búsqueda
     if filter_form.is_valid():
         texto = filter_form.cleaned_data.get('texto_busqueda')
         estado = filter_form.cleaned_data.get('estado')
         fecha_desde = filter_form.cleaned_data.get('fecha_desde')
         fecha_hasta = filter_form.cleaned_data.get('fecha_hasta')
-        
+
         if texto:
-            query &= Q(nombre_documento__icontains=texto) | Q(grupo__icontains=texto) | Q(modulo__icontains=texto)
-        
+            query &= Q(nombre_documento__icontains=texto) | Q(
+                grupo__icontains=texto) | Q(modulo__icontains=texto)
+
         if estado:
             query &= Q(status=estado)
-        
+
         if fecha_desde:
             query &= Q(created_at__date__gte=fecha_desde)
-            
+
         if fecha_hasta:
             query &= Q(created_at__date__lte=fecha_hasta)
-    
+
     # Obtener documentos filtrados y paginar
     documentos = Documento.objects.filter(query).order_by('-created_at')
     paginator = Paginator(documentos, 10)  # 10 documentos por página
@@ -143,10 +154,11 @@ def documento_lista(request):
         'servicio_actual': servicio_actual  # ✅ Agregar servicio actual
     })
 
+
 @login_required
 def documento_detalle(request, doc_id):
     documento = get_object_or_404(Documento, pk=doc_id)
-    
+
     # Verificar permisos según rol
     if not request.user.is_superuser:
         perfil = request.user.perfil
@@ -159,7 +171,7 @@ def documento_detalle(request, doc_id):
         elif perfil.es_usuario_servicio() and documento.usuario != request.user:
             messages.error(request, "No tiene permiso para ver este documento")
             return redirect('documento_lista')
-    
+
     # Formatear el JSON para la plantilla
     json_data_pretty = None
     if documento.json_data:
@@ -170,19 +182,17 @@ def documento_detalle(request, doc_id):
                 json_data = json.loads(documento.json_data)
             else:
                 json_data = documento.json_data
-                
+
             json_data_pretty = json.dumps(json_data)
         except Exception as e:
             print(f"Error procesando JSON: {e}")
             json_data_pretty = "{}"
-    
+
     context = {
         'documento': documento,
         'json_data_pretty': json_data_pretty,
     }
     return render(request, 'documents/detail_document.html', context)
-
-
 
 
 # Elimina el decorador @login_required
@@ -191,26 +201,26 @@ def documento_webhook(request):
     """Endpoint para recibir actualizaciones de n8n"""
     if request.method != 'POST':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
-    
+
     # Autenticación simple por API_KEY
     api_key = request.headers.get('X-Api-Key')
     if not api_key or api_key != settings.N8N_API_KEY:
         return JsonResponse({'error': 'No autorizado'}, status=401)
-    
+
     try:
         data = json.loads(request.body)
         doc_id = data.get('documento_id')
         ocr_data = data.get('ocr_data')
         json_data = data.get('json_data')
-        grupo = data.get('grupo')  
-        modulo = data.get('modulo') 
+        grupo = data.get('grupo')
+        modulo = data.get('modulo')
         status = data.get('status', DocumentoStatus.COMPLETADO)
-        
+
         if not doc_id:
             return JsonResponse({'error': 'ID de documento requerido'}, status=400)
-        
+
         documento = get_object_or_404(Documento, pk=doc_id)
-        
+
         # Actualizar documento con datos de OCR/IA
         if ocr_data:
             documento.ocr_data = ocr_data
@@ -233,37 +243,39 @@ def documento_webhook(request):
                 grupo=grupo_obj
             )
             documento.modulo_obj = modulo_obj
-        
+
         documento.status = status
         documento.save()
-        
+
         return JsonResponse({
             'success': True,
             'documento_id': str(doc_id),
             'data': data,
-            'grupo_actualizado': grupo,  
-            'modulo_actualizado': modulo  
+            'grupo_actualizado': grupo,
+            'modulo_actualizado': modulo
         })
-        
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
-    
+
+
 @csrf_exempt
 def documento_pendientes(request):
     """Endpoint para que n8n obtenga documentos pendientes de procesar"""
     if request.method != 'GET':
         return JsonResponse({'error': 'Método no permitido'}, status=405)
-    
+
     # Autenticación simple por API_KEY
     api_key = request.headers.get('X-Api-Key')
     if not api_key or api_key != settings.N8N_API_KEY:
         return JsonResponse({'error': 'No autorizado'}, status=401)
-    
+
     try:
         # Obtener los 10 documentos más recientes en estado "En espera"
         limit = int(request.GET.get('limit', 10))
-        documentos = Documento.objects.filter(status=DocumentoStatus.EN_ESPERA).order_by('-created_at')[:limit]
-        
+        documentos = Documento.objects.filter(
+            status=DocumentoStatus.EN_ESPERA).order_by('-created_at')[:limit]
+
         # Convertir a formato JSON
         docs_list = []
         for doc in documentos:
@@ -277,11 +289,22 @@ def documento_pendientes(request):
                 'created_at': doc.created_at.isoformat(),
                 'empresa_id': str(doc.empresa.id) if doc.empresa else None,
                 'servicio_id': str(doc.servicio.id) if doc.servicio else None,
-                'usuario_id': doc.usuario.id if doc.usuario else None
+                'usuario_id': doc.usuario.id if doc.usuario else None,
+                # Agregar datos de grupo y módulo
+                'grupo': doc.grupo,
+                'grupo_obj': {
+                    'id': doc.grupo_obj.id,
+                    'nombre': doc.grupo_obj.nombre
+                } if doc.grupo_obj else None,
+                'modulo': doc.modulo,
+                'modulo_obj': {
+                    'id': doc.modulo_obj.id,
+                    'nombre': doc.modulo_obj.nombre
+                } if doc.modulo_obj else None,
             })
-        
+
         return JsonResponse({'documentos': docs_list})
-    
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
