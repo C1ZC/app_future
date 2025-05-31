@@ -34,28 +34,23 @@
                         {% if form.archivo.help_text %}
                             <div class="form-text">{{ form.archivo.help_text }}</div>
                         {% endif %}
-                        {% if form.archivo.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.archivo.errors.0 }}
-                            </div>
-                        {% endif %}
                     </div>
                     
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="{{ form.grupo.id_for_label }}" class="form-label">
-                                {{ form.grupo.label }}
+                            <label for="{{ form.grupo_id.id_for_label }}" class="form-label">
+                                {{ form.grupo_id.label }}
                             </label>
-                            {{ form.grupo|addclass:"form-control" }}
+                            {{ form.grupo_id|addclass:"form-select" }}
                         </div>
                         <div class="col-md-6">
-                            <label for="{{ form.modulo.id_for_label }}" class="form-label">
-                                {{ form.modulo.label }}
+                            <label for="{{ form.modulo_id.id_for_label }}" class="form-label">
+                                {{ form.modulo_id.label }}
                             </label>
-                            {{ form.modulo|addclass:"form-control" }}
+                            {{ form.modulo_id|addclass:"form-select" }}
                         </div>
                     </div>
-                    
+                                    
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-cloud-arrow-up"></i> Subir Documento
@@ -69,4 +64,43 @@
         </div>
     </div>
 </div>
+
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const grupoSelect = document.getElementById('{{ form.grupo_id.id_for_label }}');
+    const moduloSelect = document.getElementById('{{ form.modulo_id.id_for_label }}');
+    
+    // Cargar módulos cuando cambia el grupo
+    grupoSelect.addEventListener('change', function() {
+        const grupoId = this.value;
+        
+        // Limpiar selector de módulos
+        moduloSelect.innerHTML = '<option value="">Seleccione un módulo</option>';
+        
+        if (!grupoId) return;
+        
+        // Cargar módulos para el grupo seleccionado
+        fetch(`/api/modulos-por-grupo/?grupo_id=${grupoId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.modulos.forEach(modulo => {
+                    const option = document.createElement('option');
+                    option.value = modulo.id;
+                    option.textContent = modulo.nombre;
+                    moduloSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error cargando módulos:', error));
+    });
+    
+    // Disparar el evento si ya hay un grupo seleccionado (ej. en caso de error al enviar)
+    if (grupoSelect.value) {
+        grupoSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}
+
 {% endblock %}

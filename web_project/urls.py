@@ -4,7 +4,7 @@ from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
 from webapp.views.admin_documents_views import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
-from webapp.views.administration_views import administracion
+from webapp.views.administration_views import admin_grupos_modulos, administracion, crear_grupo, crear_modulo, toggle_grupo_activo
 from webapp.views.auth_views import register
 from webapp.views.dashboard_cosumo_view import dashboard_consumo_empresa
 from webapp.views.home_views import home
@@ -14,7 +14,7 @@ from webapp.service.users_crud import usuario_list, usuario_create, usuario_upda
 from webapp.views.licences_views import crear_licencia, editar_licencia, lista_licencias, eliminar_licencia, detalle_licencia
 from webapp.views.profile_views import perfil_view
 from webapp.views.administration_user_views import administracion_user
-from webapp.views.document_views import documento_update_fragmentos, documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes
+from webapp.views.document_views import documento_update_fragmentos, documento_upload, documento_lista, documento_detalle, documento_webhook, documento_pendientes, get_modulos_por_grupo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -62,7 +62,16 @@ urlpatterns = [
     path('administration/licencias/<int:pk>/editar/', editar_licencia, name='editar_licencia'),
     path('administration/licencias/<int:pk>/eliminar/', eliminar_licencia, name='eliminar_licencia'),
     path('administration/licencias/<int:pk>/detalle/', detalle_licencia, name='detalle_licencia'),
-    
+    path('api/modulos-por-grupo/', get_modulos_por_grupo,
+         name='get_modulos_por_grupo'),
+    path('administration/documentos/grupos-modulos/',
+         admin_grupos_modulos, name='admin_grupos_modulos'),
+    path('administration/documentos/grupos/crear/',
+         crear_grupo, name='crear_grupo'),
+    path('administration/documentos/modulos/crear/',
+         crear_modulo, name='crear_modulo'),
+    path('administration/documentos/grupos/<int:grupo_id>/toggle-activo/',
+         toggle_grupo_activo, name='toggle_grupo_activo'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

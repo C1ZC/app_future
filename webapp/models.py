@@ -69,6 +69,33 @@ class DocumentoStatus(models.TextChoices):
     COMPLETADO = 'completado', 'Completado'
     ERROR = 'error', 'Error'
 
+class Grupo(models.Model):
+    nombre = models.CharField(max_length=100, unique=True)
+    descripcion = models.TextField(blank=True, null=True)
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        ordering = ['nombre']
+
+
+class Modulo(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+    grupo = models.ForeignKey(
+        Grupo, on_delete=models.CASCADE, related_name='modulos')
+    activo = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.grupo.nombre})"
+
+    class Meta:
+        ordering = ['grupo__nombre', 'nombre']
+        unique_together = ['nombre', 'grupo']
+
+
 
 class Documento(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -100,6 +127,16 @@ class Documento(models.Model):
     )
     usuario = models.ForeignKey(
         User, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='documentos'
+    )
+
+    # Nuevos campos relacionales
+    grupo_obj = models.ForeignKey(
+        Grupo, on_delete=models.SET_NULL,
+        null=True, blank=True, related_name='documentos'
+    )
+    modulo_obj = models.ForeignKey(
+        Modulo, on_delete=models.SET_NULL,
         null=True, blank=True, related_name='documentos'
     )
 
@@ -195,3 +232,5 @@ class HistorialConsumo(models.Model):
         ordering = ['-fecha_consumo']
         verbose_name = "Historial de Consumo"
         verbose_name_plural = "Historiales de Consumo"
+
+

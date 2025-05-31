@@ -66,13 +66,23 @@
                         <th>Páginas:</th>
                         <td>{{ documento.cantidad_hojas }}</td>
                     </tr>
-                    {% if documento.grupo %}
+                    {% if documento.grupo_obj %}
+                    <tr>
+                        <th>Grupo:</th>
+                        <td>{{ documento.grupo_obj.nombre }}</td>
+                    </tr>
+                    {% elif documento.grupo %}
                     <tr>
                         <th>Grupo:</th>
                         <td>{{ documento.grupo }}</td>
                     </tr>
                     {% endif %}
-                    {% if documento.modulo %}
+                    {% if documento.modulo_obj %}
+                    <tr>
+                        <th>Módulo:</th>
+                        <td>{{ documento.modulo_obj.nombre }}</td>
+                    </tr>
+                    {% elif documento.modulo %}
                     <tr>
                         <th>Módulo:</th>
                         <td>{{ documento.modulo }}</td>

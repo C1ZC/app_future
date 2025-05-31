@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from webapp.forms.document_forms import DocumentoUploadForm, DocumentoFilterForm
-from webapp.models import Documento, DocumentoStatus, Servicio  # Importar Servicio
+# Importar Servicio
+from webapp.models import Documento, DocumentoStatus, Grupo, Modulo, Servicio
 from webapp.service.document_service import DocumentoService
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -15,49 +16,72 @@ from django.conf import settings
 @login_required
 def documento_upload(request):
     if request.method == 'POST':
-        form = DocumentoUploadForm(request.POST, request.FILES)
+        form = DocumentoUploadForm(request.POST, request.FILES, request_user=request.user)
+        
+        # Debug: Verificar si hay archivos en la solicitud
+        print("FILES:", request.FILES)
+        
+        # Debug: Verificar los datos enviados
+        print("POST data:", request.POST)
+        
         if form.is_valid():
+            print("Formulario es válido")
             archivo = request.FILES.get('archivo')
-            grupo = form.cleaned_data.get('grupo')
-            modulo = form.cleaned_data.get('modulo')
-            # Si tienes un campo para seleccionar el servicio en el formulario:
-            servicio_id = form.cleaned_data.get('servicio_id')
-            servicio_obj = None
-            if servicio_id:
-                try:
-                    servicio_obj = Servicio.objects.get(id=servicio_id)
-                except Servicio.DoesNotExist:
-                    messages.error(request, "Servicio seleccionado no válido.")
-                    return render(request, 'documents/upload_documents.html', {'form': form})
+            grupo_obj = form.cleaned_data.get('grupo_id')
+            modulo_obj = form.cleaned_data.get('modulo_id')
+            
+            # Debug: Verificar valores obtenidos
+            print(f"Archivo: {archivo}, Grupo: {grupo_obj}, Módulo: {modulo_obj}")
+            
+            # Obtener nombres para compatibilidad
+            grupo_texto = grupo_obj.nombre if grupo_obj else None
+            modulo_texto = modulo_obj.nombre if modulo_obj else None
             
             if not archivo:
                 messages.error(request, "Debe seleccionar un archivo.")
-            else:
-                # Pasar servicio_obj si lo obtienes del formulario, sino se tomará del perfil del usuario si existe
+                return render(request, 'documents/upload_documents.html', {'form': form})
+            
+            try:
+                # Servicios y procesamiento
+                servicio_obj = None
+                if hasattr(request.user, 'perfil') and hasattr(request.user.perfil, 'servicio'):
+                    servicio_obj = request.user.perfil.servicio
+                
+                # Debug: Verificar antes de procesar
+                print(f"Procesando archivo: {archivo.name}, tamaño: {archivo.size}")
+                
                 success, message, documento_creado = DocumentoService.procesar_archivo(
                     file=archivo,
                     filename=archivo.name,
                     usuario=request.user,
-                    grupo=grupo,
-                    modulo=modulo
-                    # servicio_obj=servicio_obj # Descomentar si obtienes servicio del form
+                    grupo=grupo_texto,
+                    modulo=modulo_texto,
+                    servicio_obj=servicio_obj
                 )
-            
-                if success:
-                    messages.success(
-                        request, f"Documento '{documento_creado.nombre_documento}' subido. {message}")
-                    # O a 'documento_detalle' si prefieres
+                
+                # Debug: Resultado del procesamiento
+                print(f"Resultado: success={success}, mensaje={message}, documento={documento_creado}")
+                
+                if success and documento_creado:
+                    documento_creado.grupo_obj = grupo_obj
+                    documento_creado.modulo_obj = modulo_obj
+                    documento_creado.save()
+                    
+                    messages.success(request, f"Documento '{documento_creado.nombre_documento}' subido correctamente.")
                     return redirect('documento_lista')
                 else:
-                    messages.error(
-                        request, f"Error al procesar el documento: {message}")
+                    messages.error(request, f"Error al procesar el documento: {message}")
+            except Exception as e:
+                print(f"ERROR EN PROCESAMIENTO: {str(e)}")
+                messages.error(request, f"Error inesperado: {str(e)}")
+        else:
+            print("Formulario NO es válido, errores:", form.errors)
+            print("Módulos disponibles:", list(form.fields['modulo_id'].queryset.values('id', 'nombre')))
+            messages.error(request, "El formulario contiene errores. Por favor revise los campos.")
     else:
-        # Puedes pasar request.user al form si necesitas filtrar campos (ej. servicios)
-        form = DocumentoUploadForm()
+        form = DocumentoUploadForm(request_user=request.user)
     
-    return render(request, 'documents/upload_documents.html', {
-        'form': form
-    })
+    return render(request, 'documents/upload_documents.html', {'form': form})
 
 @login_required
 def documento_lista(request):
@@ -192,10 +216,23 @@ def documento_webhook(request):
             documento.ocr_data = ocr_data
         if json_data:
             documento.json_data = json_data
+
+        # Actualizar grupo y módulo
         if grupo:
             documento.grupo = grupo
-        if modulo:
+            # Buscar o crear objeto Grupo relacionado
+            grupo_obj, _ = Grupo.objects.get_or_create(nombre=grupo)
+            documento.grupo_obj = grupo_obj
+
+        if modulo and grupo:
             documento.modulo = modulo
+            # Buscar o crear objeto Módulo relacionado
+            grupo_obj = documento.grupo_obj or Grupo.objects.get(nombre=grupo)
+            modulo_obj, _ = Modulo.objects.get_or_create(
+                nombre=modulo,
+                grupo=grupo_obj
+            )
+            documento.modulo_obj = modulo_obj
         
         documento.status = status
         documento.save()
@@ -295,3 +332,16 @@ def documento_update_fragmentos(request):
         return JsonResponse({'success': True, 'documento_id': doc_id, 'cantidad_fragmentos': cantidad_fragmentos})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
+def get_modulos_por_grupo(request):
+    """API para obtener módulos filtrados por grupo"""
+    grupo_id = request.GET.get('grupo_id')
+    modulos = []
+
+    if grupo_id:
+        modulos = list(Modulo.objects.filter(
+            grupo_id=grupo_id, activo=True
+        ).values('id', 'nombre'))
+
+    return JsonResponse({'modulos': modulos})

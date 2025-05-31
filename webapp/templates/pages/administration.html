@@ -65,5 +65,21 @@
       </div>
     </div>
   {% endif %}
+
+  {% if user.is_superuser or user.perfil.rol == 'superadmin' %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100 card-hover">
+        <div class="card-body text-center">
+          <h5 class="card-title">Grupos y Módulos</h5>
+          <p class="display-4 text-danger"><i class="bi bi-diagram-3"></i></p>
+          <p class="card-text">Administra la estructura de clasificación para documentos, creando y organizando grupos y módulos</p>
+          <a href="{% url 'admin_grupos_modulos' %}" class="btn btn-danger shadow">
+            <i class="bi bi-grid-3x3-gap me-2"></i>Gestionar Categorías
+          </a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
 </div>
 {% endblock %}
