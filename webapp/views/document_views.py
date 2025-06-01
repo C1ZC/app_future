@@ -290,7 +290,8 @@ def documento_pendientes(request):
                 'modulo': doc.modulo,
                 'modulo_obj': {
                     'id': doc.modulo_obj.id,
-                    'nombre': doc.modulo_obj.nombre
+                    'nombre': doc.modulo_obj.nombre,
+                    'esquema_json': doc.modulo_obj.esquema_json
                 } if doc.modulo_obj else None,
             })
 
@@ -298,7 +299,6 @@ def documento_pendientes(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
-
 
 @csrf_exempt
 def documento_update_fragmentos(request):
