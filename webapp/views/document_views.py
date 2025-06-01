@@ -195,7 +195,6 @@ def documento_detalle(request, doc_id):
     return render(request, 'documents/detail_document.html', context)
 
 
-# Elimina el decorador @login_required
 @csrf_exempt
 def documento_webhook(request):
     """Endpoint para recibir actualizaciones de n8n"""
@@ -222,8 +221,19 @@ def documento_webhook(request):
         # Actualizar documento con datos de OCR/IA
         if ocr_data:
             documento.ocr_data = ocr_data
+
+        # Asegurar que json_data sea un dict y serializarlo correctamente
+        import json as pyjson
         if json_data:
-            documento.json_data = json_data
+            if isinstance(json_data, str):
+                try:
+                    json_data_obj = pyjson.loads(json_data)
+                except Exception:
+                    # Si falla, intenta limpiar saltos de línea y volver a cargar
+                    json_data_obj = pyjson.loads(json_data.replace('\n', '\\n'))
+            else:
+                json_data_obj = json_data
+            documento.json_data = pyjson.dumps(json_data_obj, ensure_ascii=False)
 
         documento.status = status
         documento.save()
