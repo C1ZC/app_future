@@ -123,3 +123,43 @@ def eliminar_modulo(request, modulo_id):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+    
+@login_required
+@rol_requerido(RolUsuario.SUPERADMIN)
+def editar_esquema_modulo(request, modulo_id):
+    """Editar esquema JSON de un módulo"""
+    modulo = get_object_or_404(Modulo, id=modulo_id)
+    
+    if request.method == 'POST':
+        try:
+            esquema = json.loads(request.POST.get('esquema_json', '{}'))
+            modulo.esquema_json = esquema
+            modulo.save()
+            messages.success(request, f"Esquema del módulo '{modulo.nombre}' actualizado correctamente")
+            return redirect('admin_grupos_modulos')
+        except json.JSONDecodeError:
+            messages.error(request, "El esquema JSON no es válido")
+    
+    # Valor por defecto si no hay esquema
+    esquema_default = {
+        "campos_requeridos": [
+            {"nombre": "tipo", "tipo": "string", "descripcion": "Tipo de documento"},
+            {"nombre": "fecha", "tipo": "date", "descripcion": "Fecha del documento"}
+        ],
+        "campos_opcionales": [
+            {"nombre": "monto", "tipo": "number", "descripcion": "Monto total"},
+            {"nombre": "emisor", "tipo": "string", "descripcion": "Entidad emisora"}
+        ],
+        "ejemplos": [
+            {"tipo": "factura", "fecha": "2023-01-15", "monto": 1500, "emisor": "Empresa XYZ"}
+        ],
+        "instrucciones_especiales": "Asegúrate de extraer correctamente la fecha en formato YYYY-MM-DD"
+    }
+    
+    context = {
+        'modulo': modulo,
+        'esquema_json': json.dumps(modulo.esquema_json or esquema_default, indent=2),
+        'grupo': modulo.grupo
+    }
+    
+    return render(request, 'administration/documents/editar_esquema_modulo.html', context)

@@ -66,6 +66,11 @@
                                                 {% else %}
                                                     <span class="badge bg-secondary">Inactivo</span>
                                                 {% endif %}
+                                                <!-- Botón para editar esquema JSON -->
+                                                <a href="{% url 'editar_esquema_modulo' modulo.id %}" class="btn btn-sm btn-outline-info ms-2" title="Editar Esquema JSON">
+                                                    <i class="bi bi-code-square"></i>
+                                                </a>
+                                                <!-- Botón para eliminar (existente) -->
                                                 <button type="button" class="btn btn-sm btn-outline-danger eliminar-modulo ms-2"
                                                         data-modulo-id="{{ modulo.id }}" data-modulo-nombre="{{ modulo.nombre }}">
                                                     <i class="bi bi-trash"></i>

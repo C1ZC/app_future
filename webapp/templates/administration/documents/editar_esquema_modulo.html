@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h4>Editar Esquema JSON para Módulo: {{ modulo.nombre }}</h4>
+            <p class="text-muted">Grupo: {{ grupo.nombre }}</p>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="esquema_json" class="form-label">Esquema JSON:</label>
+                    <textarea class="form-control" id="esquema_json" name="esquema_json" rows="15">{{ esquema_json }}</textarea>
+                    <small class="form-text text-muted">
+                        Define los campos requeridos, opcionales, ejemplos e instrucciones especiales 
+                        para que la IA extraiga correctamente los datos de documentos de este tipo.
+                    </small>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar Esquema</button>
+                <a href="{% url 'admin_grupos_modulos' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h5>Ayuda: Estructura Recomendada</h5>
+        </div>
+        <div class="card-body">
+            <pre>
+{
+  "campos_requeridos": [
+    {"nombre": "tipo", "tipo": "string", "descripcion": "Tipo de documento"},
+    {"nombre": "fecha", "tipo": "date", "descripcion": "Fecha del documento"}
+  ],
+  "campos_opcionales": [
+    {"nombre": "monto", "tipo": "number", "descripcion": "Monto total"},
+    {"nombre": "emisor", "tipo": "string", "descripcion": "Entidad emisora"}
+  ],
+  "ejemplos": [
+    {"tipo": "factura", "fecha": "2023-01-15", "monto": 1500, "emisor": "Empresa XYZ"}
+  ],
+  "instrucciones_especiales": "Asegúrate de extraer correctamente la fecha en formato YYYY-MM-DD"
+}
+            </pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Validación básica del JSON
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const jsonText = document.getElementById('esquema_json').value;
+        try {
+            JSON.parse(jsonText);
+        } catch(error) {
+            e.preventDefault();
+            alert('El esquema JSON no es válido. Por favor, corrige los errores: ' + error.message);
+        }
+    });
+</script>
+{% endblock %}

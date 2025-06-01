@@ -87,6 +87,8 @@ class Modulo(models.Model):
     grupo = models.ForeignKey(
         Grupo, on_delete=models.CASCADE, related_name='modulos')
     activo = models.BooleanField(default=True)
+    esquema_json = models.JSONField(blank=True, null=True,
+                                    help_text="Esquema JSON para extracciones de la IA")
 
     def __str__(self):
         return f"{self.nombre} ({self.grupo.nombre})"

@@ -3,6 +3,7 @@ from django.urls import include, path
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
+from webapp.views import administration_views
 from webapp.views.admin_documents_views import admin_documentos, eliminar_documento, limpiar_documentos, listar_archivos_storage, eliminar_archivo_storage
 from webapp.views.administration_views import (
     admin_grupos_modulos, administracion, crear_grupo, crear_modulo,
@@ -56,7 +57,10 @@ urlpatterns = [
          name='listar_archivos_storage'),
     path('administration/documentos/storage/<str:filename>/eliminar/',
          eliminar_archivo_storage, name='eliminar_archivo_storage'),
-     
+     # En la sección de administración
+    path('administration/documentos/modulos/<int:modulo_id>/esquema/', 
+         administration_views.editar_esquema_modulo, 
+     name='editar_esquema_modulo'),
      # Nueva URL para el Dashboard de Consumo
     path('dashboard/consumo/', dashboard_consumo_empresa, name='dashboard_consumo_empresa'),
     # URLs de gestión de licencias
