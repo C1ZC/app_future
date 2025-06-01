@@ -66,315 +66,344 @@ SELECT 'Rut Empresa', 'Documentación de RUT e identificación tributaria', id, 
 -- =============================================================================
 -- 1. DOCUMENTOS TRIBUTARIOS Y SII (Actualización de esquema_json)
 -- =============================================================================
-
 -- Formulario 29
 UPDATE webapp_modulo SET esquema_json = '{
-  "Formulario29": {
-    "PeriodoTributario": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "ResumenImpuestos": {
-      "IVA_DebitoFiscal": 0,
-      "IVA_CreditoFiscal": 0,
-      "PPM_Obligatorio": 0,
-      "PPM_Voluntario": 0,
-      "RetencionesNetas": 0,
-      "TotalATributar": 0,
-      "TotalAPagar": 0
-    },
-    "DetalleIVA": {
-      "VentasAfectas": 0,
-      "VentasExentas": 0,
-      "ComprasAfectas": 0,
-      "ComprasExentas": 0,
-      "CreditoImportaciones": 0
+  "json_data": {
+    "Formulario29": {
+      "PeriodoTributario": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "ResumenImpuestos": {
+        "IVA_DebitoFiscal": 0,
+        "IVA_CreditoFiscal": 0,
+        "PPM_Obligatorio": 0,
+        "PPM_Voluntario": 0,
+        "RetencionesNetas": 0,
+        "TotalATributar": 0,
+        "TotalAPagar": 0
+      },
+      "DetalleIVA": {
+        "VentasAfectas": 0,
+        "VentasExentas": 0,
+        "ComprasAfectas": 0,
+        "ComprasExentas": 0,
+        "CreditoImportaciones": 0
+      }
     }
   }
 }' WHERE nombre = 'Formulario 29';
 
 -- Formulario 22
 UPDATE webapp_modulo SET esquema_json = '{
-  "Formulario22": {
-    "AnioTributario": "YYYY",
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social",
-      "ActividadPrincipal": "Descripción de la actividad"
-    },
-    "ResumenRentas": {
-      "TotalRentaBruta": 0,
-      "TotalRentaNetaGlobal": 0,
-      "CreditosContraImpuesto": 0,
-      "TotalImpuestoDeterminado": 0,
-      "PPM_PagadoAnio": 0,
-      "RemanentePPM": 0,
-      "ImpuestoFinalAPagar": 0,
-      "DevolucionSolicitada": 0
-    },
-    "InformacionAdicional": {
-      "CodigoActividadSII": "",
-      "TipoDeclaracion": "Original/Rectificatoria"
+  "json_data": {
+    "Formulario22": {
+      "AnioTributario": "YYYY",
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social",
+        "ActividadPrincipal": "Descripción de la actividad"
+      },
+      "ResumenRentas": {
+        "TotalRentaBruta": 0,
+        "TotalRentaNetaGlobal": 0,
+        "CreditosContraImpuesto": 0,
+        "TotalImpuestoDeterminado": 0,
+        "PPM_PagadoAnio": 0,
+        "RemanentePPM": 0,
+        "ImpuestoFinalAPagar": 0,
+        "DevolucionSolicitada": 0
+      },
+      "InformacionAdicional": {
+        "CodigoActividadSII": "",
+        "TipoDeclaracion": "Original/Rectificatoria"
+      }
     }
   }
 }' WHERE nombre = 'Formulario 22';
 
 -- Formulario 50
 UPDATE webapp_modulo SET esquema_json = '{
-  "Formulario50": {
-    "PeriodoTributario": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "ImpuestosEspecificos": {
-      "ImpuestoRentasArt42N2": 0,
-      "RetencionArt48": 0,
-      "ImpuestoUnicoTrabajadores": 0,
-      "OtrosImpuestos": 0,
-      "TotalAPagar": 0
+  "json_data": {
+    "Formulario50": {
+      "PeriodoTributario": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "ImpuestosEspecificos": {
+        "ImpuestoRentasArt42N2": 0,
+        "RetencionArt48": 0,
+        "ImpuestoUnicoTrabajadores": 0,
+        "OtrosImpuestos": 0,
+        "TotalAPagar": 0
+      }
     }
   }
 }' WHERE nombre = 'Formulario 50';
 
 -- Formulario 1879
 UPDATE webapp_modulo SET esquema_json = '{
-  "Formulario1879": {
-    "AnioTributario": "YYYY",
-    "DatosDeclarante": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "BeneficiariosRetenciones": [
-      {
-        "RutBeneficiario": "XXXXXXXX-X",
-        "NombreBeneficiario": "Nombre completo",
-        "MontoBrutoPagado": 0,
-        "MontoRetenido": 0
-      }
-    ]
+  "json_data": {
+    "Formulario1879": {
+      "AnioTributario": "YYYY",
+      "DatosDeclarante": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "BeneficiariosRetenciones": [
+        {
+          "RutBeneficiario": "XXXXXXXX-X",
+          "NombreBeneficiario": "Nombre completo",
+          "MontoBrutoPagado": 0,
+          "MontoRetenido": 0
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Formulario 1879';
 
 -- Formulario 1887
 UPDATE webapp_modulo SET esquema_json = '{
-  "Formulario1887": {
-    "AnioTributario": "YYYY",
-    "DatosDeclarante": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "TrabajadoresSueldos": [
-      {
-        "RutTrabajador": "XXXXXXXX-X",
-        "NombreTrabajador": "Nombre completo",
-        "RentaBruta": 0,
-        "ImpuestoUnicoRetenido": 0,
-        "CotizacionesPrevisionales": 0
-      }
-    ]
+  "json_data": {
+    "Formulario1887": {
+      "AnioTributario": "YYYY",
+      "DatosDeclarante": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "TrabajadoresSueldos": [
+        {
+          "RutTrabajador": "XXXXXXXX-X",
+          "NombreTrabajador": "Nombre completo",
+          "RentaBruta": 0,
+          "ImpuestoUnicoRetenido": 0,
+          "CotizacionesPrevisionales": 0
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Formulario 1887';
 
--- Certificado 29 (Generalmente generado a partir del F29)
+-- Certificado 29
 UPDATE webapp_modulo SET esquema_json = '{
-  "Certificado29": {
-    "Anio": "YYYY",
-    "Mes": "MM",
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "DetalleImpuestos": {
-      "IVA_Pagado": 0,
-      "PPM_Pagado": 0,
-      "RetencionesPagadas": 0
+  "json_data": {
+    "Certificado29": {
+      "Anio": "YYYY",
+      "Mes": "MM",
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "DetalleImpuestos": {
+        "IVA_Pagado": 0,
+        "PPM_Pagado": 0,
+        "RetencionesPagadas": 0
+      }
     }
   }
 }' WHERE nombre = 'Certificado 29';
 
--- Certificado 1 (Certificado de Honorarios)
+-- Certificado 1 (Honorarios)
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoHonorarios": {
-    "AnioComercial": "YYYY",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "Nombre": "Nombre Completo"
-    },
-    "DetalleHonorarios": {
-      "MontoBrutoHonorarios": 0,
-      "MontoRetencionImpuesto": 0,
-      "MontoLiquidoPagado": 0,
+  "json_data": {
+    "CertificadoHonorarios": {
+      "AnioComercial": "YYYY",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "Nombre": "Nombre Completo"
+      },
+      "DetalleHonorarios": {
+        "MontoBrutoHonorarios": 0,
+        "MontoRetencionImpuesto": 0,
+        "MontoLiquidoPagado": 0,
+        "FechaEmision": "YYYY-MM-DD"
+      }
+    }
+  }
+}' WHERE nombre = 'Certificado 1';
+
+-- Certificado 3 (Dividendos)
+UPDATE webapp_modulo SET esquema_json = '{
+  "json_data": {
+    "CertificadoDividendos": {
+      "AnioTributario": "YYYY",
+      "DatosEmisorEmpresa": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social de la Empresa"
+      },
+      "DatosPerceptorDividendos": {
+        "Rut": "XXXXXXXX-X",
+        "Nombre": "Nombre Completo del Accionista"
+      },
+      "DetalleDividendos": {
+        "MontoDividendoBruto": 0,
+        "MontoCreditoImpuestoPrimeraCategoria": 0,
+        "MontoRetenidoAdicional": 0
+      },
       "FechaEmision": "YYYY-MM-DD"
     }
   }
-}' WHERE nombre = 'Certificado 1'; -- Asumiendo que "Certificado 1" se refiere al de Honorarios
-
--- Certificado 3 (Certificado de situación tributaria de dividendos)
-UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoDividendos": {
-    "AnioTributario": "YYYY",
-    "DatosEmisorEmpresa": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social de la Empresa"
-    },
-    "DatosPerceptorDividendos": {
-      "Rut": "XXXXXXXX-X",
-      "Nombre": "Nombre Completo del Accionista"
-    },
-    "DetalleDividendos": {
-      "MontoDividendoBruto": 0,
-      "MontoCreditoImpuestoPrimeraCategoria": 0,
-      "MontoRetenidoAdicional": 0
-    },
-    "FechaEmision": "YYYY-MM-DD"
-  }
 }' WHERE nombre = 'Certificado 3';
 
--- Certificado 6 (Certificado de sueldos para impuesto anual a la renta)
+-- Certificado 6 (Sueldos)
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoSueldos": {
-    "AnioTributario": "YYYY",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social del Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo del Trabajador"
-    },
-    "Remuneraciones": {
-      "RentaBrutaTotalAnual": 0,
-      "ImpuestoUnicoRetenidoAnual": 0,
-      "CotizacionesPrevisionalesObligatorias": 0,
-      "CotizacionesSaludObligatorias": 0
-    },
-    "FechaEmision": "YYYY-MM-DD"
+  "json_data": {
+    "CertificadoSueldos": {
+      "AnioTributario": "YYYY",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social del Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo del Trabajador"
+      },
+      "Remuneraciones": {
+        "RentaBrutaTotalAnual": 0,
+        "ImpuestoUnicoRetenidoAnual": 0,
+        "CotizacionesPrevisionalesObligatorias": 0,
+        "CotizacionesSaludObligatorias": 0
+      },
+      "FechaEmision": "YYYY-MM-DD"
+    }
   }
 }' WHERE nombre = 'Certificado 6';
 
--- Certificados de IVA (IVA Compras y Ventas)
+-- Certificados de IVA
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoIVA": {
-    "TipoCertificado": "Compras/Ventas",
-    "Periodo": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "ResumenIVA": {
-      "TotalNeto": 0,
-      "TotalIVA": 0,
-      "TotalDocumentos": 0,
-      "DetalleDocumentos": [
-        {
-          "TipoDocumento": "Factura/Boleta",
-          "Folio": "12345",
-          "FechaEmision": "YYYY-MM-DD",
-          "MontoNeto": 0,
-          "MontoIVA": 0
-        }
-      ]
+  "json_data": {
+    "CertificadoIVA": {
+      "TipoCertificado": "Compras/Ventas",
+      "Periodo": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "ResumenIVA": {
+        "TotalNeto": 0,
+        "TotalIVA": 0,
+        "TotalDocumentos": 0,
+        "DetalleDocumentos": [
+          {
+            "TipoDocumento": "Factura/Boleta",
+            "Folio": "12345",
+            "FechaEmision": "YYYY-MM-DD",
+            "MontoNeto": 0,
+            "MontoIVA": 0
+          }
+        ]
+      }
     }
   }
 }' WHERE nombre = 'Certificados de IVA';
 
 -- Contribuciones
 UPDATE webapp_modulo SET esquema_json = '{
-  "ComprobanteContribuciones": {
-    "Anio": "YYYY",
-    "RolPropiedad": "XXXX-YY",
-    "DireccionPropiedad": "Calle, Número, Comuna",
-    "PeriodoPago": "Cuota 1/2/3/4",
-    "MontoAPagar": 0,
-    "MontoPagado": 0,
-    "FechaVencimiento": "YYYY-MM-DD",
-    "FechaPago": "YYYY-MM-DD",
-    "ComprobanteNumero": "ABC12345"
+  "json_data": {
+    "ComprobanteContribuciones": {
+      "Anio": "YYYY",
+      "RolPropiedad": "XXXX-YY",
+      "DireccionPropiedad": "Calle, Número, Comuna",
+      "PeriodoPago": "Cuota 1/2/3/4",
+      "MontoAPagar": 0,
+      "MontoPagado": 0,
+      "FechaVencimiento": "YYYY-MM-DD",
+      "FechaPago": "YYYY-MM-DD",
+      "ComprobanteNumero": "ABC12345"
+    }
   }
 }' WHERE nombre = 'Contribuciones';
 
 -- Patentes Municipales
 UPDATE webapp_modulo SET esquema_json = '{
-  "ComprobantePatenteMunicipal": {
-    "Anio": "YYYY",
-    "TipoPatente": "Comercial/Profesional/Industrial",
-    "RazonSocialEmpresa": "Nombre o Razón Social",
-    "RutEmpresa": "XXXXXXXX-X",
-    "DireccionLocal": "Calle, Número, Comuna",
-    "PeriodoPago": "Primer Semestre/Segundo Semestre",
-    "MontoAPagar": 0,
-    "MontoPagado": 0,
-    "FechaVencimiento": "YYYY-MM-DD",
-    "FechaPago": "YYYY-MM-DD",
-    "NumeroComprobante": "MUN-XYZ-789"
+  "json_data": {
+    "ComprobantePatenteMunicipal": {
+      "Anio": "YYYY",
+      "TipoPatente": "Comercial/Profesional/Industrial",
+      "RazonSocialEmpresa": "Nombre o Razón Social",
+      "RutEmpresa": "XXXXXXXX-X",
+      "DireccionLocal": "Calle, Número, Comuna",
+      "PeriodoPago": "Primer Semestre/Segundo Semestre",
+      "MontoAPagar": 0,
+      "MontoPagado": 0,
+      "FechaVencimiento": "YYYY-MM-DD",
+      "FechaPago": "YYYY-MM-DD",
+      "NumeroComprobante": "MUN-XYZ-789"
+    }
   }
 }' WHERE nombre = 'Patentes Municipales';
 
 -- Inicio de Actividades
 UPDATE webapp_modulo SET esquema_json = '{
-  "InicioActividadesSII": {
-    "FechaInicioActividades": "YYYY-MM-DD",
-    "RutContribuyente": "XXXXXXXX-X",
-    "RazonSocial": "Nombre o Razón Social",
-    "ActividadEconomicaPrincipal": {
-      "CodigoSII": "XXXXXX",
-      "Descripcion": "Descripción de la actividad"
-    },
-    "CapitalInicial": 0,
-    "DireccionComercial": "Calle, Número, Oficina/Departamento, Comuna, Ciudad",
-    "TipoContribuyente": "Persona Natural/Persona Jurídica",
-    "FechaTimbreElectronico": "YYYY-MM-DD HH:MM:SS"
+  "json_data": {
+    "InicioActividadesSII": {
+      "FechaInicioActividades": "YYYY-MM-DD",
+      "RutContribuyente": "XXXXXXXX-X",
+      "RazonSocial": "Nombre o Razón Social",
+      "ActividadEconomicaPrincipal": {
+        "CodigoSII": "XXXXXX",
+        "Descripcion": "Descripción de la actividad"
+      },
+      "CapitalInicial": 0,
+      "DireccionComercial": "Calle, Número, Oficina/Departamento, Comuna, Ciudad",
+      "TipoContribuyente": "Persona Natural/Persona Jurídica",
+      "FechaTimbreElectronico": "YYYY-MM-DD HH:MM:SS"
+    }
   }
 }' WHERE nombre = 'Inicio de Actividades';
 
 -- Término de Giro
 UPDATE webapp_modulo SET esquema_json = '{
-  "TerminoGiroSII": {
-    "FechaTerminoGiro": "YYYY-MM-DD",
-    "RutContribuyente": "XXXXXXXX-X",
-    "RazonSocial": "Nombre o Razón Social",
-    "MotivoTermino": "Cierre/Venta/Fusión",
-    "DeclaracionesPendientes": "Si/No",
-    "IVA_Final": 0,
-    "ImpuestoRenta_Final": 0,
-    "ComprobanteSolicitudNumero": "TG-XXXXXX",
-    "FechaTimbreElectronico": "YYYY-MM-DD HH:MM:SS"
+  "json_data": {
+    "TerminoGiroSII": {
+      "FechaTerminoGiro": "YYYY-MM-DD",
+      "RutContribuyente": "XXXXXXXX-X",
+      "RazonSocial": "Nombre o Razón Social",
+      "MotivoTermino": "Cierre/Venta/Fusión",
+      "DeclaracionesPendientes": "Si/No",
+      "IVA_Final": 0,
+      "ImpuestoRenta_Final": 0,
+      "ComprobanteSolicitudNumero": "TG-XXXXXX",
+      "FechaTimbreElectronico": "YYYY-MM-DD HH:MM:SS"
+    }
   }
 }' WHERE nombre = 'Término de Giro';
 
 -- Rut Empresa
 UPDATE webapp_modulo SET esquema_json = '{
-  "RutEmpresa": {
-    "Rut": "XXXXXXXX-X",
-    "RazonSocial": "Nombre o Razón Social",
-    "TipoContribuyente": "Persona Natural/Persona Jurídica",
-    "FechaInicioActividades": "YYYY-MM-DD",
-    "ActividadesEconomicas": [
-      {
-        "CodigoSII": "XXXXXX",
-        "Descripcion": "Descripción de la actividad",
-        "Principal": true
-      }
-    ],
-    "DireccionComercial": "Calle, Número, Oficina/Departamento, Comuna, Ciudad",
-    "Telefono": "+569 XXXXXXXX",
-    "Email": "correo@ejemplo.com",
-    "EstadoRut": "Activo/Inactivo"
+  "json_data": {
+    "RutEmpresa": {
+      "Rut": "XXXXXXXX-X",
+      "RazonSocial": "Nombre o Razón Social",
+      "TipoContribuyente": "Persona Natural/Persona Jurídica",
+      "FechaInicioActividades": "YYYY-MM-DD",
+      "ActividadesEconomicas": [
+        {
+          "CodigoSII": "XXXXXX",
+          "Descripcion": "Descripción de la actividad",
+          "Principal": true
+        }
+      ],
+      "DireccionComercial": "Calle, Número, Oficina/Departamento, Comuna, Ciudad",
+      "Telefono": "+569 XXXXXXXX",
+      "Email": "correo@ejemplo.com",
+      "EstadoRut": "Activo/Inactivo"
+    }
   }
 }' WHERE nombre = 'Rut Empresa';
 
@@ -438,502 +467,534 @@ SELECT 'DTE Emitidos', 'Documentos tributarios electrónicos emitidos', id, true
 
 -- Facturas Electrónicas (Emisión)
 UPDATE webapp_modulo SET esquema_json = '{
-  "FacturaElectronica": {
-    "TipoDocumento": "Factura Electrónica",
-    "Folio": "XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor",
-      "Giro": "Giro Comercial",
-      "Direccion": "Dirección Emisor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Receptor",
-      "Giro": "Giro Comercial Receptor",
-      "Direccion": "Dirección Receptor",
-      "CorreoElectronico": "correo@receptor.com"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "CodigoProducto": "COD123",
-        "Descripcion": "Descripción del producto/servicio",
-        "Cantidad": 1,
-        "PrecioUnitario": 1000,
-        "MontoTotalLinea": 1000
-      }
-    ],
-    "Totales": {
-      "MontoNeto": 0,
-      "MontoExento": 0,
-      "MontoIVA": 0,
-      "MontoTotal": 0
-    },
-    "CondicionesPago": "Contado/Crédito",
-    "ReferenciaDocumentos": [
-      {
-        "TipoDocumentoReferencia": "Guía de Despacho",
-        "FolioReferencia": "YYYY",
-        "FechaReferencia": "YYYY-MM-DD"
-      }
-    ]
+  "json_data": {
+    "FacturaElectronica": {
+      "TipoDocumento": "Factura Electrónica",
+      "Folio": "XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor",
+        "Giro": "Giro Comercial",
+        "Direccion": "Dirección Emisor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Receptor",
+        "Giro": "Giro Comercial Receptor",
+        "Direccion": "Dirección Receptor",
+        "CorreoElectronico": "correo@receptor.com"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "CodigoProducto": "COD123",
+          "Descripcion": "Descripción del producto/servicio",
+          "Cantidad": 1,
+          "PrecioUnitario": 1000,
+          "MontoTotalLinea": 1000
+        }
+      ],
+      "Totales": {
+        "MontoNeto": 0,
+        "MontoExento": 0,
+        "MontoIVA": 0,
+        "MontoTotal": 0
+      },
+      "CondicionesPago": "Contado/Crédito",
+      "ReferenciaDocumentos": [
+        {
+          "TipoDocumentoReferencia": "Guía de Despacho",
+          "FolioReferencia": "YYYY",
+          "FechaReferencia": "YYYY-MM-DD"
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Facturas Electrónicas';
 
 -- Facturas de Compra (Recepción)
 UPDATE webapp_modulo SET esquema_json = '{
-  "FacturaCompra": {
-    "TipoDocumento": "Factura de Compra",
-    "Folio": "XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Proveedor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empresa"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Descripción del producto/servicio comprado",
-        "Cantidad": 1,
-        "PrecioUnitario": 500,
-        "MontoTotalLinea": 500
-      }
-    ],
-    "Totales": {
-      "MontoNeto": 0,
-      "MontoIVA": 0,
-      "MontoTotal": 0
-    },
-    "EstadoRecepcion": "Recibida/Aceptada/Rechazada",
-    "FechaRecepcionSistema": "YYYY-MM-DD HH:MM:SS"
+  "json_data": {
+    "FacturaCompra": {
+      "TipoDocumento": "Factura de Compra",
+      "Folio": "XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Proveedor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empresa"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Descripción del producto/servicio comprado",
+          "Cantidad": 1,
+          "PrecioUnitario": 500,
+          "MontoTotalLinea": 500
+        }
+      ],
+      "Totales": {
+        "MontoNeto": 0,
+        "MontoIVA": 0,
+        "MontoTotal": 0
+      },
+      "EstadoRecepcion": "Recibida/Aceptada/Rechazada",
+      "FechaRecepcionSistema": "YYYY-MM-DD HH:MM:SS"
+    }
   }
 }' WHERE nombre = 'Facturas de Compra';
 
 -- Facturas de Exportación
 UPDATE webapp_modulo SET esquema_json = '{
-  "FacturaExportacion": {
-    "TipoDocumento": "Factura de Exportación",
-    "Folio": "EXXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Exportador"
-    },
-    "DatosReceptorExtranjero": {
-      "Identificacion": "ID_EXTRANJERO",
-      "NombreRazonSocial": "Nombre o Razón Social Cliente Extranjero",
-      "Direccion": "Dirección Cliente Extranjero",
-      "Pais": "País Cliente"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Descripción del producto exportado",
-        "Cantidad": 1,
-        "PrecioUnitarioUSD": 100,
-        "MontoTotalLineaUSD": 100
-      }
-    ],
-    "Totales": {
-      "MontoTotalUSD": 0,
-      "MontoTotalCLP": 0,
-      "TipoCambio": 0
-    },
-    "Incoterm": "FOB/CIF/etc.",
-    "ViaTransporte": "Marítima/Aérea/Terrestre",
-    "ReferenciaOrdenCompra": "PO-XYZ"
+  "json_data": {
+    "FacturaExportacion": {
+      "TipoDocumento": "Factura de Exportación",
+      "Folio": "EXXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Exportador"
+      },
+      "DatosReceptorExtranjero": {
+        "Identificacion": "ID_EXTRANJERO",
+        "NombreRazonSocial": "Nombre o Razón Social Cliente Extranjero",
+        "Direccion": "Dirección Cliente Extranjero",
+        "Pais": "País Cliente"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Descripción del producto exportado",
+          "Cantidad": 1,
+          "PrecioUnitarioUSD": 100,
+          "MontoTotalLineaUSD": 100
+        }
+      ],
+      "Totales": {
+        "MontoTotalUSD": 0,
+        "MontoTotalCLP": 0,
+        "TipoCambio": 0
+      },
+      "Incoterm": "FOB/CIF/etc.",
+      "ViaTransporte": "Marítima/Aérea/Terrestre",
+      "ReferenciaOrdenCompra": "PO-XYZ"
+    }
   }
 }' WHERE nombre = 'Facturas de Exportación';
 
 -- Facturas No Afectas/Exentas
 UPDATE webapp_modulo SET esquema_json = '{
-  "FacturaNoAfectaExenta": {
-    "TipoDocumento": "Factura No Afecta o Exenta",
-    "Folio": "EXXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Receptor"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Descripción del servicio/producto exento",
-        "Cantidad": 1,
-        "PrecioUnitario": 1000,
-        "MontoTotalLinea": 1000
-      }
-    ],
-    "Totales": {
-      "MontoTotalExento": 0
-    },
-    "GlosaExencion": "Descripción de la razón de exención o no afectación"
+  "json_data": {
+    "FacturaNoAfectaExenta": {
+      "TipoDocumento": "Factura No Afecta o Exenta",
+      "Folio": "EXXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Receptor"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Descripción del servicio/producto exento",
+          "Cantidad": 1,
+          "PrecioUnitario": 1000,
+          "MontoTotalLinea": 1000
+        }
+      ],
+      "Totales": {
+        "MontoTotalExento": 0
+      },
+      "GlosaExencion": "Descripción de la razón de exención o no afectación"
+    }
   }
 }' WHERE nombre = 'Facturas No Afectas/Exentas';
 
 -- Boletas Electrónicas
 UPDATE webapp_modulo SET esquema_json = '{
-  "BoletaElectronica": {
-    "TipoDocumento": "Boleta Electrónica",
-    "Folio": "BXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "HoraEmision": "HH:MM:SS",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "MontoTotal": 0,
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Descripción del producto/servicio",
-        "Cantidad": 1,
-        "MontoUnitario": 500,
-        "MontoTotalLinea": 500
-      }
-    ],
-    "MedioPago": "Efectivo/Tarjeta/Transferencia"
+  "json_data": {
+    "BoletaElectronica": {
+      "TipoDocumento": "Boleta Electrónica",
+      "Folio": "BXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "HoraEmision": "HH:MM:SS",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "MontoTotal": 0,
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Descripción del producto/servicio",
+          "Cantidad": 1,
+          "MontoUnitario": 500,
+          "MontoTotalLinea": 500
+        }
+      ],
+      "MedioPago": "Efectivo/Tarjeta/Transferencia"
+    }
   }
 }' WHERE nombre = 'Boletas Electrónicas';
 
 -- Boletas de Honorarios
 UPDATE webapp_modulo SET esquema_json = '{
-  "BoletaHonorarios": {
-    "TipoDocumento": "Boleta de Honorarios",
-    "Folio": "HXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Prestador",
-      "ActividadEconomica": "Profesión u Oficio"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Contratante"
-    },
-    "MontoBrutoHonorarios": 0,
-    "MontoRetencion": 0,
-    "PorcentajeRetencion": 0,
-    "MontoLiquidoAPagar": 0,
-    "GlosaServicio": "Descripción detallada del servicio prestado",
-    "IndicaRetencion": "Sí/No"
+  "json_data": {
+    "BoletaHonorarios": {
+      "TipoDocumento": "Boleta de Honorarios",
+      "Folio": "HXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Prestador",
+        "ActividadEconomica": "Profesión u Oficio"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Contratante"
+      },
+      "MontoBrutoHonorarios": 0,
+      "MontoRetencion": 0,
+      "PorcentajeRetencion": 0,
+      "MontoLiquidoAPagar": 0,
+      "GlosaServicio": "Descripción detallada del servicio prestado",
+      "IndicaRetencion": "Sí/No"
+    }
   }
 }' WHERE nombre = 'Boletas de Honorarios';
 
 -- Guías de Despacho
 UPDATE webapp_modulo SET esquema_json = '{
-  "GuiaDespacho": {
-    "TipoDocumento": "Guía de Despacho",
-    "Folio": "GXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Receptor"
-    },
-    "TipoTraslado": "Venta/Consignación/TrasladoInterno/etc.",
-    "Origen": "Dirección de Origen",
-    "Destino": "Dirección de Destino",
-    "Transportista": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Transportista",
-      "PatenteVehiculo": "AA-BB-CC"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "CodigoProducto": "PROD1",
-        "Descripcion": "Descripción del producto",
-        "Cantidad": 10,
-        "UnidadMedida": "Unidades"
+  "json_data": {
+    "GuiaDespacho": {
+      "TipoDocumento": "Guía de Despacho",
+      "Folio": "GXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Receptor"
+      },
+      "TipoTraslado": "Venta/Consignación/TrasladoInterno/etc.",
+      "Origen": "Dirección de Origen",
+      "Destino": "Dirección de Destino",
+      "Transportista": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Transportista",
+        "PatenteVehiculo": "AA-BB-CC"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "CodigoProducto": "PROD1",
+          "Descripcion": "Descripción del producto",
+          "Cantidad": 10,
+          "UnidadMedida": "Unidades"
+        }
+      ],
+      "ReferenciaDocumentoOrigen": {
+        "Tipo": "Orden de Compra",
+        "Folio": "OC-12345"
       }
-    ],
-    "ReferenciaDocumentoOrigen": {
-      "Tipo": "Orden de Compra",
-      "Folio": "OC-12345"
     }
   }
 }' WHERE nombre = 'Guías de Despacho';
 
 -- Notas de Crédito
 UPDATE webapp_modulo SET esquema_json = '{
-  "NotaCredito": {
-    "TipoDocumento": "Nota de Crédito",
-    "Folio": "NCXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Receptor"
-    },
-    "DocumentoModificado": {
-      "TipoDocumento": "Factura Electrónica",
-      "Folio": "FXXXX",
-      "FechaEmision": "YYYY-MM-DD"
-    },
-    "TipoCorrecion": "Anulación/Devolución/Descuento",
-    "RazonCorrecion": "Motivo de la corrección",
-    "DetalleAjuste": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Ajuste por producto defectuoso",
-        "CantidadAjustada": 1,
-        "MontoAjusteUnitario": 100,
-        "MontoTotalAjusteLinea": 100
+  "json_data": {
+    "NotaCredito": {
+      "TipoDocumento": "Nota de Crédito",
+      "Folio": "NCXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Receptor"
+      },
+      "DocumentoModificado": {
+        "TipoDocumento": "Factura Electrónica",
+        "Folio": "FXXXX",
+        "FechaEmision": "YYYY-MM-DD"
+      },
+      "TipoCorrecion": "Anulación/Devolución/Descuento",
+      "RazonCorrecion": "Motivo de la corrección",
+      "DetalleAjuste": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Ajuste por producto defectuoso",
+          "CantidadAjustada": 1,
+          "MontoAjusteUnitario": 100,
+          "MontoTotalAjusteLinea": 100
+        }
+      ],
+      "TotalesAjuste": {
+        "MontoNetoAjuste": 0,
+        "MontoIVAAjuste": 0,
+        "MontoTotalAjuste": 0
       }
-    ],
-    "TotalesAjuste": {
-      "MontoNetoAjuste": 0,
-      "MontoIVAAjuste": 0,
-      "MontoTotalAjuste": 0
     }
   }
 }' WHERE nombre = 'Notas de Crédito';
 
 -- Notas de Débito
 UPDATE webapp_modulo SET esquema_json = '{
-  "NotaDebito": {
-    "TipoDocumento": "Nota de Débito",
-    "Folio": "NDXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "DatosReceptor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Receptor"
-    },
-    "DocumentoModificado": {
-      "TipoDocumento": "Factura Electrónica",
-      "Folio": "FYYYY",
-      "FechaEmision": "YYYY-MM-DD"
-    },
-    "RazonAumento": "Intereses/Gastos de cobranza/Error en facturación",
-    "DetalleAumento": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Intereses por atraso",
-        "MontoAumentoUnitario": 50,
-        "MontoTotalAumentoLinea": 50
+  "json_data": {
+    "NotaDebito": {
+      "TipoDocumento": "Nota de Débito",
+      "Folio": "NDXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "DatosReceptor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Receptor"
+      },
+      "DocumentoModificado": {
+        "TipoDocumento": "Factura Electrónica",
+        "Folio": "FYYYY",
+        "FechaEmision": "YYYY-MM-DD"
+      },
+      "RazonAumento": "Intereses/Gastos de cobranza/Error en facturación",
+      "DetalleAumento": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Intereses por atraso",
+          "MontoAumentoUnitario": 50,
+          "MontoTotalAumentoLinea": 50
+        }
+      ],
+      "TotalesAumento": {
+        "MontoNetoAumento": 0,
+        "MontoIVAAumento": 0,
+        "MontoTotalAumento": 0
       }
-    ],
-    "TotalesAumento": {
-      "MontoNetoAumento": 0,
-      "MontoIVAAumento": 0,
-      "MontoTotalAumento": 0
     }
   }
 }' WHERE nombre = 'Notas de Débito';
 
 -- Órdenes de Compra
 UPDATE webapp_modulo SET esquema_json = '{
-  "OrdenCompra": {
-    "NumeroOC": "OC-YYYY-MM-DD-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosComprador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Comprador",
-      "Direccion": "Dirección Comprador"
-    },
-    "DatosProveedor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Proveedor",
-      "Direccion": "Dirección Proveedor"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "CodigoProducto": "SKU001",
-        "Descripcion": "Nombre del producto/servicio",
-        "Cantidad": 5,
-        "PrecioUnitario": 200,
-        "MontoTotalLinea": 1000
-      }
-    ],
-    "Subtotal": 0,
-    "IVA": 0,
-    "Total": 0,
-    "CondicionesEntrega": "Plazo de entrega",
-    "CondicionesPago": "Forma de pago",
-    "EstadoOC": "Pendiente/Emitida/Aprobada/Rechazada"
+  "json_data": {
+    "OrdenCompra": {
+      "NumeroOC": "OC-YYYY-MM-DD-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosComprador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Comprador",
+        "Direccion": "Dirección Comprador"
+      },
+      "DatosProveedor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Proveedor",
+        "Direccion": "Dirección Proveedor"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "CodigoProducto": "SKU001",
+          "Descripcion": "Nombre del producto/servicio",
+          "Cantidad": 5,
+          "PrecioUnitario": 200,
+          "MontoTotalLinea": 1000
+        }
+      ],
+      "Subtotal": 0,
+      "IVA": 0,
+      "Total": 0,
+      "CondicionesEntrega": "Plazo de entrega",
+      "CondicionesPago": "Forma de pago",
+      "EstadoOC": "Pendiente/Emitida/Aprobada/Rechazada"
+    }
   }
 }' WHERE nombre = 'Órdenes de Compra';
 
 -- Cotizaciones
 UPDATE webapp_modulo SET esquema_json = '{
-  "Cotizacion": {
-    "NumeroCotizacion": "COT-YYYY-MM-DD-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "FechaValidezHasta": "YYYY-MM-DD",
-    "DatosEmisor": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Emisor"
-    },
-    "DatosCliente": {
-      "NombreContacto": "Nombre del Contacto",
-      "RazonSocial": "Nombre o Razón Social Cliente",
-      "CorreoElectronico": "cliente@ejemplo.com",
-      "Telefono": "+569 XXXXXXXX"
-    },
-    "DetalleItems": [
-      {
-        "NroLinea": 1,
-        "Descripcion": "Descripción del producto/servicio cotizado",
-        "Cantidad": 1,
-        "PrecioUnitario": 1500,
-        "MontoTotalLinea": 1500
-      }
-    ],
-    "Subtotal": 0,
-    "IVA": 0,
-    "TotalEstimado": 0,
-    "Observaciones": "Condiciones especiales de la cotización."
+  "json_data": {
+    "Cotizacion": {
+      "NumeroCotizacion": "COT-YYYY-MM-DD-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "FechaValidezHasta": "YYYY-MM-DD",
+      "DatosEmisor": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Emisor"
+      },
+      "DatosCliente": {
+        "NombreContacto": "Nombre del Contacto",
+        "RazonSocial": "Nombre o Razón Social Cliente",
+        "CorreoElectronico": "cliente@ejemplo.com",
+        "Telefono": "+569 XXXXXXXX"
+      },
+      "DetalleItems": [
+        {
+          "NroLinea": 1,
+          "Descripcion": "Descripción del producto/servicio cotizado",
+          "Cantidad": 1,
+          "PrecioUnitario": 1500,
+          "MontoTotalLinea": 1500
+        }
+      ],
+      "Subtotal": 0,
+      "IVA": 0,
+      "TotalEstimado": 0,
+      "Observaciones": "Condiciones especiales de la cotización."
+    }
   }
 }' WHERE nombre = 'Cotizaciones';
 
 -- Contratos Comerciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoComercial": {
-    "NumeroContrato": "CONT-YYYY-XXXX",
-    "FechaContrato": "YYYY-MM-DD",
-    "PartesContratantes": [
-      {
-        "Rol": "Vendedor",
-        "Rut": "XXXXXXXX-X",
-        "RazonSocial": "Nombre o Razón Social Vendedor",
-        "RepresentanteLegal": "Nombre Representante Legal"
-      },
-      {
-        "Rol": "Comprador",
-        "Rut": "XXXXXXXX-X",
-        "RazonSocial": "Nombre o Razón Social Comprador",
-        "RepresentanteLegal": "Nombre Representante Legal"
-      }
-    ],
-    "ObjetoContrato": "Descripción breve del objeto del contrato (ej. 'Compraventa de bienes', 'Prestación de servicios')",
-    "ClausulasPrincipales": [
-      {"Titulo": "Precio y Condiciones de Pago", "Contenido": "Detalle del precio y formas de pago."},
-      {"Titulo": "Plazo de Entrega/Ejecución", "Contenido": "Fechas y plazos."},
-      {"Titulo": "Condiciones de Garantía", "Contenido": "Cobertura de garantía."}
-    ],
-    "DuracionContrato": "Desde YYYY-MM-DD hasta YYYY-MM-DD / Indefinido",
-    "ValorTotalEstimado": 0,
-    "EstadoContrato": "Vigente/Finalizado/Rescindido",
-    "ArchivosAdjuntos": ["ruta/al/pdf_contrato.pdf"]
+  "json_data": {
+    "ContratoComercial": {
+      "NumeroContrato": "CONT-YYYY-XXXX",
+      "FechaContrato": "YYYY-MM-DD",
+      "PartesContratantes": [
+        {
+          "Rol": "Vendedor",
+          "Rut": "XXXXXXXX-X",
+          "RazonSocial": "Nombre o Razón Social Vendedor",
+          "RepresentanteLegal": "Nombre Representante Legal"
+        },
+        {
+          "Rol": "Comprador",
+          "Rut": "XXXXXXXX-X",
+          "RazonSocial": "Nombre o Razón Social Comprador",
+          "RepresentanteLegal": "Nombre Representante Legal"
+        }
+      ],
+      "ObjetoContrato": "Descripción breve del objeto del contrato (ej. Compraventa de bienes, Prestación de servicios)",
+      "ClausulasPrincipales": [
+        {"Titulo": "Precio y Condiciones de Pago", "Contenido": "Detalle del precio y formas de pago."},
+        {"Titulo": "Plazo de Entrega/Ejecución", "Contenido": "Fechas y plazos."},
+        {"Titulo": "Condiciones de Garantía", "Contenido": "Cobertura de garantía."}
+      ],
+      "DuracionContrato": "DesdeYYYY-MM-DD hastaYYYY-MM-DD / Indefinido",
+      "ValorTotalEstimado": 0,
+      "EstadoContrato": "Vigente/Finalizado/Rescindido",
+      "ArchivosAdjuntos": ["ruta/al/pdf_contrato.pdf"]
+    }
   }
 }' WHERE nombre = 'Contratos Comerciales';
 
 -- Libros de Compra-Venta
 UPDATE webapp_modulo SET esquema_json = '{
-  "LibroCompraVenta": {
-    "TipoLibro": "Compras/Ventas",
-    "Periodo": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosContribuyente": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "ResumenPeriodo": {
-      "TotalDocumentos": 0,
-      "TotalNeto": 0,
-      "TotalIVA": 0,
-      "TotalExento": 0,
-      "TotalImponible": 0
-    },
-    "DetalleDocumentos": [
-      {
-        "TipoDTE": "Factura/Boleta",
-        "Folio": "XXXX",
-        "FechaEmision": "YYYY-MM-DD",
-        "RutContraparte": "XXXXXXXX-X",
-        "MontoNeto": 0,
-        "MontoIVA": 0,
-        "MontoTotal": 0
-      }
-    ]
+  "json_data": {
+    "LibroCompraVenta": {
+      "TipoLibro": "Compras/Ventas",
+      "Periodo": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosContribuyente": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "ResumenPeriodo": {
+        "TotalDocumentos": 0,
+        "TotalNeto": 0,
+        "TotalIVA": 0,
+        "TotalExento": 0,
+        "TotalImponible": 0
+      },
+      "DetalleDocumentos": [
+        {
+          "TipoDTE": "Factura/Boleta",
+          "Folio": "XXXX",
+          "FechaEmision": "YYYY-MM-DD",
+          "RutContraparte": "XXXXXXXX-X",
+          "MontoNeto": 0,
+          "MontoIVA": 0,
+          "MontoTotal": 0
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Libros de Compra-Venta';
 
 -- Informes de Ventas
 UPDATE webapp_modulo SET esquema_json = '{
-  "InformeVentas": {
-    "TipoInforme": "Diario/Semanal/Mensual/Anual",
-    "PeriodoInforme": {
-      "FechaInicio": "YYYY-MM-DD",
-      "FechaFin": "YYYY-MM-DD"
-    },
-    "DatosEmpresa": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social"
-    },
-    "ResumenVentas": {
-      "TotalVentasNetas": 0,
-      "TotalIVA": 0,
-      "TotalVentasBrutas": 0,
-      "CantidadDocumentosEmitidos": 0,
-      "VentasPorProductoTop5": [
-        {"Producto": "Producto A", "MontoVenta": 0},
-        {"Producto": "Producto B", "MontoVenta": 0}
-      ],
-      "VentasPorClienteTop5": [
-        {"Cliente": "Cliente X", "MontoVenta": 0},
-        {"Cliente": "Cliente Y", "MontoVenta": 0}
-      ]
-    },
-    "MetasVentas": {
-      "MetaPeriodo": 0,
-      "PorcentajeCumplimiento": 0
+  "json_data": {
+    "InformeVentas": {
+      "TipoInforme": "Diario/Semanal/Mensual/Anual",
+      "PeriodoInforme": {
+        "FechaInicio": "YYYY-MM-DD",
+        "FechaFin": "YYYY-MM-DD"
+      },
+      "DatosEmpresa": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social"
+      },
+      "ResumenVentas": {
+        "TotalVentasNetas": 0,
+        "TotalIVA": 0,
+        "TotalVentasBrutas": 0,
+        "CantidadDocumentosEmitidos": 0,
+        "VentasPorProductoTop5": [
+          {"Producto": "Producto A", "MontoVenta": 0},
+          {"Producto": "Producto B", "MontoVenta": 0}
+        ],
+        "VentasPorClienteTop5": [
+          {"Cliente": "Cliente X", "MontoVenta": 0},
+          {"Cliente": "Cliente Y", "MontoVenta": 0}
+        ]
+      },
+      "MetasVentas": {
+        "MetaPeriodo": 0,
+        "PorcentajeCumplimiento": 0
+      }
     }
   }
 }' WHERE nombre = 'Informes de Ventas';
 
 -- DTE Recibidos
 UPDATE webapp_modulo SET esquema_json = '{
-  "DTERecibido": {
-    "TipoDTE": "Factura/Nota de Crédito/Guía de Despacho",
-    "Folio": "XXXX",
-    "RutEmisor": "XXXXXXXX-X",
-    "RazonSocialEmisor": "Nombre o Razón Social Emisor",
-    "FechaEmision": "YYYY-MM-DD",
-    "MontoTotal": 0,
-    "EstadoRecepcionSII": "Aceptado/Rechazado/RecibidoConReparo",
-    "FechaRecepcionSistema": "YYYY-MM-DD HH:MM:SS",
-    "LinkPDF": "url_al_pdf_dte_recibido"
+  "json_data": {
+    "DTERecibido": {
+      "TipoDTE": "Factura/Nota de Crédito/Guía de Despacho",
+      "Folio": "XXXX",
+      "RutEmisor": "XXXXXXXX-X",
+      "RazonSocialEmisor": "Nombre o Razón Social Emisor",
+      "FechaEmision": "YYYY-MM-DD",
+      "MontoTotal": 0,
+      "EstadoRecepcionSII": "Aceptado/Rechazado/RecibidoConReparo",
+      "FechaRecepcionSistema": "YYYY-MM-DD HH:MM:SS",
+      "LinkPDF": "url_al_pdf_dte_recibido"
+    }
   }
 }' WHERE nombre = 'DTE Recibidos';
 
 -- DTE Emitidos
 UPDATE webapp_modulo SET esquema_json = '{
-  "DTEEmitido": {
-    "TipoDTE": "Factura/Boleta/Guía de Despacho",
-    "Folio": "XXXX",
-    "RutReceptor": "XXXXXXXX-X",
-    "RazonSocialReceptor": "Nombre o Razón Social Receptor",
-    "FechaEmision": "YYYY-MM-DD",
-    "MontoTotal": 0,
-    "EstadoEnvioSII": "Enviado/Aceptado/Rechazado",
-    "FechaAcuseReciboSII": "YYYY-MM-DD HH:MM:SS",
-    "LinkPDF": "url_al_pdf_dte_emitido",
-    "LinkXML": "url_al_xml_dte_emitido"
+  "json_data": {
+    "DTEEmitido": {
+      "TipoDTE": "Factura/Boleta/Guía de Despacho",
+      "Folio": "XXXX",
+      "RutReceptor": "XXXXXXXX-X",
+      "RazonSocialReceptor": "Nombre o Razón Social Receptor",
+      "FechaEmision": "YYYY-MM-DD",
+      "MontoTotal": 0,
+      "EstadoEnvioSII": "Enviado/Aceptado/Rechazado",
+      "FechaAcuseReciboSII": "YYYY-MM-DD HH:MM:SS",
+      "LinkPDF": "url_al_pdf_dte_emitido",
+      "LinkXML": "url_al_xml_dte_emitido"
+    }
   }
 }' WHERE nombre = 'DTE Emitidos';
 
@@ -1000,419 +1061,453 @@ SELECT 'Permisos y Vacaciones', 'Documentos de solicitud y autorización de ause
 
 -- Contratos de Trabajo
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoTrabajo": {
-    "TipoContrato": "Indefinido/Plazo Fijo/Por Obra",
-    "NumeroContrato": "CT-YYYY-XXXX",
-    "FechaInicio": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador",
-      "Direccion": "Dirección Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador",
-      "Nacionalidad": "Chilena/Extranjera",
-      "FechaNacimiento": "YYYY-MM-DD",
-      "Direccion": "Dirección Trabajador"
-    },
-    "Cargo": "Cargo del Trabajador",
-    "SueldoBase": 0,
-    "Jornada": "Completa/Parcial",
-    "HorasSemanales": 45,
-    "AnexosAsociados": ["ANEXO-001", "ANEXO-002"]
+  "json_data": {
+    "ContratoTrabajo": {
+      "TipoContrato": "Indefinido/Plazo Fijo/Por Obra",
+      "NumeroContrato": "CT-YYYY-XXXX",
+      "FechaInicio": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador",
+        "Direccion": "Dirección Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador",
+        "Nacionalidad": "Chilena/Extranjera",
+        "FechaNacimiento": "YYYY-MM-DD",
+        "Direccion": "Dirección Trabajador"
+      },
+      "Cargo": "Cargo del Trabajador",
+      "SueldoBase": 0,
+      "Jornada": "Completa/Parcial",
+      "HorasSemanales": 45,
+      "AnexosAsociados": ["ANEXO-001", "ANEXO-002"]
+    }
   }
 }' WHERE nombre = 'Contratos de Trabajo';
 
 -- Anexos de Contrato
 UPDATE webapp_modulo SET esquema_json = '{
-  "AnexoContrato": {
-    "NumeroAnexo": "ANEXO-XXXX",
-    "FechaAnexo": "YYYY-MM-DD",
-    "ReferenciaContrato": {
-      "NumeroContrato": "CT-YYYY-XXXX",
-      "FechaContrato": "YYYY-MM-DD"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "TipoModificacion": "Cambio de Cargo/Aumento de Sueldo/Jornada/Dirección",
-    "DetalleModificacion": "Descripción detallada del cambio o adenda.",
-    "SueldoBaseNuevo": 0
+  "json_data": {
+    "AnexoContrato": {
+      "NumeroAnexo": "ANEXO-XXXX",
+      "FechaAnexo": "YYYY-MM-DD",
+      "ReferenciaContrato": {
+        "NumeroContrato": "CT-YYYY-XXXX",
+        "FechaContrato": "YYYY-MM-DD"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "TipoModificacion": "Cambio de Cargo/Aumento de Sueldo/Jornada/Dirección",
+      "DetalleModificacion": "Descripción detallada del cambio o adenda.",
+      "SueldoBaseNuevo": 0
+    }
   }
 }' WHERE nombre = 'Anexos de Contrato';
 
 -- Finiquitos
 UPDATE webapp_modulo SET esquema_json = '{
-  "Finiquito": {
-    "NumeroFiniquito": "FQN-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador",
-      "FechaIngreso": "YYYY-MM-DD",
-      "FechaEgreso": "YYYY-MM-DD"
-    },
-    "CausalTermino": "Artículo y letra de la causal",
-    "DetallePagos": {
-      "IndemnizacionAniosServicio": 0,
-      "IndemnizacionSustitutivaAvisoPrevio": 0,
-      "VacacionesPendientes": 0,
-      "OtrosHaberes": 0,
-      "TotalHaberes": 0,
-      "Descuentos": 0,
-      "TotalLiquidoAPagar": 0
-    },
-    "FechaRatificacion": "YYYY-MM-DD",
-    "NotariaOIT": "Nombre Notaría o IT"
+  "json_data": {
+    "Finiquito": {
+      "NumeroFiniquito": "FQN-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador",
+        "FechaIngreso": "YYYY-MM-DD",
+        "FechaEgreso": "YYYY-MM-DD"
+      },
+      "CausalTermino": "Artículo y letra de la causal",
+      "DetallePagos": {
+        "IndemnizacionAniosServicio": 0,
+        "IndemnizacionSustitutivaAvisoPrevio": 0,
+        "VacacionesPendientes": 0,
+        "OtrosHaberes": 0,
+        "TotalHaberes": 0,
+        "Descuentos": 0,
+        "TotalLiquidoAPagar": 0
+      },
+      "FechaRatificacion": "YYYY-MM-DD",
+      "NotariaOIT": "Nombre Notaría o IT"
+    }
   }
 }' WHERE nombre = 'Finiquitos';
 
 -- Liquidaciones de Sueldo
 UPDATE webapp_modulo SET esquema_json = '{
-  "LiquidacionSueldo": {
-    "Periodo": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador",
-      "Cargo": "Cargo",
-      "SueldoBase": 0
-    },
-    "HaberesImponibles": [
-      {"Concepto": "Sueldo Base", "Monto": 0},
-      {"Concepto": "Horas Extra", "Monto": 0}
-    ],
-    "HaberesNoImponibles": [
-      {"Concepto": "Movilización", "Monto": 0},
-      {"Concepto": "Colación", "Monto": 0}
-    ],
-    "TotalHaberes": 0,
-    "DescuentosLegales": {
-      "AFP": 0,
-      "Salud": 0,
-      "SeguroCesantia": 0,
-      "ImpuestoUnico": 0
-    },
-    "OtrosDescuentos": [
-      {"Concepto": "Anticipo", "Monto": 0}
-    ],
-    "TotalDescuentos": 0,
-    "LiquidoAPagar": 0
+  "json_data": {
+    "LiquidacionSueldo": {
+      "Periodo": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador",
+        "Cargo": "Cargo",
+        "SueldoBase": 0
+      },
+      "HaberesImponibles": [
+        {"Concepto": "Sueldo Base", "Monto": 0},
+        {"Concepto": "Horas Extra", "Monto": 0}
+      ],
+      "HaberesNoImponibles": [
+        {"Concepto": "Movilización", "Monto": 0},
+        {"Concepto": "Colación", "Monto": 0}
+      ],
+      "TotalHaberes": 0,
+      "DescuentosLegales": {
+        "AFP": 0,
+        "Salud": 0,
+        "SeguroCesantia": 0,
+        "ImpuestoUnico": 0
+      },
+      "OtrosDescuentos": [
+        {"Concepto": "Anticipo", "Monto": 0}
+      ],
+      "TotalDescuentos": 0,
+      "LiquidoAPagar": 0
+    }
   }
 }' WHERE nombre = 'Liquidaciones de Sueldo';
 
 -- Planillas de Cotizaciones (Previred)
 UPDATE webapp_modulo SET esquema_json = '{
-  "PlanillaCotizaciones": {
-    "PeriodoRemuneracion": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "FechaPago": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "TipoPlanilla": "Normal/Complementaria/Retroactiva",
-    "TotalTrabajadoresDeclarados": 0,
-    "TotalCotizacionesPagadas": 0,
-    "DetalleCotizacionesTrabajador": [
-      {
-        "RutTrabajador": "XXXXXXXX-X",
-        "NombreCompleto": "Nombre Completo",
-        "MontoImponible": 0,
-        "CotizacionAFP": 0,
-        "CotizacionSalud": 0,
-        "CotizacionSeguroCesantia": 0
-      }
-    ],
-    "IdentificadorPrevired": "ID_PREVIRED_XXXX"
+  "json_data": {
+    "PlanillaCotizaciones": {
+      "PeriodoRemuneracion": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "FechaPago": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "TipoPlanilla": "Normal/Complementaria/Retroactiva",
+      "TotalTrabajadoresDeclarados": 0,
+      "TotalCotizacionesPagadas": 0,
+      "DetalleCotizacionesTrabajador": [
+        {
+          "RutTrabajador": "XXXXXXXX-X",
+          "NombreCompleto": "Nombre Completo",
+          "MontoImponible": 0,
+          "CotizacionAFP": 0,
+          "CotizacionSalud": 0,
+          "CotizacionSeguroCesantia": 0
+        }
+      ],
+      "IdentificadorPrevired": "ID_PREVIRED_XXXX"
+    }
   }
 }' WHERE nombre = 'Planillas de Cotizaciones';
 
 -- Certificados AFP
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoAFP": {
-    "TipoCertificado": "Afiliación/Cotizaciones/Saldo",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "DatosAFP": {
-      "NombreAFP": "Habitat/Capital/Cuprum/etc.",
-      "NumeroAfiliado": "AFILIADO-XXXXX"
-    },
-    "InformacionEspecifica": {
-      "FechaAfiliacion": "YYYY-MM-DD",
-      "SaldoCuentaObligatoria": 0,
-      "PeriodosCotizados": [
-        {"Anio": "YYYY", "Mes": "MM", "MontoCotizado": 0}
-      ]
+  "json_data": {
+    "CertificadoAFP": {
+      "TipoCertificado": "Afiliación/Cotizaciones/Saldo",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "DatosAFP": {
+        "NombreAFP": "Habitat/Capital/Cuprum/etc.",
+        "NumeroAfiliado": "AFILIADO-XXXXX"
+      },
+      "InformacionEspecifica": {
+        "FechaAfiliacion": "YYYY-MM-DD",
+        "SaldoCuentaObligatoria": 0,
+        "PeriodosCotizados": [
+          {"Anio": "YYYY", "Mes": "MM", "MontoCotizado": 0}
+        ]
+      }
     }
   }
 }' WHERE nombre = 'Certificados AFP';
 
 -- Certificados Isapre/Fonasa
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoSalud": {
-    "TipoCertificado": "Afiliación/Cotizaciones",
-    "InstitucionSalud": "Isapre/Fonasa",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "DatosInstitucion": {
-      "Nombre": "Nombre Isapre/Fonasa",
-      "PlanSalud": "Nombre del Plan/Libre Elección",
-      "MontoCotizacionMensual": 0
-    },
-    "InformacionEspecifica": {
-      "FechaAfiliacion": "YYYY-MM-DD",
-      "CargasDeclaradas": 0,
-      "BeneficiariosAdicionales": []
+  "json_data": {
+    "CertificadoSalud": {
+      "TipoCertificado": "Afiliación/Cotizaciones",
+      "InstitucionSalud": "Isapre/Fonasa",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "DatosInstitucion": {
+        "Nombre": "Nombre Isapre/Fonasa",
+        "PlanSalud": "Nombre del Plan/Libre Elección",
+        "MontoCotizacionMensual": 0
+      },
+      "InformacionEspecifica": {
+        "FechaAfiliacion": "YYYY-MM-DD",
+        "CargasDeclaradas": 0,
+        "BeneficiariosAdicionales": []
+      }
     }
   }
 }' WHERE nombre = 'Certificados Isapre/Fonasa';
 
 -- Certificados Laborales
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoLaboral": {
-    "TipoCertificado": "Antigüedad/Renta/Trabajo General",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "Cargo": "Cargo",
-    "FechaIngreso": "YYYY-MM-DD",
-    "AntiguedadAnios": 0,
-    "RentaPromedioMensual": 0,
-    "Observaciones": "Texto del certificado, si aplica."
+  "json_data": {
+    "CertificadoLaboral": {
+      "TipoCertificado": "Antigüedad/Renta/Trabajo General",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "Cargo": "Cargo",
+      "FechaIngreso": "YYYY-MM-DD",
+      "AntiguedadAnios": 0,
+      "RentaPromedioMensual": 0,
+      "Observaciones": "Texto del certificado, si aplica."
+    }
   }
 }' WHERE nombre = 'Certificados Laborales';
 
 -- Reglamento Interno
 UPDATE webapp_modulo SET esquema_json = '{
-  "ReglamentoInterno": {
-    "NombreDocumento": "Reglamento Interno de Orden, Higiene y Seguridad",
-    "FechaAprobacion": "YYYY-MM-DD",
-    "FechaVigencia": "YYYY-MM-DD",
-    "Version": "1.0",
-    "DatosEmpresa": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empresa"
-    },
-    "ClausulasPrincipales": [
-      {"Titulo": "Jornada de Trabajo", "Resumen": "Horarios y descansos."},
-      {"Titulo": "Faltas y Sanciones", "Resumen": "Tipificación y consecuencias."},
-      {"Titulo": "Medidas de Higiene y Seguridad", "Resumen": "Normas de prevención de riesgos."}
-    ],
-    "ArchivosAdjuntos": ["ruta/al/pdf_reglamento.pdf"]
+  "json_data": {
+    "ReglamentoInterno": {
+      "NombreDocumento": "Reglamento Interno de Orden, Higiene y Seguridad",
+      "FechaAprobacion": "YYYY-MM-DD",
+      "FechaVigencia": "YYYY-MM-DD",
+      "Version": "1.0",
+      "DatosEmpresa": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empresa"
+      },
+      "ClausulasPrincipales": [
+        {"Titulo": "Jornada de Trabajo", "Resumen": "Horarios y descansos."},
+        {"Titulo": "Faltas y Sanciones", "Resumen": "Tipificación y consecuencias."},
+        {"Titulo": "Medidas de Higiene y Seguridad", "Resumen": "Normas de prevención de riesgos."}
+      ],
+      "ArchivosAdjuntos": ["ruta/al/pdf_reglamento.pdf"]
+    }
   }
 }' WHERE nombre = 'Reglamento Interno';
 
 -- Contratos Especiales (ej. Part-time, Teletrabajo)
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoEspecial": {
-    "TipoContrato": "Part-Time/Teletrabajo/Servicios Transitorios",
-    "NumeroContrato": "CE-YYYY-XXXX",
-    "FechaInicio": "YYYY-MM-DD",
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "Cargo": "Cargo del Trabajador",
-    "JornadaEspecifica": "Descripción de la jornada (ej. 30 horas semanales)",
-    "ModalidadTrabajo": "Presencial/Remoto/Híbrido",
-    "CondicionesEspeciales": "Cláusulas específicas del tipo de contrato."
+  "json_data": {
+    "ContratoEspecial": {
+      "TipoContrato": "Part-Time/Teletrabajo/Servicios Transitorios",
+      "NumeroContrato": "CE-YYYY-XXXX",
+      "FechaInicio": "YYYY-MM-DD",
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "Cargo": "Cargo del Trabajador",
+      "JornadaEspecifica": "Descripción de la jornada (ej. 30 horas semanales)",
+      "ModalidadTrabajo": "Presencial/Remoto/Híbrido",
+      "CondicionesEspeciales": "Cláusulas específicas del tipo de contrato."
+    }
   }
 }' WHERE nombre = 'Contratos Especiales';
 
 -- Acuerdos COVID-19 (Ley de Protección al Empleo)
 UPDATE webapp_modulo SET esquema_json = '{
-  "AcuerdoCOVID19": {
-    "TipoAcuerdo": "Suspensión Contrato/Reducción Jornada",
-    "NumeroAcuerdo": "AC-COVID-XXXX",
-    "FechaAcuerdo": "YYYY-MM-DD",
-    "PeriodoVigencia": {
-      "FechaInicio": "YYYY-MM-DD",
-      "FechaFin": "YYYY-MM-DD"
-    },
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "BeneficioAsociado": "Seguro de Cesantía/Subsidio Estatal",
-    "PorcentajeReduccionJornada": 0,
-    "MontoComplementoEmpresa": 0
+  "json_data": {
+    "AcuerdoCOVID19": {
+      "TipoAcuerdo": "Suspensión Contrato/Reducción Jornada",
+      "NumeroAcuerdo": "AC-COVID-XXXX",
+      "FechaAcuerdo": "YYYY-MM-DD",
+      "PeriodoVigencia": {
+        "FechaInicio": "YYYY-MM-DD",
+        "FechaFin": "YYYY-MM-DD"
+      },
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "BeneficioAsociado": "Seguro de Cesantía/Subsidio Estatal",
+      "PorcentajeReduccionJornada": 0,
+      "MontoComplementoEmpresa": 0
+    }
   }
 }' WHERE nombre = 'Acuerdos COVID-19';
 
 -- Libro de Remuneraciones
 UPDATE webapp_modulo SET esquema_json = '{
-  "LibroRemuneraciones": {
-    "Periodo": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosEmpresa": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empresa"
-    },
-    "TotalTrabajadores": 0,
-    "TotalRemuneracionesBrutas": 0,
-    "TotalDescuentosLegales": 0,
-    "TotalLiquidoPagado": 0,
-    "DetalleTrabajadores": [
-      {
-        "RutTrabajador": "XXXXXXXX-X",
-        "NombreCompleto": "Nombre Completo",
-        "RemuneracionBruta": 0,
-        "TotalDescuentos": 0,
-        "LiquidoAPagar": 0
-      }
-    ]
+  "json_data": {
+    "LibroRemuneraciones": {
+      "Periodo": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosEmpresa": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empresa"
+      },
+      "TotalTrabajadores": 0,
+      "TotalRemuneracionesBrutas": 0,
+      "TotalDescuentosLegales": 0,
+      "TotalLiquidoPagado": 0,
+      "DetalleTrabajadores": [
+        {
+          "RutTrabajador": "XXXXXXXX-X",
+          "NombreCompleto": "Nombre Completo",
+          "RemuneracionBruta": 0,
+          "TotalDescuentos": 0,
+          "LiquidoAPagar": 0
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Libro de Remuneraciones';
 
 -- Documentos de Capacitación
 UPDATE webapp_modulo SET esquema_json = '{
-  "DocumentoCapacitacion": {
-    "TipoDocumento": "Certificado SENCE/Plan de Capacitación",
-    "NombreCurso": "Nombre del Curso de Capacitación",
-    "InstitucionCapacitadora": "Nombre Institución",
-    "FechaInicio": "YYYY-MM-DD",
-    "FechaFin": "YYYY-MM-DD",
-    "DuracionHoras": 0,
-    "Participante": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "CostoCapacitacion": 0,
-    "FinanciamientoSENCE": "Si/No"
+  "json_data": {
+    "DocumentoCapacitacion": {
+      "TipoDocumento": "Certificado SENCE/Plan de Capacitación",
+      "NombreCurso": "Nombre del Curso de Capacitación",
+      "InstitucionCapacitadora": "Nombre Institución",
+      "FechaInicio": "YYYY-MM-DD",
+      "FechaFin": "YYYY-MM-DD",
+      "DuracionHoras": 0,
+      "Participante": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "CostoCapacitacion": 0,
+      "FinanciamientoSENCE": "Si/No"
+    }
   }
 }' WHERE nombre = 'Documentos de Capacitación';
 
 -- Certificados de Accidentes (Laborales)
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoAccidenteLaboral": {
-    "TipoDocumento": "Declaración Individual de Accidente (DIA)/Licencia Médica",
-    "NumeroCaso": "ACC-XXXX-YYYY",
-    "FechaAccidente": "YYYY-MM-DD",
-    "HoraAccidente": "HH:MM",
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "DatosEmpleador": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empleador"
-    },
-    "TipoAccidente": "Laboral/De Trayecto/Enfermedad Profesional",
-    "LugarAccidente": "Dirección o descripción",
-    "DescripcionAccidente": "Breve descripción de cómo ocurrió el accidente.",
-    "DiasLicencia": 0,
-    "FechaInicioLicencia": "YYYY-MM-DD",
-    "Mutualidad": "ACHS/IST/Mutual de Seguridad"
+  "json_data": {
+    "CertificadoAccidenteLaboral": {
+      "TipoDocumento": "Declaración Individual de Accidente (DIA)/Licencia Médica",
+      "NumeroCaso": "ACC-XXXX-YYYY",
+      "FechaAccidente": "YYYY-MM-DD",
+      "HoraAccidente": "HH:MM",
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "DatosEmpleador": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empleador"
+      },
+      "TipoAccidente": "Laboral/De Trayecto/Enfermedad Profesional",
+      "LugarAccidente": "Dirección o descripción",
+      "DescripcionAccidente": "Breve descripción de cómo ocurrió el accidente.",
+      "DiasLicencia": 0,
+      "FechaInicioLicencia": "YYYY-MM-DD",
+      "Mutualidad": "ACHS/IST/Mutual de Seguridad"
+    }
   }
 }' WHERE nombre = 'Certificados de Accidentes';
 
 -- Registro de Asistencia
 UPDATE webapp_modulo SET esquema_json = '{
-  "RegistroAsistencia": {
-    "TipoRegistro": "Libro de Asistencia/Reloj Control/Sistema Biométrico",
-    "Periodo": {
-      "Anio": "YYYY",
-      "Mes": "MM"
-    },
-    "DatosEmpresa": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Empresa"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "DetalleDiario": [
-      {
-        "Fecha": "YYYY-MM-DD",
-        "HoraEntrada": "HH:MM",
-        "HoraSalida": "HH:MM",
-        "HorasTrabajadas": 0,
-        "AusenciaTipo": "Permiso/Licencia/Vacaciones",
-        "Observaciones": ""
-      }
-    ]
+  "json_data": {
+    "RegistroAsistencia": {
+      "TipoRegistro": "Libro de Asistencia/Reloj Control/Sistema Biométrico",
+      "Periodo": {
+        "Anio": "YYYY",
+        "Mes": "MM"
+      },
+      "DatosEmpresa": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Empresa"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "DetalleDiario": [
+        {
+          "Fecha": "YYYY-MM-DD",
+          "HoraEntrada": "HH:MM",
+          "HoraSalida": "HH:MM",
+          "HorasTrabajadas": 0,
+          "AusenciaTipo": "Permiso/Licencia/Vacaciones",
+          "Observaciones": ""
+        }
+      ]
+    }
   }
 }' WHERE nombre = 'Registro de Asistencia';
 
 -- Certificados Sindicales
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoSindical": {
-    "TipoCertificado": "Afiliación/Directorio/Cuotas Sindicales",
-    "FechaEmision": "YYYY-MM-DD",
-    "DatosSindicato": {
-      "Rut": "XXXXXXXX-X",
-      "RazonSocial": "Nombre o Razón Social Sindicato",
-      "RolUnicoSindical": "RUS-XXXX"
-    },
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "FechaAfiliacion": "YYYY-MM-DD",
-    "MontoCuotaSindical": 0,
-    "PeriodoCuota": "Mensual/Anual"
+  "json_data": {
+    "CertificadoSindical": {
+      "TipoCertificado": "Afiliación/Directorio/Cuotas Sindicales",
+      "FechaEmision": "YYYY-MM-DD",
+      "DatosSindicato": {
+        "Rut": "XXXXXXXX-X",
+        "RazonSocial": "Nombre o Razón Social Sindicato",
+        "RolUnicoSindical": "RUS-XXXX"
+      },
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "FechaAfiliacion": "YYYY-MM-DD",
+      "MontoCuotaSindical": 0,
+      "PeriodoCuota": "Mensual/Anual"
+    }
   }
 }' WHERE nombre = 'Certificados Sindicales';
 
 -- Permisos y Vacaciones
 UPDATE webapp_modulo SET esquema_json = '{
-  "PermisoVacacion": {
-    "TipoDocumento": "Solicitud de Permiso/Solicitud de Vacaciones/Autorización",
-    "NumeroSolicitud": "PV-XXXX",
-    "FechaSolicitud": "YYYY-MM-DD",
-    "DatosTrabajador": {
-      "Rut": "XXXXXXXX-X",
-      "NombreCompleto": "Nombre Completo Trabajador"
-    },
-    "PeriodoSolicitado": {
-      "FechaInicio": "YYYY-MM-DD",
-      "FechaFin": "YYYY-MM-DD",
-      "DiasSolicitados": 0
-    },
-    "EstadoSolicitud": "Pendiente/Aprobada/Rechazada",
-    "FechaAprobacionRechazo": "YYYY-MM-DD",
-    "ResponsableAutorizacion": "Nombre Superior/RRHH",
-    "SaldoDiasVacaciones": 0,
-    "Observaciones": "Motivo del permiso, si aplica."
+  "json_data": {
+    "PermisoVacacion": {
+      "TipoDocumento": "Solicitud de Permiso/Solicitud de Vacaciones/Autorización",
+      "NumeroSolicitud": "PV-XXXX",
+      "FechaSolicitud": "YYYY-MM-DD",
+      "DatosTrabajador": {
+        "Rut": "XXXXXXXX-X",
+        "NombreCompleto": "Nombre Completo Trabajador"
+      },
+      "PeriodoSolicitado": {
+        "FechaInicio": "YYYY-MM-DD",
+        "FechaFin": "YYYY-MM-DD",
+        "DiasSolicitados": 0
+      },
+      "EstadoSolicitud": "Pendiente/Aprobada/Rechazada",
+      "FechaAprobacionRechazo": "YYYY-MM-DD",
+      "ResponsableAutorizacion": "Nombre Superior/RRHH",
+      "SaldoDiasVacaciones": 0,
+      "Observaciones": "Motivo del permiso, si aplica."
+    }
   }
 }' WHERE nombre = 'Permisos y Vacaciones';
 
@@ -1476,328 +1571,360 @@ SELECT 'Actas de Comparecencia', 'Constancias notariales de hechos', id, true FR
 
 -- Escrituras Públicas
 UPDATE webapp_modulo SET esquema_json = '{
-  "EscrituraPublica": {
-    "NumeroRepertorio": "XXXX-YYYY",
-    "FechaEscritura": "YYYY-MM-DD",
-    "Notaria": {
-      "Nombre": "Nombre Notaría",
-      "Ciudad": "Santiago",
-      "Oficio": "Oficio del Notario"
-    },
-    "PartesIntervinientes": [
-      {
-        "TipoParticipacion": "Vendedor/Comprador/Otorgante",
-        "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
-        "Rut": "XXXXXXXX-X",
-        "RepresentanteLegal": "Nombre Representante"
-      }
-    ],
-    "ObjetoEscritura": "Compraventa/Constitución Sociedad/Hipoteca",
-    "ResumenContenido": "Breve descripción del acto jurídico.",
-    "MontoInvolucrado": 0,
-    "ArchivosAdjuntos": ["ruta/al/pdf_escritura.pdf"]
+  "json_data": {
+    "EscrituraPublica": {
+      "NumeroRepertorio": "XXXX-YYYY",
+      "FechaEscritura": "YYYY-MM-DD",
+      "Notaria": {
+        "Nombre": "Nombre Notaría",
+        "Ciudad": "Santiago",
+        "Oficio": "Oficio del Notario"
+      },
+      "PartesIntervinientes": [
+        {
+          "TipoParticipacion": "Vendedor/Comprador/Otorgante",
+          "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
+          "Rut": "XXXXXXXX-X",
+          "RepresentanteLegal": "Nombre Representante"
+        }
+      ],
+      "ObjetoEscritura": "Compraventa/Constitución Sociedad/Hipoteca",
+      "ResumenContenido": "Breve descripción del acto jurídico.",
+      "MontoInvolucrado": 0,
+      "ArchivosAdjuntos": ["ruta/al/pdf_escritura.pdf"]
+    }
   }
 }' WHERE nombre = 'Escrituras Públicas';
 
 -- Poderes Notariales
 UPDATE webapp_modulo SET esquema_json = '{
-  "PoderNotarial": {
-    "NumeroRepertorio": "XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "Notaria": {
-      "Nombre": "Nombre Notaría",
-      "Ciudad": "Santiago"
-    },
-    "Otorgante": {
-      "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Apoderado": {
-      "NombreCompletoRazonSocial": "Nombre Completo Apoderado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "TipoPoder": "General/Especial",
-    "FacultadesOtorgadas": ["Administración de bienes", "Venta de propiedades", "Trámites bancarios"],
-    "Vigencia": "Indefinida/Desde YYYY-MM-DD hasta YYYY-MM-DD"
+  "json_data": {
+    "PoderNotarial": {
+      "NumeroRepertorio": "XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "Notaria": {
+        "Nombre": "Nombre Notaría",
+        "Ciudad": "Santiago"
+      },
+      "Otorgante": {
+        "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Apoderado": {
+        "NombreCompletoRazonSocial": "Nombre Completo Apoderado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "TipoPoder": "General/Especial",
+      "FacultadesOtorgadas": ["Administración de bienes", "Venta de propiedades", "Trámites bancarios"],
+      "Vigencia": "Indefinida/DesdeYYYY-MM-DD hastaYYYY-MM-DD"
+    }
   }
 }' WHERE nombre = 'Poderes Notariales';
 
 -- Poderes Judiciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "PoderJudicial": {
-    "NumeroCausaRol": "RIT XXXXX-YYYY",
-    "Tribunal": "Nombre Tribunal",
-    "FechaOtorgamiento": "YYYY-MM-DD",
-    "Otorgante": {
-      "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
-      "Rut": "XXXXXXXX-X"
-    },
-    "AbogadoApoderado": {
-      "NombreCompleto": "Nombre Abogado",
-      "Rut": "XXXXXXXX-X",
-      "Patrocinio": "Si/No"
-    },
-    "ObjetoPoder": "Representación en juicio ordinario/ejecutivo",
-    "FacultadesEspecificas": ["Cobrar", "Percibir", "Transigir"],
-    "ArchivosAdjuntos": ["ruta/al/pdf_poder_judicial.pdf"]
+  "json_data": {
+    "PoderJudicial": {
+      "NumeroCausaRol": "RIT XXXXX-YYYY",
+      "Tribunal": "Nombre Tribunal",
+      "FechaOtorgamiento": "YYYY-MM-DD",
+      "Otorgante": {
+        "NombreCompletoRazonSocial": "Nombre Completo o Razón Social",
+        "Rut": "XXXXXXXX-X"
+      },
+      "AbogadoApoderado": {
+        "NombreCompleto": "Nombre Abogado",
+        "Rut": "XXXXXXXX-X",
+        "Patrocinio": "Si/No"
+      },
+      "ObjetoPoder": "Representación en juicio ordinario/ejecutivo",
+      "FacultadesEspecificas": ["Cobrar", "Percibir", "Transigir"],
+      "ArchivosAdjuntos": ["ruta/al/pdf_poder_judicial.pdf"]
+    }
   }
 }' WHERE nombre = 'Poderes Judiciales';
 
 -- Contratos Civiles
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoCivil": {
-    "TipoContrato": "Compraventa/Permuta/Arrendamiento/Mutuo",
-    "FechaContrato": "YYYY-MM-DD",
-    "Partes": [
-      {
-        "Rol": "Parte 1",
-        "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 1",
-        "Rut": "XXXXXXXX-X"
-      },
-      {
-        "Rol": "Parte 2",
-        "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 2",
-        "Rut": "XXXXXXXX-X"
-      }
-    ],
-    "ObjetoContrato": "Descripción breve del objeto (ej. 'Venta de inmueble')",
-    "ClausulasRelevantes": ["Precio", "Condiciones de pago", "Plazo"],
-    "Monto": 0,
-    "Estado": "Vigente/Finalizado/Rescindido"
+  "json_data": {
+    "ContratoCivil": {
+      "TipoContrato": "Compraventa/Permuta/Arrendamiento/Mutuo",
+      "FechaContrato": "YYYY-MM-DD",
+      "Partes": [
+        {
+          "Rol": "Parte 1",
+          "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 1",
+          "Rut": "XXXXXXXX-X"
+        },
+        {
+          "Rol": "Parte 2",
+          "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 2",
+          "Rut": "XXXXXXXX-X"
+        }
+      ],
+      "ObjetoContrato": "Descripción breve del objeto (ej. Venta de inmueble)",
+      "ClausulasRelevantes": ["Precio", "Condiciones de pago", "Plazo"],
+      "Monto": 0,
+      "Estado": "Vigente/Finalizado/Rescindido"
+    }
   }
 }' WHERE nombre = 'Contratos Civiles';
 
 -- Testamentos
 UPDATE webapp_modulo SET esquema_json = '{
-  "Testamento": {
-    "FechaOtorgamiento": "YYYY-MM-DD",
-    "TipoTestamento": "Abierto/Cerrado",
-    "Testador": {
-      "NombreCompleto": "Nombre Completo Testador",
-      "Rut": "XXXXXXXX-X",
-      "EstadoCivil": "Estado Civil"
-    },
-    "Notaria": {
-      "Nombre": "Nombre Notaría",
-      "Ciudad": "Santiago"
-    },
-    "HerederosLegatarios": [
-      {"Nombre": "Nombre Heredero/Legatario", "Rut": "XXXXXXXX-X", "Tipo": "Heredero/Legatario", "BienAsignado": "Descripción del bien"}
-    ],
-    "AlbaceaDesignado": {"Nombre": "Nombre Albacea", "Rut": "XXXXXXXX-X"},
-    "Observaciones": "Instrucciones especiales o condiciones."
+  "json_data": {
+    "Testamento": {
+      "FechaOtorgamiento": "YYYY-MM-DD",
+      "TipoTestamento": "Abierto/Cerrado",
+      "Testador": {
+        "NombreCompleto": "Nombre Completo Testador",
+        "Rut": "XXXXXXXX-X",
+        "EstadoCivil": "Estado Civil"
+      },
+      "Notaria": {
+        "Nombre": "Nombre Notaría",
+        "Ciudad": "Santiago"
+      },
+      "HerederosLegatarios": [
+        {"Nombre": "Nombre Heredero/Legatario", "Rut": "XXXXXXXX-X", "Tipo": "Heredero/Legatario", "BienAsignado": "Descripción del bien"}
+      ],
+      "AlbaceaDesignado": {"Nombre": "Nombre Albacea", "Rut": "XXXXXXXX-X"},
+      "Observaciones": "Instrucciones especiales o condiciones."
+    }
   }
 }' WHERE nombre = 'Testamentos';
 
 -- Demandas
 UPDATE webapp_modulo SET esquema_json = '{
-  "Demanda": {
-    "TipoAccionLegal": "Cobro de pesos/Divorcio/Incumplimiento de contrato",
-    "FechaPresentacion": "YYYY-MM-DD",
-    "Tribunal": "Nombre Tribunal",
-    "RolCausa": "RIT XXXXX-YYYY",
-    "Demandante": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Demandante",
-      "Rut": "XXXXXXXX-X",
-      "Abogado": "Nombre Abogado Demandante"
-    },
-    "Demandado": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Demandado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Materia": "Descripción breve de la materia de la demanda.",
-    "EstadoActual": "Presentada/Notificada/En Tramitación",
-    "ArchivosAdjuntos": ["ruta/al/pdf_demanda.pdf"]
+  "json_data": {
+    "Demanda": {
+      "TipoAccionLegal": "Cobro de pesos/Divorcio/Incumplimiento de contrato",
+      "FechaPresentacion": "YYYY-MM-DD",
+      "Tribunal": "Nombre Tribunal",
+      "RolCausa": "RIT XXXXX-YYYY",
+      "Demandante": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Demandante",
+        "Rut": "XXXXXXXX-X",
+        "Abogado": "Nombre Abogado Demandante"
+      },
+      "Demandado": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Demandado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Materia": "Descripción breve de la materia de la demanda.",
+      "EstadoActual": "Presentada/Notificada/En Tramitación",
+      "ArchivosAdjuntos": ["ruta/al/pdf_demanda.pdf"]
+    }
   }
 }' WHERE nombre = 'Demandas';
 
 -- Sentencias
 UPDATE webapp_modulo SET esquema_json = '{
-  "Sentencia": {
-    "TipoSentencia": "Definitiva/Interlocutoria",
-    "RolCausa": "RIT XXXXX-YYYY",
-    "Tribunal": "Nombre Tribunal",
-    "FechaSentencia": "YYYY-MM-DD",
-    "PartesCausa": {
-      "Demandante": "Nombre o Razón Social Demandante",
-      "Demandado": "Nombre o Razón Social Demandado"
-    },
-    "FalloResumen": "Resumen de la decisión del tribunal (Ej. 'Acoge demanda', 'Rechaza demanda')",
-    "MontoCondena": 0,
-    "EstadoRecursos": "Sin recursos/Apelación pendiente",
-    "ArchivosAdjuntos": ["ruta/al/pdf_sentencia.pdf"]
+  "json_data": {
+    "Sentencia": {
+      "TipoSentencia": "Definitiva/Interlocutoria",
+      "RolCausa": "RIT XXXXX-YYYY",
+      "Tribunal": "Nombre Tribunal",
+      "FechaSentencia": "YYYY-MM-DD",
+      "PartesCausa": {
+        "Demandante": "Nombre o Razón Social Demandante",
+        "Demandado": "Nombre o Razón Social Demandado"
+      },
+      "FalloResumen": "Resumen de la decisión del tribunal (Ej. Acoge demanda, Rechaza demanda)",
+      "MontoCondena": 0,
+      "EstadoRecursos": "Sin recursos/Apelación pendiente",
+      "ArchivosAdjuntos": ["ruta/al/pdf_sentencia.pdf"]
+    }
   }
 }' WHERE nombre = 'Sentencias';
 
 -- Escritos Judiciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "EscritoJudicial": {
-    "TipoEscrito": "Contestación/Rebeldía/Medida Precautoria",
-    "FechaPresentacion": "YYYY-MM-DD",
-    "RolCausa": "RIT XXXXX-YYYY",
-    "Tribunal": "Nombre Tribunal",
-    "AbogadoPresenta": {
-      "NombreCompleto": "Nombre Abogado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Materia": "Materia del escrito (ej. 'Presenta prueba', 'Solicita suspensión')",
-    "EstadoEnCausa": "Agregado/Resuelto",
-    "ArchivosAdjuntos": ["ruta/al/pdf_escrito.pdf"]
+  "json_data": {
+    "EscritoJudicial": {
+      "TipoEscrito": "Contestación/Rebeldía/Medida Precautoria",
+      "FechaPresentacion": "YYYY-MM-DD",
+      "RolCausa": "RIT XXXXX-YYYY",
+      "Tribunal": "Nombre Tribunal",
+      "AbogadoPresenta": {
+        "NombreCompleto": "Nombre Abogado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Materia": "Materia del escrito (ej. Presenta prueba, Solicita suspensión)",
+      "EstadoEnCausa": "Agregado/Resuelto",
+      "ArchivosAdjuntos": ["ruta/al/pdf_escrito.pdf"]
+    }
   }
 }' WHERE nombre = 'Escritos Judiciales';
 
 -- Recursos Judiciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "RecursoJudicial": {
-    "TipoRecurso": "Apelación/Casación/Queja",
-    "FechaPresentacion": "YYYY-MM-DD",
-    "RolCausaOrigen": "RIT XXXXX-YYYY",
-    "TribunalOrigen": "Tribunal que dictó la resolución",
-    "TribunalConoceRecurso": "Corte de Apelaciones/Corte Suprema",
-    "ResolucionImpugnada": "Tipo de resolución (ej. 'Sentencia definitiva')",
-    "FundamentosRecurso": "Breve descripción de los fundamentos.",
-    "EstadoRecurso": "En tramitación/Resuelto"
+  "json_data": {
+    "RecursoJudicial": {
+      "TipoRecurso": "Apelación/Casación/Queja",
+      "FechaPresentacion": "YYYY-MM-DD",
+      "RolCausaOrigen": "RIT XXXXX-YYYY",
+      "TribunalOrigen": "Tribunal que dictó la resolución",
+      "TribunalConoceRecurso": "Corte de Apelaciones/Corte Suprema",
+      "ResolucionImpugnada": "Tipo de resolución (ej. 'Sentencia definitiva')",
+      "FundamentosRecurso": "Breve descripción de los fundamentos.",
+      "EstadoRecurso": "En tramitación/Resuelto"
+    }
   }
 }' WHERE nombre = 'Recursos Judiciales';
 
 -- Notificaciones
 UPDATE webapp_modulo SET esquema_json = '{
-  "NotificacionLegal": {
-    "TipoNotificacion": "Personal/Por Cédula/Estado Diario/Electrónica",
-    "FechaNotificacion": "YYYY-MM-DD",
-    "RolCausa": "RIT XXXXX-YYYY",
-    "TribunalOrigen": "Nombre Tribunal",
-    "ParteNotificada": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Notificado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "DocumentoNotificado": "Tipo y breve descripción del documento notificado (ej. 'Demanda', 'Sentencia')",
-    "Observaciones": "Datos del receptor, dirección, etc."
+  "json_data": {
+    "NotificacionLegal": {
+      "TipoNotificacion": "Personal/Por Cédula/Estado Diario/Electrónica",
+      "FechaNotificacion": "YYYY-MM-DD",
+      "RolCausa": "RIT XXXXX-YYYY",
+      "TribunalOrigen": "Nombre Tribunal",
+      "ParteNotificada": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Notificado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "DocumentoNotificado": "Tipo y breve descripción del documento notificado (ej. Demanda, Sentencia)",
+      "Observaciones": "Datos del receptor, dirección, etc."
+    }
   }
 }' WHERE nombre = 'Notificaciones';
 
 -- Acuerdos Extrajudiciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "AcuerdoExtrajudicial": {
-    "TipoAcuerdo": "Transacción/Avenimiento/Mediación",
-    "FechaAcuerdo": "YYYY-MM-DD",
-    "PartesInvolucradas": [
-      {
-        "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 1",
-        "Rut": "XXXXXXXX-X"
-      },
-      {
-        "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 2",
-        "Rut": "XXXXXXXX-X"
-      }
-    ],
-    "ObjetoAcuerdo": "Resolución de conflicto por...",
-    "MontoAcordado": 0,
-    "CondicionesAcuerdo": "Detalle de los compromisos adquiridos.",
-    "EstadoCumplimiento": "Cumplido/Pendiente/Incumplido"
+  "json_data": {
+    "AcuerdoExtrajudicial": {
+      "TipoAcuerdo": "Transacción/Avenimiento/Mediación",
+      "FechaAcuerdo": "YYYY-MM-DD",
+      "PartesInvolucradas": [
+        {
+          "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 1",
+          "Rut": "XXXXXXXX-X"
+        },
+        {
+          "NombreCompletoRazonSocial": "Nombre o Razón Social Parte 2",
+          "Rut": "XXXXXXXX-X"
+        }
+      ],
+      "ObjetoAcuerdo": "Resolución de conflicto por...",
+      "MontoAcordado": 0,
+      "CondicionesAcuerdo": "Detalle de los compromisos adquiridos.",
+      "EstadoCumplimiento": "Cumplido/Pendiente/Incumplido"
+    }
   }
 }' WHERE nombre = 'Acuerdos Extrajudiciales';
 
 -- Dictámenes y Consultas (Legales)
 UPDATE webapp_modulo SET esquema_json = '{
-  "DictamenConsultaLegal": {
-    "TipoDocumento": "Dictamen/Informe en Derecho/Consulta",
-    "EntidadEmisora": "Nombre Abogado/Estudio Jurídico/Organismo Público",
-    "FechaEmision": "YYYY-MM-DD",
-    "Materia": "Materia legal consultada (ej. 'Interpretación Art. X de Ley Y')",
-    "Consultante": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Consultante",
-      "Rut": "XXXXXXXX-X"
-    },
-    "ResumenConclusion": "Breve resumen de la opinión o conclusión legal.",
-    "ArchivosAdjuntos": ["ruta/al/pdf_dictamen.pdf"]
+  "json_data": {
+    "DictamenConsultaLegal": {
+      "TipoDocumento": "Dictamen/Informe en Derecho/Consulta",
+      "EntidadEmisora": "Nombre Abogado/Estudio Jurídico/Organismo Público",
+      "FechaEmision": "YYYY-MM-DD",
+      "Materia": "Materia legal consultada (ej. Interpretación Art. X de Ley Y)",
+      "Consultante": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Consultante",
+        "Rut": "XXXXXXXX-X"
+      },
+      "ResumenConclusion": "Breve resumen de la opinión o conclusión legal.",
+      "ArchivosAdjuntos": ["ruta/al/pdf_dictamen.pdf"]
+    }
   }
 }' WHERE nombre = 'Dictámenes y Consultas';
 
 -- Contratos de Arrendamiento
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoArrendamiento": {
-    "FechaContrato": "YYYY-MM-DD",
-    "Arrendador": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Arrendador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Arrendatario": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Arrendatario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "TipoBien": "Inmueble/Vehículo/Mueble",
-    "DireccionBien": "Dirección del inmueble/Identificación vehículo",
-    "MontoArriendoMensual": 0,
-    "MontoGarantia": 0,
-    "DuracionMeses": 0,
-    "FechaInicioArriendo": "YYYY-MM-DD",
-    "FechaTerminoArriendo": "YYYY-MM-DD",
-    "ClausulasEspeciales": ["Renovación automática", "Responsabilidades por reparaciones"]
+  "json_data": {
+    "ContratoArrendamiento": {
+      "FechaContrato": "YYYY-MM-DD",
+      "Arrendador": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Arrendador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Arrendatario": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Arrendatario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "TipoBien": "Inmueble/Vehículo/Mueble",
+      "DireccionBien": "Dirección del inmueble/Identificación vehículo",
+      "MontoArriendoMensual": 0,
+      "MontoGarantia": 0,
+      "DuracionMeses": 0,
+      "FechaInicioArriendo": "YYYY-MM-DD",
+      "FechaTerminoArriendo": "YYYY-MM-DD",
+      "ClausulasEspeciales": ["Renovación automática", "Responsabilidades por reparaciones"]
+    }
   }
 }' WHERE nombre = 'Contratos de Arrendamiento';
 
 -- Prendas e Hipotecas
 UPDATE webapp_modulo SET esquema_json = '{
-  "PrendaHipotecas": {
-    "TipoGarantia": "Prenda/Hipoteca",
-    "FechaConstitucion": "YYYY-MM-DD",
-    "Deudor": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Deudor",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Acreedor": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Acreedor",
-      "Rut": "XXXXXXXX-X"
-    },
-    "BienGravado": {
-      "TipoBien": "Inmueble/Vehículo/Maquinaria",
-      "Identificador": "Rol/Patente/Número Serie",
-      "DireccionUbicacion": "Dirección (si aplica)"
-    },
-    "MontoGarantizado": 0,
-    "RegistroConservador": {
-      "Conservador": "Conservador de Bienes Raíces/Registro Civil",
-      "Foja": "XXXX",
-      "Numero": "YYYY",
-      "Anio": "ZZZZ"
-    },
-    "Estado": "Vigente/Alzada"
+  "json_data": {
+    "PrendaHipotecas": {
+      "TipoGarantia": "Prenda/Hipoteca",
+      "FechaConstitucion": "YYYY-MM-DD",
+      "Deudor": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Deudor",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Acreedor": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Acreedor",
+        "Rut": "XXXXXXXX-X"
+      },
+      "BienGravado": {
+        "TipoBien": "Inmueble/Vehículo/Maquinaria",
+        "Identificador": "Rol/Patente/Número Serie",
+        "DireccionUbicacion": "Dirección (si aplica)"
+      },
+      "MontoGarantizado": 0,
+      "RegistroConservador": {
+        "Conservador": "Conservador de Bienes Raíces/Registro Civil",
+        "Foja": "XXXX",
+        "Numero": "YYYY",
+        "Anio": "ZZZZ"
+      },
+      "Estado": "Vigente/Alzada"
+    }
   }
 }' WHERE nombre = 'Prendas e Hipotecas';
 
 -- Propiedad Intelectual
 UPDATE webapp_modulo SET esquema_json = '{
-  "PropiedadIntelectual": {
-    "TipoDerecho": "Patente/Marca/Derecho de Autor/Modelo de Utilidad",
-    "NumeroRegistro": "REG-XXXX-YYYY",
-    "FechaSolicitud": "YYYY-MM-DD",
-    "FechaConcesion": "YYYY-MM-DD",
-    "Titular": {
-      "NombreCompletoRazonSocial": "Nombre o Razón Social Titular",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Descripcion": "Descripción del objeto de propiedad intelectual (ej. 'Patente de invención X', 'Marca Y')",
-    "VigenciaHasta": "YYYY-MM-DD",
-    "InstitucionRegistro": "INAPI/Departamento Derechos Intelectuales"
+  "json_data": {
+    "PropiedadIntelectual": {
+      "TipoDerecho": "Patente/Marca/Derecho de Autor/Modelo de Utilidad",
+      "NumeroRegistro": "REG-XXXX-YYYY",
+      "FechaSolicitud": "YYYY-MM-DD",
+      "FechaConcesion": "YYYY-MM-DD",
+      "Titular": {
+        "NombreCompletoRazonSocial": "Nombre o Razón Social Titular",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Descripcion": "Descripción del objeto de propiedad intelectual (ej. Patente de invención X, Marca Y)",
+      "VigenciaHasta": "YYYY-MM-DD",
+      "InstitucionRegistro": "INAPI/Departamento Derechos Intelectuales"
+    }
   }
 }' WHERE nombre = 'Propiedad Intelectual';
 
 -- Actas de Comparecencia
 UPDATE webapp_modulo SET esquema_json = '{
-  "ActaComparecencia": {
-    "NumeroRepertorio": "XXXX-YYYY",
-    "FechaActa": "YYYY-MM-DD",
-    "Notaria": {
-      "Nombre": "Nombre Notaría",
-      "Ciudad": "Santiago"
-    },
-    "Compareciente": {
-      "NombreCompletoRazonSocial": "Nombre Completo o Razón Social Compareciente",
-      "Rut": "XXXXXXXX-X"
-    },
-    "HechoPresenciadoCertificado": "Constancia de firma/Declaración jurada simple/Reunión de directorio",
-    "Observaciones": "Breve descripción de lo sucedido o declarado."
+  "json_data": {
+    "ActaComparecencia": {
+      "NumeroRepertorio": "XXXX-YYYY",
+      "FechaActa": "YYYY-MM-DD",
+      "Notaria": {
+        "Nombre": "Nombre Notaría",
+        "Ciudad": "Santiago"
+      },
+      "Compareciente": {
+        "NombreCompletoRazonSocial": "Nombre Completo o Razón Social Compareciente",
+        "Rut": "XXXXXXXX-X"
+      },
+      "HechoPresenciadoCertificado": "Constancia de firma/Declaración jurada simple/Reunión de directorio",
+      "Observaciones": "Breve descripción de lo sucedido o declarado."
+    }
   }
 }' WHERE nombre = 'Actas de Comparecencia';
 
@@ -1864,377 +1991,409 @@ SELECT 'Inversiones', 'Documentación de depósitos a plazo y fondos mutuos', id
 
 -- Estados de Cuenta / Cartolas Bancarias (Fusionados por similitud)
 UPDATE webapp_modulo SET esquema_json = '{
-  "EstadoCartolaBancaria": {
-    "TipoDocumento": "Estado de Cuenta/Cartola Bancaria",
-    "NumeroCuenta": "XXXX-XXXX-XXXX-XXXX",
-    "Banco": "Nombre del Banco",
-    "TitularCuenta": {
-      "NombreRazonSocial": "Nombre o Razón Social",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Periodo": {
-      "FechaInicio": "YYYY-MM-DD",
-      "FechaFin": "YYYY-MM-DD"
-    },
-    "SaldoInicial": 0,
-    "SaldoFinal": 0,
-    "Moneda": "CLP/USD",
-    "Movimientos": [
-      {
-        "Fecha": "YYYY-MM-DD",
-        "Descripcion": "Descripción del movimiento",
-        "Referencia": "Nro. Comprobante/Transacción",
-        "MontoCargo": 0,
-        "MontoAbono": 0,
-        "SaldoPostMovimiento": 0
-      }
-    ],
-    "TotalCargosPeriodo": 0,
-    "TotalAbonosPeriodo": 0
-  }
+  "json_data": {
+    "EstadoCartolaBancaria": {
+      "TipoDocumento": "Estado de Cuenta/Cartola Bancaria",
+      "NumeroCuenta": "XXXX-XXXX-XXXX-XXXX",
+      "Banco": "Nombre del Banco",
+      "TitularCuenta": {
+        "NombreRazonSocial": "Nombre o Razón Social",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Periodo": {
+        "FechaInicio": "YYYY-MM-DD",
+        "FechaFin": "YYYY-MM-DD"
+      },
+      "SaldoInicial": 0,
+      "SaldoFinal": 0,
+      "Moneda": "CLP/USD",
+      "Movimientos": [
+        {
+          "Fecha": "YYYY-MM-DD",
+          "Descripcion": "Descripción del movimiento",
+          "Referencia": "Nro. Comprobante/Transacción",
+          "MontoCargo": 0,
+          "MontoAbono": 0,
+          "SaldoPostMovimiento": 0
+        }
+      ],
+      "TotalCargosPeriodo": 0,
+      "TotalAbonosPeriodo": 0
+    }
+  }
 }' WHERE nombre IN ('Estados de Cuenta', 'Cartolas Bancarias');
 
 -- Comprobantes de Transferencia
 UPDATE webapp_modulo SET esquema_json = '{
-  "ComprobanteTransferencia": {
-    "TipoDocumento": "Comprobante de Transferencia",
-    "NumeroOperacion": "TRF-XXXX-YYYY",
-    "FechaHora": "YYYY-MM-DD HH:MM:SS",
-    "MontoTransferido": 0,
-    "Moneda": "CLP/USD",
-    "CuentaOrigen": {
-      "Banco": "Banco Origen",
-      "NumeroCuenta": "XXXXX",
-      "Titular": "Nombre Titular Origen",
-      "Rut": "XXXXXXXX-X"
-    },
-    "CuentaDestino": {
-      "Banco": "Banco Destino",
-      "NumeroCuenta": "YYYYY",
-      "Titular": "Nombre Titular Destino",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Concepto": "Glosa de la transferencia"
-  }
+  "json_data": {
+    "ComprobanteTransferencia": {
+      "TipoDocumento": "Comprobante de Transferencia",
+      "NumeroOperacion": "TRF-XXXX-YYYY",
+      "FechaHora": "YYYY-MM-DD HH:MM:SS",
+      "MontoTransferido": 0,
+      "Moneda": "CLP/USD",
+      "CuentaOrigen": {
+        "Banco": "Banco Origen",
+        "NumeroCuenta": "XXXXX",
+        "Titular": "Nombre Titular Origen",
+        "Rut": "XXXXXXXX-X"
+      },
+      "CuentaDestino": {
+        "Banco": "Banco Destino",
+        "NumeroCuenta": "YYYYY",
+        "Titular": "Nombre Titular Destino",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Concepto": "Glosa de la transferencia"
+    }
+  }
 }' WHERE nombre = 'Comprobantes de Transferencia';
 
 -- Comprobantes de Depósito
 UPDATE webapp_modulo SET esquema_json = '{
-  "ComprobanteDeposito": {
-    "TipoDocumento": "Comprobante de Depósito",
-    "NumeroOperacion": "DEP-XXXX-YYYY",
-    "FechaHora": "YYYY-MM-DD HH:MM:SS",
-    "MontoDepositado": 0,
-    "Moneda": "CLP/USD",
-    "CuentaDestino": {
-      "Banco": "Banco Destino",
-      "NumeroCuenta": "XXXXX",
-      "Titular": "Nombre Titular Cuenta"
-    },
-    "TipoDeposito": "Efectivo/Cheque/Vale Vista",
-    "Depositante": {
-      "Nombre": "Nombre del Depositante (opcional)",
-      "Rut": "XXXXXXXX-X (opcional)"
-    },
-    "SucursalDeposito": "Nombre Sucursal/Cajero"
-  }
+  "json_data": {
+    "ComprobanteDeposito": {
+      "TipoDocumento": "Comprobante de Depósito",
+      "NumeroOperacion": "DEP-XXXX-YYYY",
+      "FechaHora": "YYYY-MM-DD HH:MM:SS",
+      "MontoDepositado": 0,
+      "Moneda": "CLP/USD",
+      "CuentaDestino": {
+        "Banco": "Banco Destino",
+        "NumeroCuenta": "XXXXX",
+        "Titular": "Nombre Titular Cuenta"
+      },
+      "TipoDeposito": "Efectivo/Cheque/Vale Vista",
+      "Depositante": {
+        "Nombre": "Nombre del Depositante (opcional)",
+        "Rut": "XXXXXXXX-X (opcional)"
+      },
+      "SucursalDeposito": "Nombre Sucursal/Cajero"
+    }
+  }
 }' WHERE nombre = 'Comprobantes de Depósito';
 
 -- Comprobantes de Giro
 UPDATE webapp_modulo SET esquema_json = '{
-  "ComprobanteGiro": {
-    "TipoDocumento": "Comprobante de Giro",
-    "NumeroOperacion": "GIR-XXXX-YYYY",
-    "FechaHora": "YYYY-MM-DD HH:MM:SS",
-    "MontoGirado": 0,
-    "Moneda": "CLP/USD",
-    "CuentaOrigen": {
-      "Banco": "Banco Origen",
-      "NumeroCuenta": "XXXXX",
-      "Titular": "Nombre Titular Cuenta"
-    },
-    "TipoGiro": "Retiro Cajero/Giro por Caja/Cheque",
-    "SucursalGiro": "Nombre Sucursal/Cajero"
-  }
+  "json_data": {
+    "ComprobanteGiro": {
+      "TipoDocumento": "Comprobante de Giro",
+      "NumeroOperacion": "GIR-XXXX-YYYY",
+      "FechaHora": "YYYY-MM-DD HH:MM:SS",
+      "MontoGirado": 0,
+      "Moneda": "CLP/USD",
+      "CuentaOrigen": {
+        "Banco": "Banco Origen",
+        "NumeroCuenta": "XXXXX",
+        "Titular": "Nombre Titular Cuenta"
+      },
+      "TipoGiro": "Retiro Cajero/Giro por Caja/Cheque",
+      "SucursalGiro": "Nombre Sucursal/Cajero"
+    }
+  }
 }' WHERE nombre = 'Comprobantes de Giro';
 
 -- Pagarés
 UPDATE webapp_modulo SET esquema_json = '{
-  "Pagare": {
-    "NumeroPagare": "PAG-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "MontoCapital": 0,
-    "Moneda": "CLP/UF/USD",
-    "Deudor": {
-      "NombreRazonSocial": "Nombre o Razón Social Deudor",
-      "Rut": "XXXXXXXX-X",
-      "Direccion": "Dirección Deudor"
-    },
-    "Acreedor": {
-      "NombreRazonSocial": "Nombre o Razón Social Acreedor",
-      "Rut": "XXXXXXXX-X"
-    },
-    "FechaVencimiento": "YYYY-MM-DD",
-    "TasaInteresAnual": 0,
-    "Cuotas": 0,
-    "MontoCuota": 0,
-    "Estado": "Vigente/Pagado/Moroso"
-  }
+  "json_data": {
+    "Pagare": {
+      "NumeroPagare": "PAG-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "MontoCapital": 0,
+      "Moneda": "CLP/UF/USD",
+      "Deudor": {
+        "NombreRazonSocial": "Nombre o Razón Social Deudor",
+        "Rut": "XXXXXXXX-X",
+        "Direccion": "Dirección Deudor"
+      },
+      "Acreedor": {
+        "NombreRazonSocial": "Nombre o Razón Social Acreedor",
+        "Rut": "XXXXXXXX-X"
+      },
+      "FechaVencimiento": "YYYY-MM-DD",
+      "TasaInteresAnual": 0,
+      "Cuotas": 0,
+      "MontoCuota": 0,
+      "Estado": "Vigente/Pagado/Moroso"
+    }
+  }
 }' WHERE nombre = 'Pagarés';
 
 -- Contratos de Crédito
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoCredito": {
-    "NumeroContrato": "CRD-XXXX-YYYY",
-    "FechaContrato": "YYYY-MM-DD",
-    "InstitucionFinanciera": "Nombre del Banco/Institución",
-    "TipoCredito": "Consumo/Hipotecario/Automotriz/Comercial",
-    "TitularCredito": {
-      "NombreRazonSocial": "Nombre o Razón Social Titular",
-      "Rut": "XXXXXXXX-X"
-    },
-    "MontoCreditoAprobado": 0,
-    "Moneda": "CLP/UF/USD",
-    "TasaInteresAnual": 0,
-    "PlazoMeses": 0,
-    "MontoCuotaMensual": 0,
-    "FechaPrimerVencimiento": "YYYY-MM-DD",
-    "Garantias": ["Prenda/Hipoteca/Aval"],
-    "Estado": "Vigente/Pagado/Castigado"
-  }
+  "json_data": {
+    "ContratoCredito": {
+      "NumeroContrato": "CRD-XXXX-YYYY",
+      "FechaContrato": "YYYY-MM-DD",
+      "InstitucionFinanciera": "Nombre del Banco/Institución",
+      "TipoCredito": "Consumo/Hipotecario/Automotriz/Comercial",
+      "TitularCredito": {
+        "NombreRazonSocial": "Nombre o Razón Social Titular",
+        "Rut": "XXXXXXXX-X"
+      },
+      "MontoCreditoAprobado": 0,
+      "Moneda": "CLP/UF/USD",
+      "TasaInteresAnual": 0,
+      "PlazoMeses": 0,
+      "MontoCuotaMensual": 0,
+      "FechaPrimerVencimiento": "YYYY-MM-DD",
+      "Garantias": ["Prenda/Hipoteca/Aval"],
+      "Estado": "Vigente/Pagado/Castigado"
+    }
+  }
 }' WHERE nombre = 'Contratos de Crédito';
 
 -- Contratos de Cuenta
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoCuentaBancaria": {
-    "NumeroContrato": "CTA-XXXX-YYYY",
-    "FechaApertura": "YYYY-MM-DD",
-    "Banco": "Nombre del Banco",
-    "TipoCuenta": "Corriente/Ahorro/Vista",
-    "TitularCuenta": {
-      "NombreRazonSocial": "Nombre o Razón Social Titular",
-      "Rut": "XXXXXXXX-X",
-      "Direccion": "Dirección Titular"
-    },
-    "CondicionesEspeciales": "Beneficios/Comisiones/Sobregiro",
-    "Estado": "Activa/Cerrada"
-  }
+  "json_data": {
+    "ContratoCuentaBancaria": {
+      "NumeroContrato": "CTA-XXXX-YYYY",
+      "FechaApertura": "YYYY-MM-DD",
+      "Banco": "Nombre del Banco",
+      "TipoCuenta": "Corriente/Ahorro/Vista",
+      "TitularCuenta": {
+        "NombreRazonSocial": "Nombre o Razón Social Titular",
+        "Rut": "XXXXXXXX-X",
+        "Direccion": "Dirección Titular"
+      },
+      "CondicionesEspeciales": "Beneficios/Comisiones/Sobregiro",
+      "Estado": "Activa/Cerrada"
+    }
+  }
 }' WHERE nombre = 'Contratos de Cuenta';
 
 -- Tarjetas de Crédito (Estado de Cuenta)
 UPDATE webapp_modulo SET esquema_json = '{
-  "TarjetaCredito": {
-    "TipoDocumento": "Estado de Cuenta Tarjeta de Crédito",
-    "NumeroTarjetaUltimos4Digitos": "XXXX",
-    "BancoEmisor": "Nombre del Banco",
-    "TitularTarjeta": {
-      "NombreCompleto": "Nombre Completo Titular",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PeriodoFacturacion": {
-      "FechaInicio": "YYYY-MM-DD",
-      "FechaFin": "YYYY-MM-DD"
-    },
-    "FechaVencimientoPago": "YYYY-MM-DD",
-    "SaldoAnterior": 0,
-    "AvancesPeriodo": 0,
-    "ComprasPeriodo": 0,
-    "PagosPeriodo": 0,
-    "CargosIntereses": 0,
-    "SaldoActual": 0,
-    "MontoMinimoPago": 0,
-    "CupoNacional": 0,
-    "CupoInternacional": 0,
-    "MovimientosPeriodo": [
-      {
-        "Fecha": "YYYY-MM-DD",
-        "Comercio": "Nombre del Comercio",
-        "Monto": 0,
-        "Tipo": "Compra/Avance/Pago"
-      }
-    ]
-  }
+  "json_data": {
+    "TarjetaCredito": {
+      "TipoDocumento": "Estado de Cuenta Tarjeta de Crédito",
+      "NumeroTarjetaUltimos4Digitos": "XXXX",
+      "BancoEmisor": "Nombre del Banco",
+      "TitularTarjeta": {
+        "NombreCompleto": "Nombre Completo Titular",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PeriodoFacturacion": {
+        "FechaInicio": "YYYY-MM-DD",
+        "FechaFin": "YYYY-MM-DD"
+      },
+      "FechaVencimientoPago": "YYYY-MM-DD",
+      "SaldoAnterior": 0,
+      "AvancesPeriodo": 0,
+      "ComprasPeriodo": 0,
+      "PagosPeriodo": 0,
+      "CargosIntereses": 0,
+      "SaldoActual": 0,
+      "MontoMinimoPago": 0,
+      "CupoNacional": 0,
+      "CupoInternacional": 0,
+      "MovimientosPeriodo": [
+        {
+          "Fecha": "YYYY-MM-DD",
+          "Comercio": "Nombre del Comercio",
+          "Monto": 0,
+          "Tipo": "Compra/Avance/Pago"
+        }
+      ]
+    }
+  }
 }' WHERE nombre = 'Tarjetas de Crédito';
 
 -- Tarjetas de Débito (Documentación relacionada)
 UPDATE webapp_modulo SET esquema_json = '{
-  "TarjetaDebito": {
-    "TipoDocumento": "Documentación Tarjeta de Débito",
-    "NumeroTarjetaUltimos4Digitos": "XXXX",
-    "BancoEmisor": "Nombre del Banco",
-    "TitularTarjeta": {
-      "NombreCompleto": "Nombre Completo Titular",
-      "Rut": "XXXXXXXX-X"
-    },
-    "CuentaAsociada": "Numero de Cuenta Asociada",
-    "FechaEmision": "YYYY-MM-DD",
-    "FechaVencimiento": "YYYY-MM-DD",
-    "Observaciones": "Condiciones de uso, límites."
-  }
+  "json_data": {
+    "TarjetaDebito": {
+      "TipoDocumento": "Documentación Tarjeta de Débito",
+      "NumeroTarjetaUltimos4Digitos": "XXXX",
+      "BancoEmisor": "Nombre del Banco",
+      "TitularTarjeta": {
+        "NombreCompleto": "Nombre Completo Titular",
+        "Rut": "XXXXXXXX-X"
+      },
+      "CuentaAsociada": "Numero de Cuenta Asociada",
+      "FechaEmision": "YYYY-MM-DD",
+      "FechaVencimiento": "YYYY-MM-DD",
+      "Observaciones": "Condiciones de uso, límites."
+    }
+  }
 }' WHERE nombre = 'Tarjetas de Débito';
 
 -- Cheques
 UPDATE webapp_modulo SET esquema_json = '{
-  "Cheque": {
-    "TipoDocumento": "Cheque",
-    "NumeroCheque": "XXXXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "MontoNumerico": 0,
-    "MontoEscrito": "Monto en letras",
-    "Girador": {
-      "NombreRazonSocial": "Nombre o Razón Social Girador",
-      "Rut": "XXXXXXXX-X",
-      "NumeroCuenta": "XXXXX"
-    },
-    "Beneficiario": {
-      "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "BancoEmisor": "Nombre del Banco",
-    "Estado": "Emitido/Cobrado/Depositado/Protestado"
-  }
+  "json_data": {
+    "Cheque": {
+      "TipoDocumento": "Cheque",
+      "NumeroCheque": "XXXXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "MontoNumerico": 0,
+      "MontoEscrito": "Monto en letras",
+      "Girador": {
+        "NombreRazonSocial": "Nombre o Razón Social Girador",
+        "Rut": "XXXXXXXX-X",
+        "NumeroCuenta": "XXXXX"
+      },
+      "Beneficiario": {
+        "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "BancoEmisor": "Nombre del Banco",
+      "Estado": "Emitido/Cobrado/Depositado/Protestado"
+    }
+  }
 }' WHERE nombre = 'Cheques';
 
 -- Letras de Cambio
 UPDATE webapp_modulo SET esquema_json = '{
-  "LetraCambio": {
-    "TipoDocumento": "Letra de Cambio",
-    "NumeroLetra": "LC-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "MontoCapital": 0,
-    "Moneda": "CLP/USD",
-    "Girador": {
-      "NombreRazonSocial": "Nombre o Razón Social Girador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Girado": {
-      "NombreRazonSocial": "Nombre o Razón Social Girado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Beneficiario": {
-      "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "FechaVencimiento": "YYYY-MM-DD",
-    "Estado": "Vigente/Pagada/Protestada"
-  }
+  "json_data": {
+    "LetraCambio": {
+      "TipoDocumento": "Letra de Cambio",
+      "NumeroLetra": "LC-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "MontoCapital": 0,
+      "Moneda": "CLP/USD",
+      "Girador": {
+        "NombreRazonSocial": "Nombre o Razón Social Girador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Girado": {
+        "NombreRazonSocial": "Nombre o Razón Social Girado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Beneficiario": {
+        "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "FechaVencimiento": "YYYY-MM-DD",
+      "Estado": "Vigente/Pagada/Protestada"
+    }
+  }
 }' WHERE nombre = 'Letras de Cambio';
 
 -- Contratos de Leasing
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoLeasing": {
-    "NumeroContrato": "LSG-XXXX-YYYY",
-    "FechaContrato": "YYYY-MM-DD",
-    "ArrendadorFinanciero": {
-      "NombreRazonSocial": "Nombre o Razón Social Entidad Leasing",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Arrendatario": {
-      "NombreRazonSocial": "Nombre o Razón Social Arrendatario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "BienObjetoLeasing": {
-      "TipoBien": "Vehículo/Maquinaria/Inmueble",
-      "Identificador": "Patente/Número Serie/Rol",
-      "ValorAdquisicion": 0
-    },
-    "MontoCuotaMensual": 0,
-    "PlazoMeses": 0,
-    "ValorOpcionCompra": 0,
-    "FechaTerminoContrato": "YYYY-MM-DD",
-    "Estado": "Vigente/Finalizado/Incumplido"
-  }
+  "json_data": {
+    "ContratoLeasing": {
+      "NumeroContrato": "LSG-XXXX-YYYY",
+      "FechaContrato": "YYYY-MM-DD",
+      "ArrendadorFinanciero": {
+        "NombreRazonSocial": "Nombre o Razón Social Entidad Leasing",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Arrendatario": {
+        "NombreRazonSocial": "Nombre o Razón Social Arrendatario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "BienObjetoLeasing": {
+        "TipoBien": "Vehículo/Maquinaria/Inmueble",
+        "Identificador": "Patente/Número Serie/Rol",
+        "ValorAdquisicion": 0
+      },
+      "MontoCuotaMensual": 0,
+      "PlazoMeses": 0,
+      "ValorOpcionCompra": 0,
+      "FechaTerminoContrato": "YYYY-MM-DD",
+      "Estado": "Vigente/Finalizado/Incumplido"
+    }
+  }
 }' WHERE nombre = 'Contratos de Leasing';
 
 -- Contratos de Factoring
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoFactoring": {
-    "NumeroContrato": "FCT-XXXX-YYYY",
-    "FechaContrato": "YYYY-MM-DD",
-    "EmpresaFactoring": {
-      "NombreRazonSocial": "Nombre o Razón Social Empresa Factoring",
-      "Rut": "XXXXXXXX-X"
-    },
-    "ClienteFactoring": {
-      "NombreRazonSocial": "Nombre o Razón Social Cliente",
-      "Rut": "XXXXXXXX-X"
-    },
-    "TipoFactoring": "Con/Sin recurso",
-    "MontoLineaCredito": 0,
-    "ComisionFactoring": 0,
-    "AnticipoPromedio": 0,
-    "DocumentosCedidos": [
-      {"TipoDocumento": "Factura Electrónica", "Folio": "FXXXX", "Monto": 0, "FechaVencimiento": "YYYY-MM-DD"}
-    ]
-  }
+  "json_data": {
+    "ContratoFactoring": {
+      "NumeroContrato": "FCT-XXXX-YYYY",
+      "FechaContrato": "YYYY-MM-DD",
+      "EmpresaFactoring": {
+        "NombreRazonSocial": "Nombre o Razón Social Empresa Factoring",
+        "Rut": "XXXXXXXX-X"
+      },
+      "ClienteFactoring": {
+        "NombreRazonSocial": "Nombre o Razón Social Cliente",
+        "Rut": "XXXXXXXX-X"
+      },
+      "TipoFactoring": "Con/Sin recurso",
+      "MontoLineaCredito": 0,
+      "ComisionFactoring": 0,
+      "AnticipoPromedio": 0,
+      "DocumentosCedidos": [
+        {"TipoDocumento": "Factura Electrónica", "Folio": "FXXXX", "Monto": 0, "FechaVencimiento": "YYYY-MM-DD"}
+      ]
+    }
+  }
 }' WHERE nombre = 'Contratos de Factoring';
 
 -- Boletas de Garantía
 UPDATE webapp_modulo SET esquema_json = '{
-  "BoletaGarantia": {
-    "TipoDocumento": "Boleta de Garantía",
-    "NumeroBoleta": "BG-XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "BancoEmisor": "Nombre del Banco Emisor",
-    "MontoGarantizado": 0,
-    "Moneda": "CLP/USD",
-    "Tomador": {
-      "NombreRazonSocial": "Nombre o Razón Social Tomador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Beneficiario": {
-      "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "ObjetoGarantia": "Cumplimiento de contrato/Seriedad de la oferta",
-    "FechaVencimiento": "YYYY-MM-DD",
-    "Estado": "Vigente/Liberada/Cobrada"
-  }
+  "json_data": {
+    "BoletaGarantia": {
+      "TipoDocumento": "Boleta de Garantía",
+      "NumeroBoleta": "BG-XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "BancoEmisor": "Nombre del Banco Emisor",
+      "MontoGarantizado": 0,
+      "Moneda": "CLP/USD",
+      "Tomador": {
+        "NombreRazonSocial": "Nombre o Razón Social Tomador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Beneficiario": {
+        "NombreRazonSocial": "Nombre o Razón Social Beneficiario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "ObjetoGarantia": "Cumplimiento de contrato/Seriedad de la oferta",
+      "FechaVencimiento": "YYYY-MM-DD",
+      "Estado": "Vigente/Liberada/Cobrada"
+    }
+  }
 }' WHERE nombre = 'Boletas de Garantía';
 
 -- Mandatos Bancarios
 UPDATE webapp_modulo SET esquema_json = '{
-  "MandatoBancario": {
-    "TipoMandato": "Pago Automático/Administración de Cuenta",
-    "FechaEmision": "YYYY-MM-DD",
-    "Mandante": {
-      "NombreRazonSocial": "Nombre o Razón Social Mandante",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Mandatario": {
-      "NombreRazonSocial": "Nombre o Razón Social Mandatario (ej. Banco)",
-      "Rut": "XXXXXXXX-X"
-    },
-    "NumeroCuentaAsociada": "XXXXX",
-    "FacultadesOtorgadas": ["Pagar servicios", "Invertir", "Transferir"],
-    "MontoMaximoAutorizado": 0,
-    "Vigencia": "Indefinida/Hasta YYYY-MM-DD"
-  }
+  "json_data": {
+    "MandatoBancario": {
+      "TipoMandato": "Pago Automático/Administración de Cuenta",
+      "FechaEmision": "YYYY-MM-DD",
+      "Mandante": {
+        "NombreRazonSocial": "Nombre o Razón Social Mandante",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Mandatario": {
+        "NombreRazonSocial": "Nombre o Razón Social Mandatario (ej. Banco)",
+        "Rut": "XXXXXXXX-X"
+      },
+      "NumeroCuentaAsociada": "XXXXX",
+      "FacultadesOtorgadas": ["Pagar servicios", "Invertir", "Transferir"],
+      "MontoMaximoAutorizado": 0,
+      "Vigencia": "Indefinida/Hasta YYYY-MM-DD"
+    }
+  }
 }' WHERE nombre = 'Mandatos Bancarios';
 
 -- Inversiones (Depósitos a Plazo y Fondos Mutuos)
 UPDATE webapp_modulo SET esquema_json = '{
-  "Inversion": {
-    "TipoInversion": "Depósito a Plazo/Fondo Mutuo/Acciones",
-    "NumeroOperacion": "INV-XXXX-YYYY",
-    "FechaConstitucion": "YYYY-MM-DD",
-    "InstitucionFinanciera": "Nombre del Banco/Corredora",
-    "TitularInversion": {
-      "NombreRazonSocial": "Nombre o Razón Social Titular",
-      "Rut": "XXXXXXXX-X"
-    },
-    "MontoInvertido": 0,
-    "Moneda": "CLP/USD",
-    "InformacionEspecifica": {
-      "PlazoDias": 0,
-      "TasaInteresAnual": 0,
-      "FechaVencimiento": "YYYY-MM-DD",
-      "RentabilidadAcumulada": 0,
-      "ValorCuota": 0,
-      "NumeroCuotas": 0
-    },
-    "Estado": "Activa/Rescatada/Vencida"
-  }
+  "json_data": {
+    "Inversion": {
+      "TipoInversion": "Depósito a Plazo/Fondo Mutuo/Acciones",
+      "NumeroOperacion": "INV-XXXX-YYYY",
+      "FechaConstitucion": "YYYY-MM-DD",
+      "InstitucionFinanciera": "Nombre del Banco/Corredora",
+      "TitularInversion": {
+        "NombreRazonSocial": "Nombre o Razón Social Titular",
+        "Rut": "XXXXXXXX-X"
+      },
+      "MontoInvertido": 0,
+      "Moneda": "CLP/USD",
+      "InformacionEspecifica": {
+        "PlazoDias": 0,
+        "TasaInteresAnual": 0,
+        "FechaVencimiento": "YYYY-MM-DD",
+        "RentabilidadAcumulada": 0,
+        "ValorCuota": 0,
+        "NumeroCuotas": 0
+      },
+      "Estado": "Activa/Rescatada/Vencida"
+    }
+  }
 }' WHERE nombre = 'Inversiones';
 
 -- =============================================================================
@@ -2297,378 +2456,410 @@ SELECT 'Certificados DOM', 'Documentos de la Dirección de Obras Municipales', i
 
 -- Escrituras de Compraventa
 UPDATE webapp_modulo SET esquema_json = '{
-  "EscrituraCompraventa": {
-    "TipoDocumento": "Escritura de Compraventa",
-    "NumeroRepertorio": "XXXX-YYYY",
-    "FechaEscritura": "YYYY-MM-DD",
-    "Notaria": {
-      "Nombre": "Nombre Notaría",
-      "Comuna": "Comuna Notaría"
-    },
-    "Vendedor": {
-      "NombreRazonSocial": "Nombre o Razón Social Vendedor",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Comprador": {
-      "NombreRazonSocial": "Nombre o Razón Social Comprador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Propiedad": {
-      "TipoInmueble": "Casa/Departamento/Terreno/Oficina",
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY",
-      "MetrosCuadradosConstruidos": 0,
-      "MetrosCuadradosTerreno": 0
-    },
-    "PrecioVenta": 0,
-    "Moneda": "CLP/UF/USD",
-    "InscripcionCBR": {
-      "Foja": "XXXX",
-      "Numero": "YYYY",
-      "Año": "ZZZZ",
-      "Conservador": "Nombre Conservador de Bienes Raíces"
-    },
-    "ArchivosAdjuntos": ["ruta/al/pdf_escritura.pdf"]
-  }
+  "json_data": {
+    "EscrituraCompraventa": {
+      "TipoDocumento": "Escritura de Compraventa",
+      "NumeroRepertorio": "XXXX-YYYY",
+      "FechaEscritura": "YYYY-MM-DD",
+      "Notaria": {
+        "Nombre": "Nombre Notaría",
+        "Comuna": "Comuna Notaría"
+      },
+      "Vendedor": {
+        "NombreRazonSocial": "Nombre o Razón Social Vendedor",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Comprador": {
+        "NombreRazonSocial": "Nombre o Razón Social Comprador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Propiedad": {
+        "TipoInmueble": "Casa/Departamento/Terreno/Oficina",
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY",
+        "MetrosCuadradosConstruidos": 0,
+        "MetrosCuadradosTerreno": 0
+      },
+      "PrecioVenta": 0,
+      "Moneda": "CLP/UF/USD",
+      "InscripcionCBR": {
+        "Foja": "XXXX",
+        "Numero": "YYYY",
+        "Año": "ZZZZ",
+        "Conservador": "Nombre Conservador de Bienes Raíces"
+      },
+      "ArchivosAdjuntos": ["ruta/al/pdf_escritura.pdf"]
+    }
+  }
 }' WHERE nombre = 'Escrituras de Compraventa';
 
 -- Contratos de Arriendo
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoArriendo": {
-    "TipoDocumento": "Contrato de Arrendamiento",
-    "NumeroContrato": "ARRI-XXXX-YYYY",
-    "FechaContrato": "YYYY-MM-DD",
-    "Arrendador": {
-      "NombreRazonSocial": "Nombre o Razón Social Arrendador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "Arrendatario": {
-      "NombreRazonSocial": "Nombre o Razón Social Arrendatario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PropiedadArrendada": {
-      "TipoInmueble": "Casa/Departamento/Oficina",
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "MontoArriendoMensual": 0,
-    "Moneda": "CLP/UF",
-    "MontoGarantia": 0,
-    "DuracionMeses": 12,
-    "FechaInicioArriendo": "YYYY-MM-DD",
-    "FechaTerminoArriendo": "YYYY-MM-DD",
-    "CondicionesEspeciales": "Renovación automática, Mantención"
-  }
+  "json_data": {
+    "ContratoArriendo": {
+      "TipoDocumento": "Contrato de Arrendamiento",
+      "NumeroContrato": "ARRI-XXXX-YYYY",
+      "FechaContrato": "YYYY-MM-DD",
+      "Arrendador": {
+        "NombreRazonSocial": "Nombre o Razón Social Arrendador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "Arrendatario": {
+        "NombreRazonSocial": "Nombre o Razón Social Arrendatario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PropiedadArrendada": {
+        "TipoInmueble": "Casa/Departamento/Oficina",
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "MontoArriendoMensual": 0,
+      "Moneda": "CLP/UF",
+      "MontoGarantia": 0,
+      "DuracionMeses": 12,
+      "FechaInicioArriendo": "YYYY-MM-DD",
+      "FechaTerminoArriendo": "YYYY-MM-DD",
+      "CondicionesEspeciales": "Renovación automática, Mantención"
+    }
+  }
 }' WHERE nombre = 'Contratos de Arriendo';
 
 -- Certificados de Dominio
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoDominio": {
-    "TipoDocumento": "Certificado de Dominio Vigente",
-    "NumeroCertificado": "CBR-DOM-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "Conservador": {
-      "Nombre": "Nombre Conservador de Bienes Raíces",
-      "Comuna": "Comuna Conservador"
-    },
-    "Propiedad": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "InscripcionOriginal": {
-      "Foja": "XXXX",
-      "Numero": "YYYY",
-      "Año": "ZZZZ"
-    },
-    "ActualPropietario": {
-      "NombreRazonSocial": "Nombre o Razón Social Propietario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "EstadoGravamenes": "Sin gravámenes/Con gravámenes (ver Certificado Hipotecas)"
-  }
+  "json_data": {
+    "CertificadoDominio": {
+      "TipoDocumento": "Certificado de Dominio Vigente",
+      "NumeroCertificado": "CBR-DOM-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "Conservador": {
+        "Nombre": "Nombre Conservador de Bienes Raíces",
+        "Comuna": "Comuna Conservador"
+      },
+      "Propiedad": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "InscripcionOriginal": {
+        "Foja": "XXXX",
+        "Numero": "YYYY",
+        "Año": "ZZZZ"
+      },
+      "ActualPropietario": {
+        "NombreRazonSocial": "Nombre o Razón Social Propietario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "EstadoGravamenes": "Sin gravámenes/Con gravámenes (ver Certificado Hipotecas)"
+    }
+  }
 }' WHERE nombre = 'Certificados de Dominio';
 
 -- Certificados de Hipotecas
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoHipotecas": {
-    "TipoDocumento": "Certificado de Hipotecas y Gravámenes",
-    "NumeroCertificado": "CBR-HIP-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "Conservador": {
-      "Nombre": "Nombre Conservador de Bienes Raíces",
-      "Comuna": "Comuna Conservador"
-    },
-    "Propiedad": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "Gravamenes": [
-      {
-        "TipoGravamen": "Hipoteca/Servidumbre/Prohibición",
-        "Beneficiario": "Nombre o Razón Social Beneficiario",
-        "MontoAsociado": 0,
-        "FechaInscripcion": "YYYY-MM-DD",
-        "Foja": "XXXX",
-        "Numero": "YYYY",
-        "Año": "ZZZZ"
-      }
-    ],
-    "EstadoPropiedad": "Libre de gravámenes/Con gravámenes indicados"
-  }
+  "json_data": {
+    "CertificadoHipotecas": {
+      "TipoDocumento": "Certificado de Hipotecas y Gravámenes",
+      "NumeroCertificado": "CBR-HIP-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "Conservador": {
+        "Nombre": "Nombre Conservador de Bienes Raíces",
+        "Comuna": "Comuna Conservador"
+      },
+      "Propiedad": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "Gravamenes": [
+        {
+          "TipoGravamen": "Hipoteca/Servidumbre/Prohibición",
+          "Beneficiario": "Nombre o Razón Social Beneficiario",
+          "MontoAsociado": 0,
+          "FechaInscripcion": "YYYY-MM-DD",
+          "Foja": "XXXX",
+          "Numero": "YYYY",
+          "Año": "ZZZZ"
+        }
+      ],
+      "EstadoPropiedad": "Libre de gravámenes/Con gravámenes indicados"
+    }
+  }
 }' WHERE nombre = 'Certificados de Hipotecas';
 
 -- Certificados de Avalúo Fiscal
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoAvaluoFiscal": {
-    "TipoDocumento": "Certificado de Avalúo Fiscal",
-    "NumeroCertificado": "SII-AVAL-XXXX",
-    "FechaEmision": "YYYY-MM-DD",
-    "Emisor": "Servicio de Impuestos Internos (SII)",
-    "Propiedad": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "AvaluoFiscalVigente": 0,
-    "AvaluoFiscalTerreno": 0,
-    "AvaluoFiscalConstrucciones": 0,
-    "FechaVigenciaAvaluo": "YYYY-MM-DD"
-  }
+  "json_data": {
+    "CertificadoAvaluoFiscal": {
+      "TipoDocumento": "Certificado de Avalúo Fiscal",
+      "NumeroCertificado": "SII-AVAL-XXXX",
+      "FechaEmision": "YYYY-MM-DD",
+      "Emisor": "Servicio de Impuestos Internos (SII)",
+      "Propiedad": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "AvaluoFiscalVigente": 0,
+      "AvaluoFiscalTerreno": 0,
+      "AvaluoFiscalConstrucciones": 0,
+      "FechaVigenciaAvaluo": "YYYY-MM-DD"
+    }
+  }
 }' WHERE nombre = 'Certificados de Avalúo Fiscal';
 
 -- Tasaciones Comerciales
 UPDATE webapp_modulo SET esquema_json = '{
-  "TasacionComercial": {
-    "TipoDocumento": "Informe de Tasación Comercial",
-    "NumeroInforme": "TAS-XXXX-YYYY",
-    "FechaTasacion": "YYYY-MM-DD",
-    "Tasador": {
-      "Nombre": "Nombre del Tasador",
-      "Rut": "XXXXXXXX-X",
-      "EmpresaTasadora": "Nombre Empresa Tasadora"
-    },
-    "PropiedadTasada": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY",
-      "SuperficieTerrenoM2": 0,
-      "SuperficieConstruidaM2": 0
-    },
-    "ValorTasacionComercial": 0,
-    "Moneda": "UF/CLP",
-    "Observaciones": "Factores considerados: ubicación, estado, accesibilidad."
-  }
+  "json_data": {
+    "TasacionComercial": {
+      "TipoDocumento": "Informe de Tasación Comercial",
+      "NumeroInforme": "TAS-XXXX-YYYY",
+      "FechaTasacion": "YYYY-MM-DD",
+      "Tasador": {
+        "Nombre": "Nombre del Tasador",
+        "Rut": "XXXXXXXX-X",
+        "EmpresaTasadora": "Nombre Empresa Tasadora"
+      },
+      "PropiedadTasada": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY",
+        "SuperficieTerrenoM2": 0,
+        "SuperficieConstruidaM2": 0
+      },
+      "ValorTasacionComercial": 0,
+      "Moneda": "UF/CLP",
+      "Observaciones": "Factores considerados: ubicación, estado, accesibilidad."
+    }
+  }
 }' WHERE nombre = 'Tasaciones Comerciales';
 
 -- Planos de Propiedad
 UPDATE webapp_modulo SET esquema_json = '{
-  "PlanoPropiedad": {
-    "TipoDocumento": "Plano Arquitectónico/Loteo/Ubicación",
-    "NombrePlano": "Nombre del Plano (ej. Planta Primer Piso)",
-    "FechaEmision": "YYYY-MM-DD",
-    "ArquitectoResponsable": "Nombre Arquitecto",
-    "NumeroRegistroColegio": "XXXXX",
-    "PropiedadAsociada": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "Escala": "1:50/1:100",
-    "DetalleContenido": "Distribución, cotas, instalaciones",
-    "ArchivosAdjuntos": ["ruta/al/pdf_plano.pdf", "ruta/al/dwg_plano.dwg"]
-  }
+  "json_data": {
+    "PlanoPropiedad": {
+      "TipoDocumento": "Plano Arquitectónico/Loteo/Ubicación",
+      "NombrePlano": "Nombre del Plano (ej. Planta Primer Piso)",
+      "FechaEmision": "YYYY-MM-DD",
+      "ArquitectoResponsable": "Nombre Arquitecto",
+      "NumeroRegistroColegio": "XXXXX",
+      "PropiedadAsociada": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "Escala": "1:50/1:100",
+      "DetalleContenido": "Distribución, cotas, instalaciones",
+      "ArchivosAdjuntos": ["ruta/al/pdf_plano.pdf", "ruta/al/dwg_plano.dwg"]
+    }
+  }
 }' WHERE nombre = 'Planos de Propiedad';
 
 -- Permisos de Edificación
 UPDATE webapp_modulo SET esquema_json = '{
-  "PermisoEdificacion": {
-    "TipoDocumento": "Permiso de Edificación",
-    "NumeroExpedienteDOM": "PED-XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "Municipalidad": {
-      "Nombre": "Municipalidad de Comuna",
-      "DireccionObras": "Dirección D.O.M."
-    },
-    "PropietarioProyecto": {
-      "NombreRazonSocial": "Nombre o Razón Social Propietario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "DireccionObra": "Calle #Numero, Comuna, Ciudad",
-    "TipoObra": "Obra Nueva/Ampliación/Modificación",
-    "SuperficieAutorizadaM2": 0,
-    "VigenciaHasta": "YYYY-MM-DD",
-    "Estado": "Vigente/Caducado/Obra Iniciada"
-  }
+  "json_data": {
+    "PermisoEdificacion": {
+      "TipoDocumento": "Permiso de Edificación",
+      "NumeroExpedienteDOM": "PED-XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "Municipalidad": {
+        "Nombre": "Municipalidad de Comuna",
+        "DireccionObras": "Dirección D.O.M."
+      },
+      "PropietarioProyecto": {
+        "NombreRazonSocial": "Nombre o Razón Social Propietario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "DireccionObra": "Calle #Numero, Comuna, Ciudad",
+      "TipoObra": "Obra Nueva/Ampliación/Modificación",
+      "SuperficieAutorizadaM2": 0,
+      "VigenciaHasta": "YYYY-MM-DD",
+      "Estado": "Vigente/Caducado/Obra Iniciada"
+    }
+  }
 }' WHERE nombre = 'Permisos de Edificación';
 
 -- Recepciones Finales
 UPDATE webapp_modulo SET esquema_json = '{
-  "RecepcionFinal": {
-    "TipoDocumento": "Certificado de Recepción Final",
-    "NumeroCertificadoDOM": "REF-XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "Municipalidad": {
-      "Nombre": "Municipalidad de Comuna"
-    },
-    "PropietarioObra": {
-      "NombreRazonSocial": "Nombre o Razón Social Propietario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "DireccionObra": "Calle #Numero, Comuna, Ciudad",
-    "PermisoEdificacionAsociado": "PED-XXXX-YYYY",
-    "SuperficieRecepcionadaM2": 0,
-    "Observaciones": "La obra cumple con normativa."
-  }
+  "json_data": {
+    "RecepcionFinal": {
+      "TipoDocumento": "Certificado de Recepción Final",
+      "NumeroCertificadoDOM": "REF-XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "Municipalidad": {
+        "Nombre": "Municipalidad de Comuna"
+      },
+      "PropietarioObra": {
+        "NombreRazonSocial": "Nombre o Razón Social Propietario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "DireccionObra": "Calle #Numero, Comuna, Ciudad",
+      "PermisoEdificacionAsociado": "PED-XXXX-YYYY",
+      "SuperficieRecepcionadaM2": 0,
+      "Observaciones": "La obra cumple con normativa."
+    }
+  }
 }' WHERE nombre = 'Recepciones Finales';
 
 -- Certificados de Informaciones Previas
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoInformacionesPrevias": {
-    "TipoDocumento": "Certificado de Informaciones Previas (CIP)",
-    "NumeroCertificadoDOM": "CIP-XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "Municipalidad": {
-      "Nombre": "Municipalidad de Comuna"
-    },
-    "DireccionPropiedad": "Calle #Numero, Comuna, Ciudad",
-    "RolAvaluo": "XXX-YY",
-    "ZonaUsoSuelo": "Zona Residencial/Comercial",
-    "CoeficienteConstructibilidad": 0,
-    "CoeficienteOcupacionSuelo": 0,
-    "AlturaMaximaEdificacion": "Metros/Pisos",
-    "Afectaciones": ["Expropiación", "Utilidad Pública (si aplica)"]
-  }
+  "json_data": {
+    "CertificadoInformacionesPrevias": {
+      "TipoDocumento": "Certificado de Informaciones Previas (CIP)",
+      "NumeroCertificadoDOM": "CIP-XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "Municipalidad": {
+        "Nombre": "Municipalidad de Comuna"
+      },
+      "DireccionPropiedad": "Calle #Numero, Comuna, Ciudad",
+      "RolAvaluo": "XXX-YY",
+      "ZonaUsoSuelo": "Zona Residencial/Comercial",
+      "CoeficienteConstructibilidad": 0,
+      "CoeficienteOcupacionSuelo": 0,
+      "AlturaMaximaEdificacion": "Metros/Pisos",
+      "Afectaciones": ["Expropiación", "Utilidad Pública (si aplica)"]
+    }
+  }
 }' WHERE nombre = 'Certificados de Informaciones Previas';
 
 -- Reglamentos de Copropiedad
 UPDATE webapp_modulo SET esquema_json = '{
-  "ReglamentoCopropiedad": {
-    "TipoDocumento": "Reglamento de Copropiedad",
-    "FechaAprobacion": "YYYY-MM-DD",
-    "NombreComunidad": "Nombre Edificio/Condominio",
-    "DireccionComunidad": "Calle #Numero, Comuna, Ciudad",
-    "NumeroInscripcionCBRS": "XXXX-YYYY (Registro de Copropiedad)",
-    "NormasPrincipales": [
-      {"Titulo": "Uso de Bienes Comunes", "Resumen": "Reglas de uso de piscina, quinchos."},
-      {"Titulo": "Gastos Comunes", "Resumen": "Forma de cálculo y cobro."},
-      {"Titulo": "Mascotas", "Resumen": "Permiso o prohibición de mascotas."}
-    ],
-    "AdministradorActual": {
-      "NombreRazonSocial": "Nombre o Razón Social Administrador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "ArchivosAdjuntos": ["ruta/al/pdf_reglamento_copropiedad.pdf"]
-  }
+  "json_data": {
+    "ReglamentoCopropiedad": {
+      "TipoDocumento": "Reglamento de Copropiedad",
+      "FechaAprobacion": "YYYY-MM-DD",
+      "NombreComunidad": "Nombre Edificio/Condominio",
+      "DireccionComunidad": "Calle #Numero, Comuna, Ciudad",
+      "NumeroInscripcionCBRS": "XXXX-YYYY (Registro de Copropiedad)",
+      "NormasPrincipales": [
+        {"Titulo": "Uso de Bienes Comunes", "Resumen": "Reglas de uso de piscina, quinchos."},
+        {"Titulo": "Gastos Comunes", "Resumen": "Forma de cálculo y cobro."},
+        {"Titulo": "Mascotas", "Resumen": "Permiso o prohibición de mascotas."}
+      ],
+      "AdministradorActual": {
+        "NombreRazonSocial": "Nombre o Razón Social Administrador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "ArchivosAdjuntos": ["ruta/al/pdf_reglamento_copropiedad.pdf"]
+    }
+  }
 }' WHERE nombre = 'Reglamentos de Copropiedad';
 
 -- Actas de Asamblea
 UPDATE webapp_modulo SET esquema_json = '{
-  "ActaAsamblea": {
-    "TipoAsamblea": "Ordinaria/Extraordinaria",
-    "FechaAsamblea": "YYYY-MM-DD",
-    "HoraInicio": "HH:MM",
-    "NombreComunidad": "Nombre Edificio/Condominio",
-    "NumeroSesion": "XXXX",
-    "QuorumPresente": "Número de asistentes/Porcentaje",
-    "TemasTratados": ["Aprobación de gastos comunes", "Elección de comité"],
-    "AcuerdosTomados": [
-      {"Tema": "Remodelación Fachada", "Acuerdo": "Aprobada remodelación con presupuesto X."}
-    ],
-    "ProximaAsambleaFecha": "YYYY-MM-DD",
-    "ArchivosAdjuntos": ["ruta/al/pdf_acta.pdf"]
-  }
+  "json_data": {
+    "ActaAsamblea": {
+      "TipoAsamblea": "Ordinaria/Extraordinaria",
+      "FechaAsamblea": "YYYY-MM-DD",
+      "HoraInicio": "HH:MM",
+      "NombreComunidad": "Nombre Edificio/Condominio",
+      "NumeroSesion": "XXXX",
+      "QuorumPresente": "Número de asistentes/Porcentaje",
+      "TemasTratados": ["Aprobación de gastos comunes", "Elección de comité"],
+      "AcuerdosTomados": [
+        {"Tema": "Remodelación Fachada", "Acuerdo": "Aprobada remodelación con presupuesto X."}
+      ],
+      "ProximaAsambleaFecha": "YYYY-MM-DD",
+      "ArchivosAdjuntos": ["ruta/al/pdf_acta.pdf"]
+    }
+  }
 }' WHERE nombre = 'Actas de Asamblea';
 
 -- Promesas de Compraventa
 UPDATE webapp_modulo SET esquema_json = '{
-  "PromesaCompraventa": {
-    "TipoDocumento": "Promesa de Compraventa",
-    "FechaPromesa": "YYYY-MM-DD",
-    "PromitenteVendedor": {
-      "NombreRazonSocial": "Nombre o Razón Social Promitente Vendedor",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PromitenteComprador": {
-      "NombreRazonSocial": "Nombre o Razón Social Promitente Comprador",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PropiedadObjeto": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "PrecioAcordado": 0,
-    "Moneda": "CLP/UF",
-    "MontoPie": 0,
-    "FechaMaximaEscrituracion": "YYYY-MM-DD",
-    "CondicionesResolutorias": "Obtención de crédito, Estudio de títulos conforme."
-  }
+  "json_data": {
+    "PromesaCompraventa": {
+      "TipoDocumento": "Promesa de Compraventa",
+      "FechaPromesa": "YYYY-MM-DD",
+      "PromitenteVendedor": {
+        "NombreRazonSocial": "Nombre o Razón Social Promitente Vendedor",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PromitenteComprador": {
+        "NombreRazonSocial": "Nombre o Razón Social Promitente Comprador",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PropiedadObjeto": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "PrecioAcordado": 0,
+      "Moneda": "CLP/UF",
+      "MontoPie": 0,
+      "FechaMaximaEscrituracion": "YYYY-MM-DD",
+      "CondicionesResolutorias": "Obtención de crédito, Estudio de títulos conforme."
+    }
+  }
 }' WHERE nombre = 'Promesas de Compraventa';
 
 -- Estudios de Título
 UPDATE webapp_modulo SET esquema_json = '{
-  "EstudioTitulo": {
-    "TipoDocumento": "Informe de Estudio de Títulos",
-    "FechaInforme": "YYYY-MM-DD",
-    "AbogadoResponsable": {
-      "NombreCompleto": "Nombre Abogado",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PropiedadEstudiada": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "PeriodoEstudiadoAnios": 10,
-    "Conclusiones": "Títulos conforme/Con observaciones/Con reparos",
-    "Observaciones": "Detalle de los hallazgos (ej. 'Existencia de servidumbre').",
-    "ArchivosAdjuntos": ["ruta/al/pdf_estudio_titulos.pdf"]
-  }
+  "json_data": {
+    "EstudioTitulo": {
+      "TipoDocumento": "Informe de Estudio de Títulos",
+      "FechaInforme": "YYYY-MM-DD",
+      "AbogadoResponsable": {
+        "NombreCompleto": "Nombre Abogado",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PropiedadEstudiada": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "PeriodoEstudiadoAnios": 10,
+      "Conclusiones": "Títulos conforme/Con observaciones/Con reparos",
+      "Observaciones": "Detalle de los hallazgos (ej. Existencia de servidumbre).",
+      "ArchivosAdjuntos": ["ruta/al/pdf_estudio_titulos.pdf"]
+    }
+  }
 }' WHERE nombre = 'Estudios de Título';
 
 -- Contratos de Corretaje
 UPDATE webapp_modulo SET esquema_json = '{
-  "ContratoCorretaje": {
-    "TipoDocumento": "Contrato de Corretaje de Propiedades",
-    "NumeroContrato": "CORR-XXXX-YYYY",
-    "FechaContrato": "YYYY-MM-DD",
-    "Propietario": {
-      "NombreRazonSocial": "Nombre o Razón Social Propietario",
-      "Rut": "XXXXXXXX-X"
-    },
-    "CorredorPropiedades": {
-      "NombreRazonSocial": "Nombre o Razón Social Corredor",
-      "Rut": "XXXXXXXX-X",
-      "NumeroRegistroACOP": "XXXXX"
-    },
-    "PropiedadEncargada": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY",
-      "TipoOperacion": "Venta/Arriendo"
-    },
-    "ComisionCorretajePorcentaje": 0,
-    "PlazoContratoMeses": 6,
-    "Exclusividad": "Si/No"
-  }
+  "json_data": {
+    "ContratoCorretaje": {
+      "TipoDocumento": "Contrato de Corretaje de Propiedades",
+      "NumeroContrato": "CORR-XXXX-YYYY",
+      "FechaContrato": "YYYY-MM-DD",
+      "Propietario": {
+        "NombreRazonSocial": "Nombre o Razón Social Propietario",
+        "Rut": "XXXXXXXX-X"
+      },
+      "CorredorPropiedades": {
+        "NombreRazonSocial": "Nombre o Razón Social Corredor",
+        "Rut": "XXXXXXXX-X",
+        "NumeroRegistroACOP": "XXXXX"
+      },
+      "PropiedadEncargada": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY",
+        "TipoOperacion": "Venta/Arriendo"
+      },
+      "ComisionCorretajePorcentaje": 0,
+      "PlazoContratoMeses": 6,
+      "Exclusividad": "Si/No"
+    }
+  }
 }' WHERE nombre = 'Contratos de Corretaje';
 
 -- Certificados DOM (Dirección de Obras Municipales) - General
 -- Nota: Ya existen Permisos de Edificación, Recepciones Finales y CIPs que son Certificados DOM específicos.
 -- Este esquema sería para certificados DOM más generales o solicitudes.
 UPDATE webapp_modulo SET esquema_json = '{
-  "CertificadoDOM": {
-    "TipoDocumento": "Certificado DOM (General)",
-    "NumeroSolicitud": "DOM-SOL-XXXX-YYYY",
-    "FechaEmision": "YYYY-MM-DD",
-    "Municipalidad": {
-      "Nombre": "Municipalidad de Comuna"
-    },
-    "Solicitante": {
-      "NombreRazonSocial": "Nombre o Razón Social Solicitante",
-      "Rut": "XXXXXXXX-X"
-    },
-    "PropiedadAsociada": {
-      "Direccion": "Calle #Numero, Comuna, Ciudad",
-      "RolAvaluo": "XXX-YY"
-    },
-    "MateriaSolicitud": "Factibilidad de Construcción/Línea Oficial/Número",
-    "Respuesta": "Descripción de la respuesta o información entregada."
-  }
+  "json_data": {
+    "CertificadoDOM": {
+      "TipoDocumento": "Certificado DOM (General)",
+      "NumeroSolicitud": "DOM-SOL-XXXX-YYYY",
+      "FechaEmision": "YYYY-MM-DD",
+      "Municipalidad": {
+        "Nombre": "Municipalidad de Comuna"
+      },
+      "Solicitante": {
+        "NombreRazonSocial": "Nombre o Razón Social Solicitante",
+        "Rut": "XXXXXXXX-X"
+      },
+      "PropiedadAsociada": {
+        "Direccion": "Calle #Numero, Comuna, Ciudad",
+        "RolAvaluo": "XXX-YY"
+      },
+      "MateriaSolicitud": "Factibilidad de Construcción/Línea Oficial/Número",
+      "Respuesta": "Descripción de la respuesta o información entregada."
+    }
+  }
 }' WHERE nombre = 'Certificados DOM';
 
 -- =============================================================================
