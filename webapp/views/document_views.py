@@ -222,17 +222,19 @@ def documento_webhook(request):
         if ocr_data:
             documento.ocr_data = ocr_data
 
-        # Asegurar que json_data sea un dict y serializarlo correctamente
+        # Limpiar y serializar json_data si es string
         import json as pyjson
         if json_data:
             if isinstance(json_data, str):
                 try:
-                    json_data_obj = pyjson.loads(json_data)
-                except Exception:
-                    # Si falla, intenta limpiar saltos de línea y volver a cargar
-                    json_data_obj = pyjson.loads(json_data.replace('\n', '\\n'))
+                    # Elimina saltos de línea y espacios innecesarios
+                    json_data_clean = json_data.replace('\n', '').replace('\r', '').strip()
+                    json_data_obj = pyjson.loads(json_data_clean)
+                except Exception as e:
+                    return JsonResponse({'error': f'Error procesando json_data: {e}'}, status=400)
             else:
                 json_data_obj = json_data
+            # Guarda el JSON serializado y limpio
             documento.json_data = pyjson.dumps(json_data_obj, ensure_ascii=False)
 
         documento.status = status
