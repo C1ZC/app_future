@@ -9,6 +9,7 @@ from webapp.views.administration_views import (
     admin_grupos_modulos, administracion, crear_grupo, crear_modulo,
     toggle_grupo_activo, eliminar_grupo, eliminar_modulo
 )
+from webapp.views.api_views import buscar_modulos_grupos
 from webapp.views.auth_views import register
 from webapp.views.dashboard_cosumo_view import dashboard_consumo_empresa
 from webapp.views.home_views import home
@@ -83,6 +84,7 @@ urlpatterns = [
          eliminar_grupo, name='eliminar_grupo'),
     path('administration/documentos/modulos/<int:modulo_id>/eliminar/',
          eliminar_modulo, name='eliminar_modulo'),
+    path('api/buscar-modulos-grupos/', buscar_modulos_grupos, name='buscar_modulos_grupos'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

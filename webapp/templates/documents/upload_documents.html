@@ -23,6 +23,25 @@
                 </div>
                 {% endif %}
                 
+                <!-- Nuevo buscador de documentos -->
+                <div class="mb-4">
+                    <label for="buscador" class="form-label">Buscar tipo de documento</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="buscador" placeholder="Ej: Factura, Contrato, Permiso...">
+                        <button class="btn btn-outline-secondary" type="button" id="limpiarBusqueda">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                    <div id="resultadosBusqueda" class="list-group position-absolute d-none" style="width: calc(100% - 3rem); z-index: 1000;"></div>
+                    <div class="form-text">Busque para autocompletar grupo y módulo</div>
+                </div>
+                
+                <!-- Información del documento seleccionado -->
+                <div id="infoDocumento" class="alert alert-info d-none mb-3">
+                    <h6 id="tipoDocumentoSeleccionado" class="mb-1"></h6>
+                    <p id="descripcionDocumento" class="mb-0 small"></p>
+                </div>
+                
                 <form method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     
@@ -62,17 +81,43 @@
                 </form>
             </div>
         </div>
+        
+        <!-- Documentos Recientes -->
+        <div class="card shadow mt-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="card-title mb-0">Documentos recientes</h6>
+                <button id="limpiarRecientes" class="btn btn-sm btn-outline-secondary">Limpiar</button>
+            </div>
+            <div class="card-body">
+                <div id="documentosRecientes" class="d-flex flex-wrap gap-2">
+                    <!-- Se llena con JavaScript -->
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const grupoSelect = document.getElementById('{{ form.grupo_id.id_for_label }}');
     const moduloSelect = document.getElementById('{{ form.modulo_id.id_for_label }}');
+    const buscador = document.getElementById('buscador');
+    const resultadosBusqueda = document.getElementById('resultadosBusqueda');
+    const limpiarBusqueda = document.getElementById('limpiarBusqueda');
+    const infoDocumento = document.getElementById('infoDocumento');
+    const tipoDocumentoSeleccionado = document.getElementById('tipoDocumentoSeleccionado');
+    const descripcionDocumento = document.getElementById('descripcionDocumento');
+    const documentosRecientes = document.getElementById('documentosRecientes');
+    const limpiarRecientes = document.getElementById('limpiarRecientes');
     
-    // Cargar módulos cuando cambia el grupo
+    let timeoutId;
+    let recientes = JSON.parse(localStorage.getItem('documentosRecientes') || '[]');
+    
+    // Cargar documentos recientes
+    cargarDocumentosRecientes();
+    
+    // Cargar módulos cuando cambia el grupo (código original)
     grupoSelect.addEventListener('change', function() {
         const grupoId = this.value;
         
@@ -95,7 +140,213 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error cargando módulos:', error));
     });
     
-    // Disparar el evento si ya hay un grupo seleccionado (ej. en caso de error al enviar)
+    // Evento de búsqueda con debounce
+    buscador.addEventListener('input', function() {
+        clearTimeout(timeoutId);
+        const termino = this.value.trim();
+        
+        if (termino.length < 2) {
+            resultadosBusqueda.innerHTML = '';
+            resultadosBusqueda.classList.add('d-none');
+            return;
+        }
+        
+        timeoutId = setTimeout(function() {
+            buscarDocumentos(termino);
+        }, 300);
+    });
+    
+    // Limpiar búsqueda
+    limpiarBusqueda.addEventListener('click', function() {
+        buscador.value = '';
+        resultadosBusqueda.innerHTML = '';
+        resultadosBusqueda.classList.add('d-none');
+    });
+    
+    // Limpiar recientes
+    limpiarRecientes.addEventListener('click', function() {
+        localStorage.removeItem('documentosRecientes');
+        recientes = [];
+        cargarDocumentosRecientes();
+    });
+    
+    // Función para buscar documentos
+    function buscarDocumentos(termino) {
+        fetch(`/api/buscar-modulos-grupos/?termino=${encodeURIComponent(termino)}`)
+            .then(response => response.json())
+            .then(data => {
+                resultadosBusqueda.innerHTML = '';
+                
+                if (data.resultados.length === 0) {
+                    resultadosBusqueda.innerHTML = '<div class="list-group-item">No se encontraron resultados</div>';
+                    resultadosBusqueda.classList.remove('d-none');
+                    return;
+                }
+                
+                data.resultados.forEach(resultado => {
+                    const item = document.createElement('div');
+                    item.className = 'list-group-item list-group-item-action';
+                    item.textContent = resultado.texto;
+                    item.dataset.grupo = resultado.grupo_id;
+                    item.dataset.modulo = resultado.modulo_id || '';
+                    item.dataset.tipo = resultado.tipo;
+                    item.dataset.grupoNombre = resultado.grupo_nombre;
+                    item.dataset.moduloNombre = resultado.modulo_nombre || '';
+                    
+                    item.addEventListener('click', function() {
+                        seleccionarDocumento(this.dataset);
+                    });
+                    
+                    resultadosBusqueda.appendChild(item);
+                });
+                
+                resultadosBusqueda.classList.remove('d-none');
+            })
+            .catch(error => {
+                console.error('Error al buscar:', error);
+            });
+    }
+    
+    // Función para seleccionar un documento
+    function seleccionarDocumento(datos) {
+        buscador.value = datos.tipo === 'modulo' ? 
+            `${datos.moduloNombre} (${datos.grupoNombre})` : 
+            `${datos.grupoNombre}`;
+        
+        resultadosBusqueda.classList.add('d-none');
+        
+        // Seleccionar grupo
+        seleccionarOpcion(grupoSelect, datos.grupo);
+        
+        // Si es módulo, seleccionar módulo después de cargar las opciones
+        if (datos.tipo === 'modulo') {
+            // Usar una promesa para esperar a que los módulos se carguen
+            const esperarModulos = new Promise((resolve) => {
+                // Función para verificar si el módulo está en las opciones
+                function verificarModulo() {
+                    for (let i = 0; i < moduloSelect.options.length; i++) {
+                        if (moduloSelect.options[i].value === datos.modulo) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                
+                // Comprobar inmediatamente por si ya está cargado
+                if (verificarModulo()) {
+                    resolve();
+                    return;
+                }
+                
+                // Si no está cargado, configurar un observador de cambios en el select
+                const observer = new MutationObserver(() => {
+                    if (verificarModulo()) {
+                        observer.disconnect();
+                        resolve();
+                    }
+                });
+                
+                // Observar cambios en las opciones del select
+                observer.observe(moduloSelect, { childList: true });
+                
+                // Tiempo máximo de espera (3 segundos)
+                setTimeout(() => {
+                    observer.disconnect();
+                    resolve();
+                }, 3000);
+            });
+            
+            // Cuando los módulos estén cargados, seleccionar la opción
+            esperarModulos.then(() => {
+                seleccionarOpcion(moduloSelect, datos.modulo);
+                
+                // Mostrar información del documento
+                tipoDocumentoSeleccionado.textContent = datos.moduloNombre;
+                descripcionDocumento.textContent = `Grupo: ${datos.grupoNombre}`;
+                infoDocumento.classList.remove('d-none');
+                
+                // Guardar en recientes
+                guardarEnRecientes({
+                    grupo_id: datos.grupo,
+                    modulo_id: datos.modulo,
+                    grupo_nombre: datos.grupoNombre,
+                    modulo_nombre: datos.moduloNombre,
+                    texto: datos.moduloNombre
+                });
+            });
+        }
+    }
+    
+    // Seleccionar opción en select
+    function seleccionarOpcion(select, valor) {
+        for (let i = 0; i < select.options.length; i++) {
+            if (select.options[i].value === valor) {
+                select.selectedIndex = i;
+                select.dispatchEvent(new Event('change'));
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Guardar en recientes
+    function guardarEnRecientes(documento) {
+        // Evitar duplicados
+        recientes = recientes.filter(item => 
+            !(item.grupo_id === documento.grupo_id && item.modulo_id === documento.modulo_id)
+        );
+        
+        // Añadir al inicio
+        recientes.unshift(documento);
+        
+        // Limitar a 5 elementos
+        if (recientes.length > 5) {
+            recientes = recientes.slice(0, 5);
+        }
+        
+        // Guardar en localStorage
+        localStorage.setItem('documentosRecientes', JSON.stringify(recientes));
+        
+        // Actualizar UI
+        cargarDocumentosRecientes();
+    }
+    
+    // Cargar documentos recientes
+    function cargarDocumentosRecientes() {
+        documentosRecientes.innerHTML = '';
+        
+        if (recientes.length === 0) {
+            documentosRecientes.innerHTML = '<p class="text-muted mb-0">No hay documentos recientes</p>';
+            return;
+        }
+        
+        recientes.forEach(doc => {
+            const item = document.createElement('span');
+            item.className = 'badge bg-light text-dark border p-2';
+            item.style.cursor = 'pointer';
+            item.textContent = doc.texto;
+            item.dataset.grupo = doc.grupo_id;
+            item.dataset.modulo = doc.modulo_id;
+            item.dataset.tipo = 'modulo';
+            item.dataset.grupoNombre = doc.grupo_nombre;
+            item.dataset.moduloNombre = doc.modulo_nombre;
+            
+            item.addEventListener('click', function() {
+                seleccionarDocumento(this.dataset);
+            });
+            
+            documentosRecientes.appendChild(item);
+        });
+    }
+    
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        if (!buscador.contains(event.target) && !resultadosBusqueda.contains(event.target)) {
+            resultadosBusqueda.classList.add('d-none');
+        }
+    });
+    
+    // Disparar el evento si ya hay un grupo seleccionado (código original)
     if (grupoSelect.value) {
         grupoSelect.dispatchEvent(new Event('change'));
     }
