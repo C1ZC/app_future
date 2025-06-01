@@ -341,6 +341,7 @@ def documento_update_fragmentos(request):
         # Actualizar el modelo Documento
         documento = Documento.objects.get(pk=doc_id)
         documento.cantidad_fragmentos = cantidad_fragmentos
+        documento.status = DocumentoStatus.COMPLETADO
         documento.save()
 
         return JsonResponse({'success': True, 'documento_id': doc_id, 'cantidad_fragmentos': cantidad_fragmentos})
