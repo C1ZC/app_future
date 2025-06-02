@@ -5,8 +5,9 @@
 {% block title %}Subir Documento{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
+<div class="row">
+    <!-- Columna principal - Formulario (más estrecha ahora) -->
+    <div class="col-md-7">
         <div class="card shadow">
             <div class="card-header">
                 <h5 class="card-title mb-0">Subir Nuevo Documento</h5>
@@ -23,7 +24,7 @@
                 </div>
                 {% endif %}
                 
-                <!-- Nuevo buscador de documentos -->
+                <!-- Buscador de documentos -->
                 <div class="mb-4">
                     <label for="buscador" class="form-label">Buscar tipo de documento</label>
                     <div class="input-group">
@@ -42,7 +43,7 @@
                     <p id="descripcionDocumento" class="mb-0 small"></p>
                 </div>
                 
-                <form method="post" enctype="multipart/form-data">
+                <form method="post" enctype="multipart/form-data" id="documentoForm">
                     {% csrf_token %}
                     
                     <div class="mb-3">
@@ -78,6 +79,9 @@
                             <i class="bi bi-arrow-left"></i> Volver a la Lista
                         </a>
                     </div>
+                    
+                    <!-- Campo oculto para el esquema JSON -->
+                    <input type="hidden" id="esquema_json_modified" name="esquema_json_modified" value="false">
                 </form>
             </div>
         </div>
@@ -94,38 +98,31 @@
                 </div>
             </div>
         </div>
-        
-        <!-- Esquema JSON de extracción (avanzado) -->
-        <div class="accordion mt-4" id="esquemaAccordion">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingEsquema">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                            data-bs-target="#collapseEsquema" aria-expanded="false" aria-controls="collapseEsquema">
-                        Esquema JSON de extracción (avanzado)
+    </div>
+    
+    <!-- Columna derecha - Editor JSON -->
+    <div class="col-md-5">
+        <div class="card shadow h-100">
+            <div class="card-header bg-light">
+                <h6 class="card-title mb-0">Esquema JSON de extracción</h6>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="esquema_json_editor">Editar esquema JSON para este documento:</label>
+                    <textarea class="form-control" id="esquema_json_editor" name="esquema_json_editor" 
+                              rows="20" style="font-family: monospace; font-size: 0.9rem;"></textarea>
+                    <small class="form-text text-muted mt-2">
+                        Este esquema define cómo la IA extraerá la información de este documento.
+                        Las modificaciones actualizarán el esquema del módulo.
+                    </small>
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" id="formatJsonBtn">
+                        <i class="bi bi-code"></i> Formatear JSON
                     </button>
-                </h2>
-                <div id="collapseEsquema" class="accordion-collapse collapse" aria-labelledby="headingEsquema" 
-                     data-bs-parent="#esquemaAccordion">
-                    <div class="accordion-body">
-                        <div class="form-group">
-                            <label for="esquema_json_editor">Editar esquema JSON para este documento:</label>
-                            <textarea class="form-control" id="esquema_json_editor" name="esquema_json_editor" 
-                                      rows="10" style="font-family: monospace;"></textarea>
-                            <small class="form-text text-muted">
-                                Este esquema define cómo la IA extraerá la información de este documento.
-                                Las modificaciones solo afectarán a este documento.
-                            </small>
-                        </div>
-                        <div class="mt-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary" id="formatJsonBtn">
-                                Formatear JSON
-                            </button>
-                            <button type="button" class="btn btn-sm btn-outline-danger" id="resetJsonBtn">
-                                Restaurar original
-                            </button>
-                        </div>
-                        <input type="hidden" id="esquema_json_modified" name="esquema_json_modified" value="false">
-                    </div>
+                    <button type="button" class="btn btn-sm btn-outline-danger" id="resetJsonBtn">
+                        <i class="bi bi-arrow-counterclockwise"></i> Restaurar original
+                    </button>
                 </div>
             </div>
         </div>
