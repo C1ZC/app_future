@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from webapp.models import Grupo, Modulo
+from webapp.models import Modulo, Grupo
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 def buscar_modulos_grupos(request):
     """API para buscar módulos y grupos según término de búsqueda"""
@@ -48,3 +49,11 @@ def buscar_modulos_grupos(request):
         })
     
     return JsonResponse({'resultados': resultados})
+
+
+def get_modulo_esquema_json(request, modulo_id):
+    """API para obtener el esquema JSON de un módulo específico"""
+    modulo = get_object_or_404(Modulo, id=modulo_id)
+    return JsonResponse({
+        'esquema_json': modulo.esquema_json
+    })

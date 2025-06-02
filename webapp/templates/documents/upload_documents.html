@@ -94,6 +94,41 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Esquema JSON de extracción (avanzado) -->
+        <div class="accordion mt-4" id="esquemaAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingEsquema">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                            data-bs-target="#collapseEsquema" aria-expanded="false" aria-controls="collapseEsquema">
+                        Esquema JSON de extracción (avanzado)
+                    </button>
+                </h2>
+                <div id="collapseEsquema" class="accordion-collapse collapse" aria-labelledby="headingEsquema" 
+                     data-bs-parent="#esquemaAccordion">
+                    <div class="accordion-body">
+                        <div class="form-group">
+                            <label for="esquema_json_editor">Editar esquema JSON para este documento:</label>
+                            <textarea class="form-control" id="esquema_json_editor" name="esquema_json_editor" 
+                                      rows="10" style="font-family: monospace;"></textarea>
+                            <small class="form-text text-muted">
+                                Este esquema define cómo la IA extraerá la información de este documento.
+                                Las modificaciones solo afectarán a este documento.
+                            </small>
+                        </div>
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="formatJsonBtn">
+                                Formatear JSON
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-danger" id="resetJsonBtn">
+                                Restaurar original
+                            </button>
+                        </div>
+                        <input type="hidden" id="esquema_json_modified" name="esquema_json_modified" value="false">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -352,6 +387,73 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-{% endblock %}
+<script>
 
+// Variables para manejar el esquema JSON
+let originalJsonSchema = {};
+let currentJsonSchema = {};
+
+// Obtener el esquema JSON cuando cambie el módulo
+document.getElementById('{{ form.modulo_id.id_for_label }}').addEventListener('change', function() {
+    const moduloId = this.value;
+    if (!moduloId) {
+        document.getElementById('esquema_json_editor').value = '';
+        return;
+    }
+    
+    // Hacer una petición AJAX para obtener el esquema JSON del módulo
+    fetch(`/api/modulo/${moduloId}/esquema/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.esquema_json) {
+                originalJsonSchema = data.esquema_json;
+                currentJsonSchema = JSON.parse(JSON.stringify(originalJsonSchema)); // Clonar objeto
+                document.getElementById('esquema_json_editor').value = JSON.stringify(data.esquema_json, null, 2);
+            } else {
+                document.getElementById('esquema_json_editor').value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error al obtener el esquema JSON:', error);
+        });
+});
+
+// Formatear el JSON
+document.getElementById('formatJsonBtn').addEventListener('click', function() {
+    const editor = document.getElementById('esquema_json_editor');
+    try {
+        const jsonObj = JSON.parse(editor.value);
+        editor.value = JSON.stringify(jsonObj, null, 2);
+    } catch (e) {
+        alert('El JSON no es válido: ' + e.message);
+    }
+});
+
+// Restaurar el esquema original
+document.getElementById('resetJsonBtn').addEventListener('click', function() {
+    if (originalJsonSchema) {
+        document.getElementById('esquema_json_editor').value = JSON.stringify(originalJsonSchema, null, 2);
+        document.getElementById('esquema_json_modified').value = "false";
+    }
+});
+
+// Detectar cambios en el editor de JSON
+document.getElementById('esquema_json_editor').addEventListener('input', function() {
+    document.getElementById('esquema_json_modified').value = "true";
+});
+
+// Antes de enviar el formulario, validar el JSON
+document.getElementById('documentoForm').addEventListener('submit', function(e) {
+    const jsonEditor = document.getElementById('esquema_json_editor');
+    if (jsonEditor.value.trim()) {
+        try {
+            JSON.parse(jsonEditor.value);
+        } catch (error) {
+            e.preventDefault();
+            alert('El esquema JSON no es válido: ' + error.message);
+        }
+    }
+});
+</script>
+{% endblock %}
 {% endblock %}
