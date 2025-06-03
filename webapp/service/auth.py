@@ -1,6 +1,9 @@
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 
+# ===============================================================
+# REGISTRO DE USUARIOS
+# ===============================================================
 class AuthService:
     @staticmethod
     def register_user(request):

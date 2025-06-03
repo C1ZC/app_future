@@ -1,3 +1,11 @@
+# ===============================================================
+# GESTIÓN DE LICENCIAS
+# ===============================================================
+# Este módulo implementa las vistas para administrar licencias de
+# uso del sistema, incluyendo su creación, edición, visualización
+# y eliminación con los permisos correspondientes.
+# ===============================================================
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -9,7 +17,20 @@ from django import forms
 from datetime import timedelta, date
 from django.http import JsonResponse
 
+# ===============================================================
+# FORMULARIO PARA PERÍODOS DE LICENCIA
+# ===============================================================
 class PeriodoLicenciaForm(forms.ModelForm):
+    """
+    Formulario para crear y editar períodos de licencia.
+    
+    Este formulario permite definir los parámetros principales de un período:
+    - Empresa asociada
+    - Tipo de período (mensual, anual, etc.)
+    - Fechas de inicio y fin
+    - Cuotas de consumo (hojas y almacenamiento)
+    - Estado activo/inactivo
+    """
     class Meta:
         model = PeriodoLicencia
         fields = ['empresa', 'tipo_periodo', 'fecha_inicio', 'fecha_fin', 
@@ -25,12 +46,25 @@ class PeriodoLicenciaForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        """
+        Inicializa el formulario aplicando clases CSS a los campos.
+        
+        Asegura una presentación consistente en la interfaz al aplicar
+        las clases de Bootstrap a todos los campos.
+        """
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             if not isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({'class': 'form-control'})
 
     def clean(self):
+        """
+        Valida coherencia entre campos del formulario.
+        
+        Realiza validaciones específicas para asegurar que:
+        - La fecha de fin sea posterior a la de inicio
+        - El tipo de período sea coherente con la duración
+        """
         cleaned_data = super().clean()
         fecha_inicio = cleaned_data.get('fecha_inicio')
         fecha_fin = cleaned_data.get('fecha_fin')
@@ -52,21 +86,44 @@ class PeriodoLicenciaForm(forms.ModelForm):
         
         return cleaned_data
 
+# ===============================================================
+# HELPER FUNCTIONS
+# ===============================================================
 def es_admin(user):
+    """
+    Determina si un usuario tiene permisos administrativos.
+    
+    Utilizado como prueba de condición para los decoradores user_passes_test.
+    """
     return user.is_superuser or (hasattr(user, 'perfil') and user.perfil and user.perfil.rol in ['superadmin', 'admin_empresa'])
 
+# ===============================================================
+# LISTADO Y FILTRADO DE LICENCIAS
+# ===============================================================
 @login_required
 @user_passes_test(es_admin)
 def lista_licencias(request):
-    # Filtros
+    """
+    Muestra un listado filtrable de períodos de licencia.
+    
+    Implementa un sistema de filtros que permite:
+    - Filtrar por empresa específica
+    - Filtrar por tipo de período (mensual, anual, etc.)
+    - Mostrar solo licencias activas
+    
+    Además, aplica restricciones según el rol del usuario:
+    - Superadmins ven todas las licencias
+    - Admins de empresa solo ven licencias de su empresa
+    """
+    # 1. Obtener parámetros de filtro de la URL
     empresa_id = request.GET.get('empresa')
     tipo_periodo = request.GET.get('tipo_periodo')
     solo_activos = request.GET.get('activos') == 'on'
     
-    # Iniciar queryset
+    # 2. Iniciar queryset base
     periodos = PeriodoLicencia.objects.all().select_related('empresa')
 
-    # Aplicar filtros
+    # 3. Aplicar filtros según parámetros
     if empresa_id:
         periodos = periodos.filter(empresa_id=empresa_id)
     if tipo_periodo:
@@ -76,24 +133,24 @@ def lista_licencias(request):
         periodos = periodos.filter(
             activo=True, fecha_inicio__lte=now, fecha_fin__gte=now)
 
-    # Permisos para admin_empresa
+    # 4. Restricciones por rol de usuario
     if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
         periodos = periodos.filter(empresa=request.user.perfil.empresa)
 
-    # Ordenar
+    # 5. Ordenar resultados
     periodos = periodos.order_by('-fecha_inicio')
     
-    # Paginación
-    paginator = Paginator(periodos, 10)
+    # 6. Configurar paginación
+    paginator = Paginator(periodos, 10)  # 10 registros por página
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     
-    # Para los modales
+    # 7. Preparar formularios para modales
     form = PeriodoLicenciaForm()
     edit_forms = {periodo.pk: PeriodoLicenciaForm(
         instance=periodo) for periodo in page_obj}
 
-    # Restricción para admin_empresa
+    # 8. Restricciones adicionales para admin_empresa
     if hasattr(request.user, 'perfil') and request.user.perfil and request.user.perfil.rol == 'admin_empresa':
         form.fields['empresa'].queryset = Empresa.objects.filter(
             id=request.user.perfil.empresa.id)
@@ -103,6 +160,7 @@ def lista_licencias(request):
                 id=request.user.perfil.empresa.id)
             edit_form.fields['empresa'].widget.attrs['disabled'] = 'disabled'
     
+    # 9. Preparar contexto para la plantilla
     context = {
         'page_obj': page_obj,
         'empresas': Empresa.objects.all().order_by('nombre'),
@@ -119,9 +177,20 @@ def lista_licencias(request):
 
     return render(request, 'administration/licences/licences_list.html', context)
 
+# ===============================================================
+# CREACIÓN DE LICENCIAS
+# ===============================================================
 @login_required
 @user_passes_test(es_admin)
 def crear_licencia(request):
+    """
+    Maneja la creación de nuevos períodos de licencia.
+    
+    Funcionalidades principales:
+    - En POST: procesa el formulario enviado y crea el período
+    - En GET: prepara el formulario con valores iniciales según parámetros
+    - Aplica restricciones según el rol del usuario
+    """
     if request.method == 'POST':
         form = PeriodoLicenciaForm(request.POST)
         if form.is_valid():
@@ -172,9 +241,20 @@ def crear_licencia(request):
     }
     return render(request, 'administration/licences/modal_create_licence.html', context)
 
+# ===============================================================
+# EDICIÓN DE LICENCIAS
+# ===============================================================
 @login_required
 @user_passes_test(es_admin)
 def editar_licencia(request, pk):
+    """
+    Permite editar un período de licencia existente.
+    
+    Características:
+    - Verifica permisos del usuario según su rol
+    - Soporta peticiones AJAX para interacción modal
+    - Valida y procesa el formulario de edición
+    """
     periodo = get_object_or_404(PeriodoLicencia, pk=pk)
     
     # Verificar permisos para admin_empresa
@@ -220,9 +300,20 @@ def editar_licencia(request, pk):
     }
     return render(request, 'administration/licences/modal_edit_licence.html', context)
 
+# ===============================================================
+# ELIMINACIÓN DE LICENCIAS
+# ===============================================================
 @login_required
 @user_passes_test(es_admin)
 def eliminar_licencia(request, pk):
+    """
+    Gestiona la eliminación de períodos de licencia.
+    
+    Restricciones y validaciones:
+    - Verifica permisos según rol del usuario
+    - Impide eliminar períodos con historial de consumo
+    - Requiere confirmación mediante petición POST
+    """
     periodo = get_object_or_404(PeriodoLicencia, pk=pk)
     
     # Verificar permisos para admin_empresa
@@ -249,9 +340,21 @@ def eliminar_licencia(request, pk):
     }
     return render(request, 'administration/licences/licences_modal_delete.html', context)
 
+# ===============================================================
+# DETALLE DE LICENCIAS
+# ===============================================================
 @login_required
 @user_passes_test(es_admin)
 def detalle_licencia(request, pk):
+    """
+    Muestra información detallada de un período de licencia.
+    
+    Características:
+    - Verifica permisos de acceso según rol
+    - Muestra datos de consumo actual y límites
+    - Incluye historial de consumo paginado
+    - Calcula porcentajes de uso para visualización
+    """
     periodo = get_object_or_404(PeriodoLicencia, pk=pk)
     
     # Verificar permisos para admin_empresa

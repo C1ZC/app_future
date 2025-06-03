@@ -1,7 +1,12 @@
 from django import forms
 from webapp.models import Documento, DocumentoStatus, Grupo, Modulo, Servicio
 
+# ===============================================================
+# FORMULARIO PARA SUBIDA DE DOCUMENTOS
+# ===============================================================
 class DocumentoUploadForm(forms.Form):
+    """Formulario para subir documentos al sistema."""
+
     archivo = forms.FileField(
         label="Seleccione un archivo",
         help_text="Archivos permitidos: PDF, JPG, PNG, GIF, TXT, DOCX, XLSX"
@@ -53,7 +58,12 @@ class DocumentoUploadForm(forms.Form):
         
         return cleaned_data
 
+# ===============================================================
+# FORMULARIO PARA FILTRADO DE DOCUMENTOS
+# ===============================================================
 class DocumentoFilterForm(forms.Form):
+    """Formulario para filtrar la lista de documentos."""
+
     ESTADO_CHOICES = [('', 'Todos')] + list(DocumentoStatus.choices)
     
     texto_busqueda = forms.CharField(required=False, label="Buscar")

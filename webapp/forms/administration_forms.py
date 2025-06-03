@@ -1,11 +1,17 @@
 from django import forms
-from webapp.models import Empresa, Servicio, PerfilUsuario
 from django.contrib.auth.models import User
 from django.contrib.auth import password_validation
-import re
 from django.core.exceptions import ValidationError
+import re
 
+from webapp.models import Empresa, Servicio, PerfilUsuario
+
+# ===============================================================
+# FORMULARIOS DE EMPRESA
+# ===============================================================
 class EmpresaForm(forms.ModelForm):
+    """Formulario para crear y editar empresas."""
+
     class Meta:
         model = Empresa
         fields = '__all__'
@@ -37,10 +43,16 @@ class EmpresaForm(forms.ModelForm):
         rut_formateado = f"{cuerpo_formateado}-{dv}"
         return rut_formateado
 
+# ===============================================================
+# FORMULARIOS DE SERVICIO
+# ===============================================================
 class ServicioForm(forms.ModelForm):
+    """Formulario para crear y editar servicios."""
+
     class Meta:
         model = Servicio
         fields = ['nombre', 'empresa']
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
@@ -48,40 +60,14 @@ class ServicioForm(forms.ModelForm):
         self.fields['empresa'].empty_label = "Seleccione una empresa"
         self.fields['empresa'].queryset = Empresa.objects.all()
 
-class PerfilUsuarioForm(forms.ModelForm):
-    class Meta:
-        model = PerfilUsuario
-        fields = ['servicio', 'empresa', 'rol']
-
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('request_user', None)
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.widget.attrs['class'] = 'form-control'
-        if user:
-            perfil = getattr(user, 'perfil', None)
-            if perfil:
-                if perfil.es_admin_empresa():
-                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
-                    self.fields['servicio'].queryset = Servicio.objects.filter(empresa=perfil.empresa)
-                    self.fields['rol'].choices = [
-                        (choice, label) for choice, label in self.fields['rol'].choices
-                        if choice in ['admin_servicio', 'usuario_servicio']
-                    ]
-                elif perfil.es_admin_servicio():
-                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
-                    self.fields['servicio'].queryset = Servicio.objects.filter(pk=perfil.servicio_id)
-                    self.fields['rol'].choices = [
-                        (choice, label) for choice, label in self.fields['rol'].choices
-                        if choice == 'usuario_servicio'
-                    ]
-                elif perfil.es_superadmin():
-                    self.fields['empresa'].queryset = Empresa.objects.all()
-                    self.fields['servicio'].queryset = Servicio.objects.all()
-
-
+# ===============================================================
+# FORMULARIOS DE USUARIO
+# ===============================================================
 class UserForm(forms.ModelForm):
+    """Formulario para crear nuevos usuarios."""
+
     password = forms.CharField(widget=forms.PasswordInput, required=True)
+
     class Meta:
         model = User
         fields = ['username', 'email', 'password', 'first_name', 'last_name']
@@ -97,8 +83,10 @@ class UserForm(forms.ModelForm):
         if commit:
             user.save()
         return user
-    
+
 class UserEditForm(forms.ModelForm):
+    """Formulario para editar usuarios existentes."""
+
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
@@ -107,8 +95,10 @@ class UserEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-    
+
 class PerfilUsuarioEditForm(forms.ModelForm):
+    """Formulario para editar el perfil de un usuario."""
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
@@ -119,6 +109,8 @@ class PerfilUsuarioEditForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 class PasswordChangeCustomForm(forms.Form):
+    """Formulario personalizado para cambiar la contraseña de un usuario."""
+
     old_password = forms.CharField(
         label="Contraseña actual",
         widget=forms.PasswordInput,
@@ -158,3 +150,47 @@ class PasswordChangeCustomForm(forms.Form):
         self.user.set_password(self.cleaned_data["new_password1"])
         if commit:
             self.user.save()
+        return self.user
+
+# ===============================================================
+# FORMULARIOS DE PERFIL DE USUARIO
+# ===============================================================
+class PerfilUsuarioForm(forms.ModelForm):
+    """Formulario para gestionar los permisos y roles del usuario."""
+
+    class Meta:
+        model = PerfilUsuario
+        fields = ['servicio', 'empresa', 'rol']
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('request_user', None)
+        super().__init__(*args, **kwargs)
+
+        # Aplicar estilos a todos los campos
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
+
+        # Limitar opciones según el rol del usuario autenticado
+        if user:
+            perfil = getattr(user, 'perfil', None)
+            if perfil:
+                if perfil.es_admin_empresa():
+                    # Admins de empresa solo ven su empresa y sus servicios
+                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
+                    self.fields['servicio'].queryset = Servicio.objects.filter(empresa=perfil.empresa)
+                    self.fields['rol'].choices = [
+                        (choice, label) for choice, label in self.fields['rol'].choices
+                        if choice in ['admin_servicio', 'usuario_servicio']
+                    ]
+                elif perfil.es_admin_servicio():
+                    # Admins de servicio solo ven su empresa y servicio
+                    self.fields['empresa'].queryset = Empresa.objects.filter(pk=perfil.empresa_id)
+                    self.fields['servicio'].queryset = Servicio.objects.filter(pk=perfil.servicio_id)
+                    self.fields['rol'].choices = [
+                        (choice, label) for choice, label in self.fields['rol'].choices
+                        if choice == 'usuario_servicio'
+                    ]
+                elif perfil.es_superadmin():
+                    # Superadmins ven todas las opciones
+                    self.fields['empresa'].queryset = Empresa.objects.all()
+                    self.fields['servicio'].queryset = Servicio.objects.all()

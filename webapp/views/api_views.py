@@ -1,12 +1,35 @@
+# ===============================================================
+# APIS DE GESTIÓN DE DOCUMENTOS
+# ===============================================================
+# Este módulo contiene endpoints de API para operaciones relacionadas
+# con la gestión de documentos, incluyendo búsqueda de módulos/grupos
+# y acceso a esquemas JSON para la extracción de datos.
+# ===============================================================
+
 from django.http import JsonResponse
 from webapp.models import Modulo, Grupo
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 import unicodedata
 
-
+# ===============================================================
+# UTILIDADES DE NORMALIZACIÓN DE TEXTO
+# ===============================================================
 def normalizar_texto(texto):
-    """Normaliza texto para búsqueda quitando acentos y convirtiendo a minúsculas"""
+    """
+    Normaliza texto para búsqueda quitando acentos y convirtiendo a minúsculas.
+    
+    Esta función es crucial para las búsquedas porque permite:
+    1. Encontrar coincidencias independientemente de acentos 
+       (ej: "curriculum" encuentra "currículum")
+    2. Hacer búsquedas insensibles a mayúsculas/minúsculas
+    
+    Args:
+        texto: Texto a normalizar
+        
+    Returns:
+        Texto normalizado sin acentos y en minúsculas
+    """
     # Primero normaliza Unicode (separa caracteres base de acentos)
     texto_normalizado = unicodedata.normalize('NFKD', texto)
     # Luego elimina los caracteres no ASCII (como acentos)
@@ -15,8 +38,30 @@ def normalizar_texto(texto):
     # Convierte a minúsculas
     return texto_sin_acentos.lower()
 
+# ===============================================================
+# FORMULARIO PARA FILTRADO DE DOCUMENTOS
+# ===============================================================
+# Esta sección gestiona las APIs necesarias para los formularios de
+# filtrado de documentos. Incluye búsqueda de módulos y grupos
+# que se utilizan para poblar selectores y autocompletado en los
+# formularios de filtrado.
+# ===============================================================
 def buscar_modulos_grupos(request):
-    """API para buscar módulos y grupos según término de búsqueda"""
+    """
+    API para buscar módulos y grupos según término de búsqueda.
+    
+    Esta API alimenta el autocompletado en formularios de filtro de documentos,
+    permitiendo:
+    1. Buscar por coincidencia parcial en nombres o descripciones
+    2. Obtener resultados normalizados (sin importar acentos/mayúsculas)
+    3. Recibir tanto módulos como grupos en un solo llamado
+    
+    Args:
+        request: Request HTTP con parámetro GET 'termino'
+        
+    Returns:
+        JsonResponse con lista de resultados formateados
+    """
     termino = request.GET.get('termino', '')
     
     if not termino or len(termino) < 2:

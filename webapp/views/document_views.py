@@ -1,9 +1,11 @@
+# ===============================================================
+# IMPORTACIONES NECESARIAS
+# ===============================================================
 from django.db import connection
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from webapp.forms.document_forms import DocumentoUploadForm, DocumentoFilterForm
-# Importar Servicio
 from webapp.models import Documento, DocumentoStatus, Grupo, Modulo, Servicio
 from webapp.service.document_service import DocumentoService
 from django.core.paginator import Paginator
@@ -13,9 +15,17 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 
-
+# ===============================================================
+# CARGA DE DOCUMENTOS
+# ===============================================================
 @login_required
 def documento_upload(request):
+    """
+    Gestiona la subida de documentos al sistema.
+    
+    Esta vista maneja tanto la presentación del formulario (GET)
+    como el procesamiento del archivo subido (POST).
+    """
     if request.method == 'POST':
         form = DocumentoUploadForm(
             request.POST, request.FILES, request_user=request.user)
@@ -92,71 +102,117 @@ def documento_upload(request):
 
     return render(request, 'documents/upload_documents.html', {'form': form})
 
-
+# ===============================================================
+# FORMULARIO PARA FILTRADO DE DOCUMENTOS
+# ===============================================================
 @login_required
 def documento_lista(request):
-    # Inicializar formulario de filtro y query base
+    """
+    Muestra una lista filtrable de documentos.
+    
+    Esta vista implementa un sistema completo de filtrado con múltiples criterios:
+    1. Filtros de URL (ej: servicio específico)
+    2. Filtros de seguridad (basados en el rol del usuario)
+    3. Filtros de formulario (texto, fechas, estado)
+    """
+    # ---------------------------------------------------------------
+    # 1. INICIALIZACIÓN DE FILTROS
+    # ---------------------------------------------------------------
+    # Crear formulario con datos de la petición GET (para mantener filtros entre páginas)
     filter_form = DocumentoFilterForm(request.GET)
+    
+    # Inicializar query base vacío - se irán añadiendo condiciones
     query = Q()
 
-    # Filtrar por servicio si se proporciona en la URL
+    # ---------------------------------------------------------------
+    # 2. FILTRADO POR SERVICIO (DE URL)
+    # ---------------------------------------------------------------
+    # Este filtro se aplica cuando se accede desde el menú de servicios
     servicio_id = request.GET.get('servicio')
     servicio_actual = None
+    
     if servicio_id:
         try:
+            # Obtener objeto servicio para mostrar en la interfaz
             servicio_actual = Servicio.objects.get(id=servicio_id)
+            # Añadir condición al query para filtrar por este servicio
             query &= Q(servicio_id=servicio_id)
         except Servicio.DoesNotExist:
             messages.warning(request, "El servicio seleccionado no existe.")
 
-    # Aplicar filtros del usuario actual según rol
+    # ---------------------------------------------------------------
+    # 3. FILTRADO POR PERMISOS (SEGÚN ROL)
+    # ---------------------------------------------------------------
+    # Restringir los documentos según el rol del usuario
     if not request.user.is_superuser:
         perfil = request.user.perfil
         if perfil.es_admin_empresa():
-            # Ver documentos de su empresa
+            # Admins de empresa ven documentos de su empresa
             query &= Q(empresa=perfil.empresa)
         elif perfil.es_admin_servicio():
-            # Ver documentos de su servicio
+            # Admins de servicio ven documentos de su servicio
             query &= Q(servicio=perfil.servicio)
         else:
-            # Usuario normal, solo ve sus documentos
+            # Usuarios normales solo ven sus propios documentos
             query &= Q(usuario=request.user)
 
-    # Aplicar filtros de búsqueda
+    # ---------------------------------------------------------------
+    # 4. FILTRADO POR CRITERIOS DE BÚSQUEDA (DEL FORMULARIO)
+    # ---------------------------------------------------------------
+    # Procesar filtros si el formulario es válido
     if filter_form.is_valid():
+        # Extraer valores de los campos del formulario
         texto = filter_form.cleaned_data.get('texto_busqueda')
         estado = filter_form.cleaned_data.get('estado')
         fecha_desde = filter_form.cleaned_data.get('fecha_desde')
         fecha_hasta = filter_form.cleaned_data.get('fecha_hasta')
 
+        # Filtrar por texto (busca en múltiples campos)
         if texto:
+            # Búsqueda en varios campos con OR lógico
             query &= Q(nombre_documento__icontains=texto) | Q(
                 grupo__icontains=texto) | Q(modulo__icontains=texto)
 
+        # Filtrar por estado del documento
         if estado:
             query &= Q(status=estado)
 
+        # Filtrar por rango de fechas
         if fecha_desde:
-            query &= Q(created_at__date__gte=fecha_desde)
+            query &= Q(created_at__date__gte=fecha_desde)  # Mayor o igual que fecha_desde
 
         if fecha_hasta:
-            query &= Q(created_at__date__lte=fecha_hasta)
+            query &= Q(created_at__date__lte=fecha_hasta)  # Menor o igual que fecha_hasta
 
-    # Obtener documentos filtrados y paginar
+    # ---------------------------------------------------------------
+    # 5. EJECUCIÓN DE CONSULTA Y PAGINACIÓN
+    # ---------------------------------------------------------------
+    # Aplicar todos los filtros y ordenar por fecha descendente
     documentos = Documento.objects.filter(query).order_by('-created_at')
-    paginator = Paginator(documentos, 10)  # 10 documentos por página
-    page_number = request.GET.get('page', 1)
-    documentos_pagina = paginator.get_page(page_number)
+    
+    # Configurar paginación (10 documentos por página)
+    paginator = Paginator(documentos, 10)
+    page_number = request.GET.get('page', 1)  # Obtener número de página, default 1
+    documentos_pagina = paginator.get_page(page_number)  # Obtener página actual
 
+    # Renderizar plantilla con resultados
     return render(request, 'documents/list_documents.html', {
-        'documentos': documentos_pagina,
-        'filter_form': filter_form,
-        'servicio_actual': servicio_actual  # ✅ Agregar servicio actual
+        'documentos': documentos_pagina,  # Lista paginada de documentos
+        'filter_form': filter_form,       # Formulario con valores actuales
+        'servicio_actual': servicio_actual  # Para mostrar el servicio filtrado
     })
 
-
+# ===============================================================
+# DETALLE DE DOCUMENTOS
+# ===============================================================
 @login_required
 def documento_detalle(request, doc_id):
+    """
+    Muestra el detalle completo de un documento específico.
+    
+    Incluye validación de permisos según el rol del usuario
+    y el procesamiento del JSON de datos extraídos.
+    """
     documento = get_object_or_404(Documento, pk=doc_id)
 
     # Verificar permisos según rol
@@ -194,7 +250,9 @@ def documento_detalle(request, doc_id):
     }
     return render(request, 'documents/detail_document.html', context)
 
-
+# ===============================================================
+# ENDPOINTS API PARA PROCESAMIENTO ASÍNCRONO
+# ===============================================================
 @csrf_exempt
 def documento_webhook(request):
     """Endpoint para recibir actualizaciones de n8n"""
@@ -348,7 +406,9 @@ def documento_update_fragmentos(request):
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
 
-
+# ===============================================================
+# ENDPOINTS API AUXILIARES
+# ===============================================================
 def get_modulos_por_grupo(request):
     """API para obtener módulos filtrados por grupo"""
     grupo_id = request.GET.get('grupo_id')

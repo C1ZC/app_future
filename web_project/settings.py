@@ -1,12 +1,11 @@
 from pathlib import Path
 import os
 
+# ===============================================================
+# CONFIGURACIONES BÁSICAS
+# ===============================================================
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
@@ -16,9 +15,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Application definition
-
+# ===============================================================
+# APLICACIONES Y MIDDLEWARE
+# ===============================================================
+# Aplicaciones instaladas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -26,15 +29,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.humanize',  # Asegúrate de que esta línea exista
-    'corsheaders',  # Añadir esta línea
-    'webapp',  # Your custom app
+    'django.contrib.humanize',
+    'corsheaders',  # Gestión de CORS
+    'webapp',       # Aplicación principal
 ]
 
+# Middleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # Añadir esta línea
+    'corsheaders.middleware.CorsMiddleware',  # CORS (debe ir antes de CommonMiddleware)
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -42,6 +46,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# ===============================================================
+# URLS Y TEMPLATES
+# ===============================================================
 ROOT_URLCONF = 'web_project.urls'
 
 TEMPLATES = [
@@ -54,7 +61,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'webapp.views.context_processors.sidebar_context',  # Añadir el context processor
+                'webapp.views.context_processors.sidebar_context',  # Context processor personalizado
             ],
         },
     },
@@ -62,10 +69,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web_project.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
+# ===============================================================
+# BASE DE DATOS
+# ===============================================================
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -77,9 +83,10 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
+# ===============================================================
+# AUTENTICACIÓN Y SEGURIDAD
+# ===============================================================
+# Validadores de contraseña
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -95,43 +102,41 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Configuración de redirección de login/logout
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
+# ===============================================================
+# CONFIGURACIÓN DE INTERNACIONALIZACIÓN
+# ===============================================================
 LANGUAGE_CODE = 'es-cl'
-
 TIME_ZONE = 'America/Santiago'
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
+# ===============================================================
+# ARCHIVOS ESTÁTICOS
+# ===============================================================
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'webapp/static'),
 ]
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# LOGIN URL
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
-
+# ===============================================================
+# SERVICIOS EXTERNOS
+# ===============================================================
 # Configuración para n8n
-# Clave para autenticar solicitudes de n8n
 N8N_API_KEY = os.getenv("N8N_API_KEY")
+
+# Configuración de Supabase
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 
-CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo
+# ===============================================================
+# CONFIGURACIÓN DE CORS
+# ===============================================================
+CORS_ALLOW_ALL_ORIGINS = True  # Solo para desarrollo - NO USAR EN PRODUCCIÓN
+
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
@@ -142,5 +147,5 @@ CORS_ALLOW_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with',
-    'x-api-key',  # Añadir este header específicamente
+    'x-api-key',  # Header para API key personalizada
 ]
