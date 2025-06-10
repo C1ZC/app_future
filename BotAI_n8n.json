@@ -1,0 +1,919 @@
+{
+  "name": "Agente de Procesamiento de Documentos",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8000/api/documentos/pendientes/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key",
+              "value": "4tVC1zrNwl9lD3xM5JO8ugF7DYshwEd-Xy2P0sABCDE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -1620,
+        1035
+      ],
+      "id": "9255d367-1cbe-4b2a-94d7-88fe9e68138a",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4jVDL5SqDreMsolK",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.documentos.length }}",
+              "operation": "larger"
+            }
+          ]
+        }
+      },
+      "name": "¿Hay Documentos?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -1400,
+        1035
+      ],
+      "id": "bab21db5-7979-4a71-a037-26736055f021"
+    },
+    {
+      "parameters": {
+        "options": {
+          "reset": false
+        }
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1180,
+        1035
+      ],
+      "id": "56584f97-0794-4729-ba55-f2de62b168ed",
+      "name": "Loop Over Items",
+      "retryOnFail": false,
+      "executeOnce": false,
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.datos_recibidos.documentos[0].ruta_documento }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -960,
+        660
+      ],
+      "id": "00d036d0-7bf9-4516-8c1c-8cf2e66dde9d",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.datos_recibidos.documentos[0].tipo_archivo }}",
+                    "rightValue": "application/pdf",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "401e14ae-4b98-477d-b755-565c5c707482"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "PDF"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ccbb3571-1a6d-45f9-86e3-b47a1975e1b9",
+                    "leftValue": "={{ $json.datos_recibidos.documentos[0].tipo_archivo }}",
+                    "rightValue": "application/word",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "WORD"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "93df6928-321d-4029-911d-7234bcf647d4",
+                    "leftValue": "={{ $json.datos_recibidos.documentos[0].tipo_archivo }}",
+                    "rightValue": "application/txt",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "TXT"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "42f41a52-41e9-4d42-9474-4641713c3639",
+                    "leftValue": "={{ $json.datos_recibidos.documentos[0].tipo_archivo }}",
+                    "rightValue": "application/xls",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "EXCELL"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -740,
+        639
+      ],
+      "id": "0c50b4d0-faa7-4fac-9f8c-0618f7f79444",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "ocr_data",
+              "stringValue": "={{ $json.output.ocr_data }}"
+            },
+            {
+              "name": "json_data",
+              "stringValue": "={{ $json.output.json_data }}"
+            },
+            {
+              "name": "documents_id",
+              "stringValue": "={{ $('HTTP Request1').item.json.datos_recibidos.documentos[0].documento_id }}"
+            }
+          ]
+        },
+        "include": "none",
+        "options": {
+          "includeBinary": false
+        }
+      },
+      "name": "Preparar Datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [
+        76,
+        660
+      ],
+      "id": "6b98af93-4911-466d-b72f-ef9b8656eedb"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/api/documentos/webhook/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "documento_id",
+              "value": "={{ $json.documents_id }}"
+            },
+            {
+              "name": "ocr_data",
+              "value": "={{ $json.ocr_data }}"
+            },
+            {
+              "name": "json_data",
+              "value": "={{ $json.json_data }}"
+            },
+            {
+              "name": "status",
+              "value": "procesando"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Actualizar Documento",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        516,
+        660
+      ],
+      "id": "b93277c3-c072-4d3b-ad1f-f7ab348d287a",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4jVDL5SqDreMsolK",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "tableName": {
+          "__rl": true,
+          "value": "documents",
+          "mode": "list",
+          "cachedResultName": "documents"
+        },
+        "options": {
+          "queryName": "match_documents"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
+      "typeVersion": 1.1,
+      "position": [
+        760,
+        660
+      ],
+      "id": "2e9ddadf-0a0c-4047-aade-189bccb5b2c7",
+      "name": "Supabase Vector Store",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "5RltX4pALt2uJXk3",
+          "name": "Supabase account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1,
+      "position": [
+        856,
+        882.5
+      ],
+      "id": "37444caa-22f4-4e56-8876-c2c090760d17",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "typeVersion": 1,
+      "position": [
+        944,
+        1080
+      ],
+      "id": "3c51b981-cc9a-40f6-9aae-c1052b2ebf70",
+      "name": "Recursive Character Text Splitter"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Este nodo se ejecuta cuando el Loop Over Items termina (no hay más documentos)\nconst input_data = $input.first().json;\n\nconsole.log(\"Loop terminado - datos recibidos:\", input_data);\n\nreturn [{\n  json: {\n    mensaje: \"Procesamiento de documentos completado\",\n    estado: \"finalizado\", \n    timestamp: new Date().toISOString(),\n    datos_recibidos: input_data\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -960,
+        960
+      ],
+      "id": "d6b470ff-98d5-4cfb-956b-8bad3f431f82",
+      "name": "Verificar Documentos"
+    },
+    {
+      "parameters": {
+        "content": "## Flujo de Procesamiento de Documentos\n\n1. Consulta documentos pendientes\n2. Descarga y procesa PDFs\n3. Extrae texto con OCR\n4. Analiza con IA para clasificación\n5. Actualiza estado en Django\n6. Almacena vectores en Supabase",
+        "height": 267,
+        "width": 329
+      },
+      "name": "Descripción del Flujo",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1660,
+        440
+      ],
+      "id": "aeec9257-aa68-40d3-a424-de085d3a727a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Este nodo procesa el resultado después de completar un documento\n// y permite continuar con el siguiente documento en la cola\n\nconst result = $input.first().json;\n\n// Retorna señal para continuar con el siguiente documento\nreturn [{\n  json: {\n    success: result.success || true,\n    document_id: result.document_id || 'N/A',\n    cantidad_fragmentos: result.cantidad_fragmentos || 0,\n    estado: 'completado',\n    continuar_loop: true,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1672,
+        935
+      ],
+      "id": "257cfa12-54dc-4301-80b0-820a224fa273",
+      "name": "Finalizar Documento"
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        460
+      ],
+      "id": "8a2c2477-a14b-4608-9d84-7f0c1d93bed6",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nconst document_id = $input.first().json.pageContent; // o como se llame tu id\nconst cantidad_fragmentos = items.length;\n\nreturn [{\n  json: {\n    document_id,\n    cantidad_fragmentos\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1232,
+        660
+      ],
+      "id": "4bc922e4-2158-447f-ba11-616d860c6587",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://127.0.0.1:8000/api/documentos/update_fragmentos/",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "document_id",
+              "value": "={{ $json.document_id }}"
+            },
+            {
+              "name": "cantidad_fragmentos",
+              "value": "={{ $json.cantidad_fragmentos }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1452,
+        660
+      ],
+      "id": "c11fd4f0-8a40-4754-bbfb-364a104623a5",
+      "name": "API update Fragmentos",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "4jVDL5SqDreMsolK",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1840,
+        1035
+      ],
+      "id": "0de4519d-e320-4932-949e-5b932083ddbd",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "ocr_data",
+              "description": "Texto literal del documento, tal como fue extraído",
+              "required": true
+            },
+            {
+              "name": "json_data",
+              "description": "Datos estructurados extraídos del documento formato 100% json",
+              "required": true
+            }
+          ]
+        },
+        "options": {
+          "systemPromptTemplate": "=Eres un asistente experto en extracción de datos de documentos. \nRecibirás dos entradas:\n- \"ocr_data\": texto plano extraído del documento.\n- \"json_data\": una plantilla JSON con los campos que debes completar.\n\nTu tarea es:\n- Analizar el \"ocr_data\" y extraer la información correspondiente para cada campo de la plantilla \"json_data\".\n- Completa todos los campos posibles. Si algún dato no está presente, deja el campo vacío o en null, pero nunca elimines ni cambies el nombre de los campos.\n- Devuelve únicamente el JSON final, sin explicaciones ni texto adicional.\n\nEjemplo de plantilla:\n{{ $('HTTP Request').item.json.documentos[0].modulo_obj.esquema_json.json_data }}\n\nRecuerda: responde solo con el JSON estructurado y válido, siguiendo exactamente la plantilla.\n\n{{ $('HTTP Request').item.json.documentos[0].modulo_obj.esquema_json.json_data }}\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        660
+      ],
+      "id": "6636e03b-d00e-487f-954c-1f2873b39fce",
+      "name": "Information Extractor Dcouments",
+      "retryOnFail": true,
+      "maxTries": 5,
+      "alwaysOutputData": false,
+      "executeOnce": false
+    },
+    {
+      "parameters": {
+        "model": "mxbai-embed-large:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [
+        700,
+        880
+      ],
+      "id": "5fcf8d07-faa6-47db-ba28-9fba52bc6f78",
+      "name": "Embeddings Ollama",
+      "notesInFlow": false,
+      "credentials": {
+        "ollamaApi": {
+          "id": "pg82jRUMEW0poRxg",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama3.2:latest",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [
+        100,
+        340
+      ],
+      "id": "e4e902ee-6251-4f06-b648-726af63d153e",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "pg82jRUMEW0poRxg",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        660
+      ],
+      "id": "2dc3a0fd-7108-4fbc-8fac-f4f75ef60b49",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        -520,
+        860
+      ],
+      "id": "fc581a0e-7aa7-465f-9e49-91047b2c9a00",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code node: solo limpia y formatea json_data, deja el resto igual\nfunction cleanString(str) {\n  // Elimina espacios al inicio/final, saltos de línea, tabulaciones y reduce múltiples espacios a uno solo\n  return str\n    .replace(/\\s+/g, ' ') // reemplaza cualquier secuencia de espacios, tabs o saltos de línea por un solo espacio\n    .trim();\n}\n\nfunction cleanObject(obj) {\n  for (const key in obj) {\n    if (typeof obj[key] === 'string') {\n      obj[key] = cleanString(obj[key]);\n    } else if (typeof obj[key] === 'object' && obj[key] !== null) {\n      obj[key] = cleanObject(obj[key]);\n    }\n  }\n  return obj;\n}\n\nfor (const item of $input.all()) {\n  // Solo limpiar json_data si es string JSON\n  if (item.json.json_data && typeof item.json.json_data === 'string') {\n    try {\n      const parsed = JSON.parse(item.json.json_data);\n      const cleaned = cleanObject(parsed);\n      item.json.json_data = JSON.stringify(cleaned);\n    } catch (e) {\n      // Si no es JSON válido, lo deja como está\n    }\n  }\n  // Imprimir todo el item y el json_data limpio (para debug)\n  console.log(item);\n  console.log('json_data limpio:', item.json.json_data);\n}\n\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        296,
+        660
+      ],
+      "id": "5f3bbf41-0780-4f73-9833-be975855f4c4",
+      "name": "Reseteao de espacios en json_data"
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        900
+      ],
+      "id": "0b63474b-3532-444a-b187-6861197f9729",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "dWvVtwApX05qJEv5",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -40,
+        340
+      ],
+      "id": "966cf8ad-476f-42d8-a024-67ffc577be3c",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Gai3cg4ijNrZ33kY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "¿Hay Documentos?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Hay Documentos?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Verificar Documentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Datos": {
+      "main": [
+        [
+          {
+            "node": "Reseteao de espacios en json_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar Documento": {
+      "main": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase Vector Store": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Documentos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Finalizar Documento": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor Dcouments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "API update Fragmentos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API update Fragmentos": {
+      "main": [
+        [
+          {
+            "node": "Finalizar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor Dcouments": {
+      "main": [
+        [
+          {
+            "node": "Preparar Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Ollama": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Supabase Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor Dcouments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor Dcouments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reseteao de espacios en json_data": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Documento",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor Dcouments",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "259f36c8-1b03-456d-aafb-88498be58177",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "971d97721f47e5a6a6f23fc63d81101b68891d182fe917ff213c53178fc6fe05"
+  },
+  "id": "9WZiKACKwRyAQ82V",
+  "tags": []
+}

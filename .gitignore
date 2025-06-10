@@ -92,7 +92,3 @@ pip-log.txt
 # Docker
 .docker/
 docker-compose.override.yml
-
-# n8n
-# Ignorar archivos de configuración de n8n
-BotAI_n8n.json
