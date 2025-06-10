@@ -38,11 +38,6 @@ Este proyecto es una plataforma web desarrollada en Django y Python, diseñada p
 │   ├── settings.py                      # Configuración principal de Django (DB, apps, etc.)
 │   ├── urls.py                          # Rutas principales del proyecto
 │   ├── wsgi.py                          # Configuración WSGI para despliegue
-│   └── __pycache__/                     # Archivos de caché Python compilados
-│       ├── __init__.cpython-312.pyc
-│       ├── settings.cpython-312.pyc
-│       ├── urls.cpython-312.pyc
-│       └── wsgi.cpython-312.pyc
 └── webapp/                              # Aplicación principal del proyecto
     ├── __init__.py                      # Indica que el directorio es un paquete Python
     ├── admin.py                         # Configuración del panel de administración de Django
@@ -50,12 +45,6 @@ Este proyecto es una plataforma web desarrollada en Django y Python, diseñada p
     ├── models.py                        # Modelos de datos (Empresas, Documentos, etc.)
     ├── tests.py                         # Tests unitarios y de integración
     ├── views.py                         # Archivo de vistas genéricas (redirecciones a módulos)
-    ├── __pycache__/                     # Archivos de caché Python compilados
-    │   ├── __init__.cpython-312.pyc
-    │   ├── admin.cpython-312.pyc
-    │   ├── apps.cpython-312.pyc
-    │   ├── models.cpython-312.pyc
-    │   └── views.cpython-312.pyc
     ├── forms/                           # Formularios del proyecto
     │   ├── __init__.py                  # Inicializador del paquete
     │   ├── administration_forms.py      # Formularios para administración (empresas, usuarios)
@@ -184,8 +173,8 @@ DJANGO_SECRET_KEY=tu_clave_secreta_django
 ### 2. Clonar el repositorio
 
 ```sh
-git clone https://github.com/tuusuario/tu-repo.git
-cd tu-repo
+git clone https://github.com/C1ZC/app_future.git
+cd app_future
 ```
 
 ### 3. Crear y activar entorno virtual
