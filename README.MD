@@ -59,54 +59,58 @@ Este proyecto es una plataforma web desarrollada en Django y Python, diseñada p
     │   ├── supabase_client.py           # Cliente para Supabase (almacenamiento)
     │   ├── company_crud.py              # CRUD de empresas
     │   ├── service_crud.py              # CRUD de servicios
-    │   └── users_crud.py                # CRUD de usuarios
+    │   ├── users_crud.py                # CRUD de usuarios
+    │   ├── auth.py                      # Servicio de autenticación y registro
+    │   └── roles.py                     # Sistema de control de acceso basado en roles
     ├── static/                          # Archivos estáticos
     │   ├── css/                         # Hojas de estilo CSS
-    │   │   ├── bootstrap.min.css        # Framework Bootstrap
-    │   │   ├── custom.css               # Estilos personalizados
-    │   │   └── ...                      # Otros archivos CSS
-    │   ├── js/                          # Scripts JavaScript
-    │   │   ├── bootstrap.bundle.min.js  # JavaScript de Bootstrap
-    │   │   ├── jquery.min.js            # Biblioteca jQuery
-    │   │   ├── json-editor.js           # Editor JSON para esquemas
-    │   │   └── ...                      # Otros scripts
-    │   └── img/                         # Imágenes del sitio
-    │       ├── logo.png                 # Logo del proyecto
-    │       └── ...                      # Otras imágenes
+    │   │   ├── style.css                # Estilos generales de la aplicación
+    │   │   ├── dark-theme.css           # Estilos para el tema oscuro
+    │   │   ├── components/              # Estilos específicos de componentes
+    │   │   │   ├── sidenav.css          # Estilos para la barra lateral
+    │   │   │   └── document-detail.css  # Estilos para la vista detalle de documentos
+    │   │   └── bootstrap.min.css        # Framework CSS Bootstrap
+    │   └── js/                          # Scripts JavaScript
+    │       ├── json-editor.js           # Editor de JSON para esquemas
+    │       ├── bootstrap.bundle.min.js  # JavaScript de Bootstrap
+    │       └── jquery.min.js            # Biblioteca jQuery
     ├── templates/                       # Plantillas HTML
     │   ├── base.html                    # Plantilla base con estructura común
-    │   ├── home.html                    # Página de inicio
-    │   ├── sidebar.html                 # Barra lateral de navegación
+    │   ├── components/                  # Componentes reutilizables
+    │   │   └── sidebar.html             # Barra lateral de navegación
+    │   ├── pages/                       # Páginas principales
+    │   │   ├── home.html                # Página de inicio
+    │   │   ├── administration.html      # Panel de administración
+    │   │   ├── administration_user.html # Panel de administración de usuarios
+    │   │   └── perfiles.html            # Página de perfil de usuario
     │   ├── administration/              # Plantillas de administración
-    │   │   ├── dashboard.html           # Panel principal de administración
     │   │   ├── empresas/                # Plantillas de gestión de empresas
     │   │   │   ├── lista_empresas.html  # Lista de empresas
-    │   │   │   ├── crear_empresa.html   # Crear nueva empresa
-    │   │   │   └── editar_empresa.html  # Editar empresa existente
-    │   │   ├── servicios/               # Plantillas de gestión de servicios
-    │   │   │   ├── lista_servicios.html # Lista de servicios
-    │   │   │   └── ...                  # Otras plantillas de servicios
-    │   │   ├── usuarios/                # Plantillas de gestión de usuarios
-    │   │   │   ├── lista_usuarios.html  # Lista de usuarios
-    │   │   │   └── ...                  # Otras plantillas de usuarios
-    │   │   ├── licencias/               # Plantillas de gestión de licencias
-    │   │   │   ├── lista_licencias.html # Lista de licencias
-    │   │   │   └── ...                  # Otras plantillas de licencias
+    │   │   │   └── modal_*.html         # Modales para operaciones CRUD
+    │   │   ├── service/                 # Plantillas de gestión de servicios
+    │   │   │   ├── list_service.html    # Lista de servicios
+    │   │   │   └── modal_*.html         # Modales para operaciones CRUD
+    │   │   ├── users/                   # Plantillas de gestión de usuarios
+    │   │   │   ├── list_users.html      # Lista de usuarios
+    │   │   │   └── modal_*.html         # Modales para operaciones CRUD
+    │   │   ├── licences/                # Plantillas de gestión de licencias
+    │   │   │   ├── licences_list.html   # Lista de licencias
+    │   │   │   └── modal_*.html         # Modales para operaciones CRUD
     │   │   └── documents/               # Plantillas de gestión de documentos
     │   │       ├── admin_documentos.html # Panel admin de documentos
+    │   │       ├── grupos_modulos.html   # Gestión de grupos y módulos
+    │   │       ├── storage_files.html    # Gestión de archivos en storage
     │   │       └── editar_esquema_modulo.html # Edición de esquemas JSON
     │   ├── documents/                   # Plantillas de documentos (frontend)
     │   │   ├── upload_documents.html    # Subida de documentos
     │   │   ├── lista_documentos.html    # Lista de documentos
     │   │   └── documento_detalle.html   # Detalle de documento
-    │   ├── profile/                     # Plantillas de perfil de usuario
-    │   │   └── profile.html             # Perfil de usuario
     │   └── registration/                # Plantillas de autenticación
     │       ├── login.html               # Inicio de sesión
     │       └── register.html            # Registro de usuario
     ├── templatetags/                    # Tags y filtros personalizados
     │   ├── __init__.py                  # Inicializador del paquete
-    │   └── custom_filters.py            # Filtros personalizados para plantillas
+    │   └── form_filters.py              # Filtros personalizados para plantillas
     └── views/                           # Vistas organizadas por módulos
         ├── __init__.py                  # Inicializador del paquete
         ├── home_views.py                # Vistas de la página principal
